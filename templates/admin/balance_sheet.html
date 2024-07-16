@@ -1,0 +1,230 @@
+
+{% block content %}
+<style>
+  .section-header {
+    text-align: center;
+    color: black;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+  }
+  .main-content {
+    margin-left: 290px;
+    /* Adjust according to sidebar width */
+    padding: 40px;
+    /* Reduce padding for a cleaner look */
+    transition: margin-left 0.3s;
+    /* Smooth transition for sidebar width changes */
+
+    /* Reduce padding for a cleaner look */
+    height: calc(100vh);
+    /* Full height minus header/footer or any other elements */
+    overflow-y: auto;
+    /* Enable vertical scrolling if content exceeds height */
+
+}
+</style>
+{% include './company_profile.html' %}
+
+
+<div class="main-content">
+
+<div class="container">
+  <form method="post">
+    {% csrf_token %}
+    <div class="row mt-5">
+      <h3 class="text-center">BALANCE SHEET DETAILS</h3>
+
+      <!-- Company Section -->
+      <div class="col-md-4">
+        <div class="form-group mt-3">
+          <label for="company_id">Company ID</label>
+          <input type="text" class="form-control" name="company_id" value="{{ company.company_id }}" required readonly>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="form-group mt-3">
+          <label for="begin_date">Begin Date</label>
+          <input type="date" class="form-control" name="begin_date" required>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="form-group mt-3">
+          <label for="end_date">End Date</label>
+          <input type="date" class="form-control" name="end_date" required>
+        </div>
+      </div>
+
+      <!-- Current Assets Section -->
+      <div class="col-12">
+        <h4 class="section-header">Current Assets</h4>
+      </div>
+      <div class="col-md-4">
+        <div class="form-group mt-3">
+          <label for="total_current_assets">Total Current Assets</label>
+          <input type="number" step="any" class="form-control" name="total_current_assets" required>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="form-group mt-3">
+          <label for="ca_cash">Cash</label>
+          <input type="number" step="any" class="form-control" name="ca_cash" required>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="form-group mt-3">
+          <label for="ca_accounts_receivables">Accounts Receivables</label>
+          <input type="number" step="any" class="form-control" name="ca_accounts_receivables" required>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="form-group mt-3">
+          <label for="ca_prepaid_expenses">Prepaid Expenses</label>
+          <input type="number" step="any" class="form-control" name="ca_prepaid_expenses" required>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="form-group mt-3">
+          <label for="ca_inventory">Inventory</label>
+          <input type="number" step="any" class="form-control" name="ca_inventory" required>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="form-group mt-3">
+          <label for="ca_other">Other Current Assets</label>
+          <input type="number" step="any" class="form-control" name="ca_other" required>
+        </div>
+      </div>
+
+      <!-- Non-Current Assets Section -->
+      <div class="col-12">
+        <h4 class="section-header">Non-Current Assets</h4>
+      </div>
+      <div class="col-md-4">
+        <div class="form-group mt-3">
+          <label for="total_non_current_assets">Total Non-Current Assets</label>
+          <input type="number" step="any" class="form-control" name="total_non_current_assets" required>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="form-group mt-3">
+          <label for="nca_property">Property</label>
+          <input type="number" step="any" class="form-control" name="nca_property" required>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="form-group mt-3">
+          <label for="nca_charity">Charity</label>
+          <input type="number" step="any" class="form-control" name="nca_charity" required>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="form-group mt-3">
+          <label for="nca_equipment">Equipment</label>
+          <input type="number" step="any" class="form-control" name="nca_equipment" required>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="form-group mt-3">
+          <label for="nca_leases">Leases</label>
+          <input type="number" step="any" class="form-control" name="nca_leases" required>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="form-group mt-3">
+          <label for="nca_other">Other Non-Current Assets</label>
+          <input type="number" step="any" class="form-control" name="nca_other" required>
+        </div>
+      </div>
+
+      <!-- Current Liabilities Section -->
+      <div class="col-12">
+        <h4 class="section-header">Current Liabilities</h4>
+      </div>
+      <div class="col-md-4">
+        <div class="form-group mt-3">
+          <label for="total_current_liabilities">Total Current Liabilities</label>
+          <input type="number" step="any" class="form-control" name="total_current_liabilities" required>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="form-group mt-3">
+          <label for="cl_accounts_payable">Accounts Payable</label>
+          <input type="number" step="any" class="form-control" name="cl_accounts_payable" required>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="form-group mt-3">
+          <label for="cl_accrued_expenses">Accrued Expenses</label>
+          <input type="number" step="any" class="form-control" name="cl_accrued_expenses" required>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="form-group mt-3">
+          <label for="cl_unearned_revenue">Unearned Revenue</label>
+          <input type="number" step="any" class="form-control" name="cl_unearned_revenue" required>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="form-group mt-3">
+          <label for="cl_other">Other Current Liabilities</label>
+          <input type="number" step="any" class="form-control" name="cl_other" required>
+        </div>
+      </div>
+
+      <!-- Non-Current Liabilities Section -->
+      <div class="col-12">
+        <h4 class="section-header">Non-Current Liabilities</h4>
+      </div>
+      <div class="col-md-4">
+        <div class="form-group mt-3">
+          <label for="total_non_current_liabilities">Total Non-Current Liabilities</label>
+          <input type="number" step="any" class="form-control" name="total_non_current_liabilities" required>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="form-group mt-3">
+          <label for="ncl_longterm_debt">Long-term Debt</label>
+          <input type="number" step="any" class="form-control" name="ncl_longterm_debt" required>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="form-group mt-3">
+          <label for="ncl_other">Other Non-Current Liabilities</label>
+          <input type="number" step="any" class="form-control" name="ncl_other" required>
+        </div>
+      </div>
+
+      <!-- Equity Section -->
+      <div class="col-12">
+        <h4 class="section-header">Equity</h4>
+      </div>
+      <div class="col-md-4">
+        <div class="form-group mt-3">
+          <label for="shareholder_equity">Shareholder Equity</label>
+          <input type="number" step="any" class="form-control" name="shareholder_equity" required>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="form-group mt-3">
+          <label for="equity_investment_capital">Equity Investment Capital</label>
+          <input type="number" step="any" class="form-control" name="equity_investment_capital" required>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="form-group mt-3">
+          <label for="equity_retained_earnings">Equity Retained Earnings</label>
+          <input type="number" step="any" class="form-control" name="equity_retained_earnings" required>
+        </div>
+      </div>
+
+      <!-- Submit Button -->
+      <div class="col-12 text-center">
+        <button type="submit" class="btn btn-primary mb-3 mt-4">Submit</button>
+      </div>
+
+    </div>
+  </form>
+</div>
+</div>
+
+{% endblock content %}

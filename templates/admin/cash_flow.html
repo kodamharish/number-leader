@@ -1,0 +1,353 @@
+{% load static %}
+{% block content %}
+<!-- <style>
+    .container {
+        font-family: 'Agency FB', sans-serif;
+    }
+
+    .form-control {
+        font-size: 16px;
+    }
+
+    label {
+        font-weight: bold;
+        font-size: 18px;
+    }
+
+    .btn-primary {
+        font-size: 20px;
+        padding: 10px 20px;
+        border-radius: 8px;
+    }
+
+    h3 {
+        font-size: 24px;
+        color: #005792;
+        margin-bottom: 20px;
+    }
+
+    .row.mb-3.mt-3 {
+        margin-top: 15px;
+    }
+
+    .form-group {
+        margin-bottom: 1rem;
+    }
+
+    .form-label {
+        font-size: 18px;
+        font-weight: bold;
+    }
+
+    .form-control {
+        font-size: 16px;
+    }
+
+    .inline {
+        display: inline-block;
+        width: 48%;
+    }
+
+    .col-md-4 {
+        margin-bottom: 1rem;
+    }
+</style> -->
+<style>
+  .main-content {
+    margin-left: 290px;
+    /* Adjust according to sidebar width */
+    padding: 40px;
+    /* Reduce padding for a cleaner look */
+    transition: margin-left 0.3s;
+    /* Smooth transition for sidebar width changes */
+
+    /* Reduce padding for a cleaner look */
+    height: calc(100vh);
+    /* Full height minus header/footer or any other elements */
+    overflow-y: auto;
+    /* Enable vertical scrolling if content exceeds height */
+
+}
+</style>
+{% include './company_profile.html' %}
+
+<div class="main-content">
+
+<div class="container">
+  <form id="cashflow-form" method="post">
+    {% csrf_token %}
+    <div class="row mt-5">
+      <h3 class="text-center">COMPANY INFO</h3>
+      <div class="col-md-4">
+        <div class="form-group row">
+          <label for="company_id" class="col-sm-4 col-form-label form-label">Company ID</label>
+          <div class="col-sm-8">
+            <input type="text" class="form-control" name="company_id" value="{{ company.company_id }}" required readonly>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="form-group row">
+          <label for="begin_date" class="col-sm-4 col-form-label form-label">Begin Date</label>
+          <div class="col-sm-8">
+            <input type="date" class="form-control" name="begin_date" required>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="form-group row">
+          <label for="end_date" class="col-sm-4 col-form-label form-label">End Date</label>
+          <div class="col-sm-8">
+            <input type="date" class="form-control" name="end_date" required>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row mt-5">
+      <h3 class="text-center">FINANCING</h3>
+      <div class="col-md-4">
+        <div class="form-group row">
+          <label for="net_financing" class="col-sm-4 col-form-label form-label">Net Financing</label>
+          <div class="col-sm-8">
+            <input type="number" step="any" class="form-control" name="net_financing" required>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="form-group row">
+          <label for="cf_finance_inflow_drawing" class="col-sm-4 col-form-label form-label">CF Finance Inflow Drawing</label>
+          <div class="col-sm-8">
+            <input type="number" step="any" class="form-control" name="cf_finance_inflow_drawing" required>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="form-group row">
+          <label for="cf_finance_inflow_distribution" class="col-sm-4 col-form-label form-label">CF Finance Inflow Distribution</label>
+          <div class="col-sm-8">
+            <input type="number" step="any" class="form-control" name="cf_finance_inflow_distribution" required>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="form-group row">
+          <label for="cf_finance_inflow_other" class="col-sm-4 col-form-label form-label">CF Finance Inflow Other</label>
+          <div class="col-sm-8">
+            <input type="number" step="any" class="form-control" name="cf_finance_inflow_other" required>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="form-group row">
+          <label for="cf_finance_outflow_loan_payments" class="col-sm-4 col-form-label form-label">CF Finance Outflow Loan Payments</label>
+          <div class="col-sm-8">
+            <input type="number" step="any" class="form-control" name="cf_finance_outflow_loan_payments" required>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="form-group row">
+          <label for="cf_finance_outflow_other" class="col-sm-4 col-form-label form-label">CF Finance Outflow Other</label>
+          <div class="col-sm-8">
+            <input type="number" step="any" class="form-control" name="cf_finance_outflow_other" required>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row mt-5">
+      <h3 class="text-center">INVESTMENTS</h3>
+      <div class="col-md-4">
+        <div class="form-group row">
+          <label for="net_investments" class="col-sm-4 col-form-label form-label">Net Investments</label>
+          <div class="col-sm-8">
+            <input type="number" step="any" class="form-control" name="net_investments" required>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="form-group row">
+          <label for="cf_invest_inflow_loans" class="col-sm-4 col-form-label form-label">CF Invest Inflow Loans</label>
+          <div class="col-sm-8">
+            <input type="number" step="any" class="form-control" name="cf_invest_inflow_loans" required>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="form-group row">
+          <label for="cf_invest_inflow_sell_property" class="col-sm-4 col-form-label form-label">CF Invest Inflow Sell Property</label>
+          <div class="col-sm-8">
+            <input type="number" step="any" class="form-control" name="cf_invest_inflow_sell_property" required>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="form-group row">
+          <label for="cf_invest_inflow_sell_equip" class="col-sm-4 col-form-label form-label">CF Invest Inflow Sell Equip</label>
+          <div class="col-sm-8">
+            <input type="number" step="any" class="form-control" name="cf_invest_inflow_sell_equip" required>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="form-group row">
+          <label for="cf_invest_inflow_other" class="col-sm-4 col-form-label form-label">CF Invest Inflow Other</label>
+          <div class="col-sm-8">
+            <input type="number" step="any" class="form-control" name="cf_invest_inflow_other" required>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="form-group row">
+          <label for="cf_invest_outflow_buy_property" class="col-sm-4 col-form-label form-label">CF Invest Outflow Buy Property</label>
+          <div class="col-sm-8">
+            <input type="number" step="any" class="form-control" name="cf_invest_outflow_buy_property" required>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="form-group row">
+          <label for="cf_invest_outflow_buy_equip" class="col-sm-4 col-form-label form-label">CF Invest Outflow Buy Equip</label>
+          <div class="col-sm-8">
+            <input type="number" step="any" class="form-control" name="cf_invest_outflow_buy_equip" required>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="form-group row">
+          <label for="cf_invest_outflow_other" class="col-sm-4 col-form-label form-label">CF Invest Outflow Other</label>
+          <div class="col-sm-8">
+            <input type="number" step="any" class="form-control" name="cf_invest_outflow_other" required>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row mt-5">
+      <h3 class="text-center">OPERATIONS</h3>
+      <div class="col-md-4">
+        <div class="form-group row">
+          <label for="net_operations" class="col-sm-4 col-form-label form-label">Net Operations</label>
+          <div class="col-sm-8">
+            <input type="number" step="any" class="form-control" name="net_operations" required>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="form-group row">
+          <label for="cf_ops_inflow_customers" class="col-sm-4 col-form-label form-label">CF Ops Inflow Customers</label>
+          <div class="col-sm-8">
+            <input type="number" step="any" class="form-control" name="cf_ops_inflow_customers" required>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="form-group row">
+          <label for="cf_ops_inflow_depreciation" class="col-sm-4 col-form-label form-label">CF Ops Inflow Depreciation</label>
+          <div class="col-sm-8">
+            <input type="number" step="any" class="form-control" name="cf_ops_inflow_depreciation" required>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="form-group row">
+          <label for="cf_ops_inflow_amortization" class="col-sm-4 col-form-label form-label">CF Ops Inflow Amortization</label>
+          <div class="col-sm-8">
+            <input type="number" step="any" class="form-control" name="cf_ops_inflow_amortization" required>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="form-group row">
+          <label for="cf_ops_inflow_other" class="col-sm-4 col-form-label form-label">CF Ops Inflow Other</label>
+          <div class="col-sm-8">
+            <input type="number" step="any" class="form-control" name="cf_ops_inflow_other" required>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="form-group row">
+          <label for="cf_ops_outflow_wages" class="col-sm-4 col-form-label form-label">CF Ops Outflow Wages</label>
+          <div class="col-sm-8">
+            <input type="number" step="any" class="form-control" name="cf_ops_outflow_wages" required>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="form-group row">
+          <label for="cf_ops_outflow_overhead" class="col-sm-4 col-form-label form-label">CF Ops Outflow Overhead</label>
+          <div class="col-sm-8">
+            <input type="number" step="any" class="form-control" name="cf_ops_outflow_overhead" required>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="form-group row">
+          <label for="cf_ops_outflow_interest" class="col-sm-4 col-form-label form-label">CF Ops Outflow Interest</label>
+          <div class="col-sm-8">
+            <input type="number" step="any" class="form-control" name="cf_ops_outflow_interest" required>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="form-group row">
+          <label for="cf_ops_outflow_taxes" class="col-sm-4 col-form-label form-label">CF Ops Outflow Taxes</label>
+          <div class="col-sm-8">
+            <input type="number" step="any" class="form-control" name="cf_ops_outflow_taxes" required>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="form-group row">
+          <label for="cf_ops_outflow_accounts_receivable" class="col-sm-4 col-form-label form-label">CF Ops Outflow Accounts Receivable</label>
+          <div class="col-sm-8">
+            <input type="number" step="any" class="form-control" name="cf_ops_outflow_accounts_receivable" required>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="form-group row">
+          <label for="cf_ops_outflow_inventory_increase" class="col-sm-4 col-form-label form-label">CF Ops Outflow Inventory Increase</label>
+          <div class="col-sm-8">
+            <input type="number" step="any" class="form-control" name="cf_ops_outflow_inventory_increase" required>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="form-group row">
+          <label for="cf_ops_outflow_other" class="col-sm-4 col-form-label form-label">CF Ops Outflow Other</label>
+          <div class="col-sm-8">
+            <input type="number" step="any" class="form-control" name="cf_ops_outflow_other" required>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row mt-5">
+      <h3 class="text-center">CASH FLOW</h3>
+      <div class="col-md-4">
+        <div class="form-group row">
+          <label for="cf_beginning_balance" class="col-sm-4 col-form-label form-label">CF Beginning Balance</label>
+          <div class="col-sm-8">
+            <input type="number" step="any" class="form-control" name="cf_beginning_balance" required>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="form-group row">
+          <label for="cf_change_in_cash" class="col-sm-4 col-form-label form-label">CF Change in Cash</label>
+          <div class="col-sm-8">
+            <input type="number" step="any" class="form-control" name="cf_change_in_cash" required>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="text-center mt-5">
+      <button type="submit" class="btn btn-primary">Submit</button>
+    </div>
+  </form>
+</div>
+</div>
+
+{% endblock %}

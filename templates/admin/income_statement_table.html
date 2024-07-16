@@ -1,0 +1,219 @@
+{% include 'admin/company_profile.html' %}
+
+{% block styles %}
+<!-- Bootstrap CSS -->
+<link href="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+<style>
+    .container {
+        padding-left: 180px;
+    }
+
+    .pivot-table {
+        border-collapse: collapse;
+        width: 40% !important;
+    }
+
+    .pivot-table th,
+    .pivot-table td {
+        padding: 0.75rem;
+        text-align: center;
+        vertical-align: middle;
+    }
+
+    .pivot-table th {
+        background-color: #f8f9fa;
+        border-bottom: 2px solid #dee2e6;
+    }
+
+    .pivot-table td {
+        border-bottom: 1px solid #dee2e6;
+    }
+
+    .pivot-table thead th {
+        background-color: #e9ecef;
+    }
+
+    .pivot-table .header-row {
+        background-color: #f1f3f5;
+    }
+
+    .pivot-table .header-col {
+        font-weight: bold;
+    }
+
+    .pivot-table .monthly-data {
+        font-size: 0.875rem;
+    }
+
+    .section-header {
+        background-color: #dee2e6;
+        font-weight: bold;
+    }
+
+    /* Add scroll functionality */
+    .table-container {
+        max-height: 400px;
+        /* Adjust height as needed */
+        overflow-y: auto;
+    }
+</style>
+{% endblock styles %}
+
+{% block content %}
+
+<div class="container mt-5">
+
+    <div class="row">
+        <div class="col-md-4">
+            <h6 class="mb-4">Corporate Finance - Planning & Budgeting - <b>Income Statement</b></h6>
+
+        </div>
+        <div class="col-md-4">
+            <div class="d-flex">
+                <label for="user_type">Past Statements</label>
+                <select class="form-select w-50" id="user_type" name="user_type" required>
+                    <option value="">2020</option>
+                    <option value="">2021</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="col-md-4 text-center">
+            {% if not request.resolver_match.url_name == 'forecasting_income_statement_table' %}
+            <a href="{% url 'income_statement' company.company_id %}"><i class="fas fa-plus"></i></a>
+            {% endif %}
+        </div>
+
+    </div>
+
+
+
+
+    <div class="table-container mt-3">
+        <table class="pivot-table table table-bordered">
+            <thead>
+                <tr class="header-row">
+                    <th class="header-col">Metrics</th>
+                    <th class="header-col" colspan="12">Monthly Data</th>
+                </tr>
+                <tr>
+                    <th class="header-col"></th>
+                    <th class="header-col">Jan</th>
+                    <!-- Add more months as needed -->
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Financing Section -->
+                <tr class="section-header">
+                    <td colspan="2">Product Details </td>
+                </tr>
+                <tr>
+                    <td>Product Name</td>
+                    <td class="monthly-data">$10,000</td>
+                </tr>
+                <tr>
+                    <td>Total Revenue</td>
+                    <td class="monthly-data">$6,000</td>
+                </tr>
+                <tr>
+                    <td>Total Taxes</td>
+                    <td class="monthly-data">$2,000</td>
+                </tr>
+                <tr>
+                    <td>Total Dividends</td>
+                    <td class="monthly-data">$2,000</td>
+                </tr>
+                <!-- Investments Section -->
+                <tr class="section-header">
+                    <td colspan="2">COST OF GOODS SOLD</td>
+                </tr>
+                <tr>
+                    <td>Total Cost of Goods Sold</td>
+                    <td class="monthly-data">$2,000</td>
+                </tr>
+                <tr>
+                    <td>Direct Labor</td>
+                    <td class="monthly-data">$2,000</td>
+                </tr>
+                <tr>
+                    <td>Material</td>
+                    <td class="monthly-data">$2,000</td>
+                </tr>
+                <tr>
+                    <td>Parts</td>
+                    <td class="monthly-data">$2,000</td>
+                </tr>
+                <tr>
+                    <td>Distribution</td>
+                    <td class="monthly-data">$2,000</td>
+                </tr>
+                <tr>
+                    <td>Other</td>
+                    <td class="monthly-data">$2,000</td>
+                </tr>
+
+                <!-- Operations Section -->
+                <tr class="section-header">
+                    <td colspan="2">OPERATING EXPENSES</td>
+                </tr>
+                <tr>
+                    <td>Total Operating Expenses</td>
+                    <td class="monthly-data">$2,000</td>
+                </tr>
+                <tr>
+                    <td>Rent</td>
+                    <td class="monthly-data">$2,000</td>
+                </tr>
+                <tr>
+                    <td>OUtilities</td>
+                    <td class="monthly-data">$2,000</td>
+                </tr>
+                <tr>
+                    <td>Overhead</td>
+                    <td class="monthly-data">$2,000</td>
+                </tr>
+                <tr>
+                    <td>Legal</td>
+                    <td class="monthly-data">$2,000</td>
+                </tr>
+                <tr>
+                    <td>Depreciation</td>
+                    <td class="monthly-data">$2,000</td>
+                </tr>
+                <tr>
+                    <td>Marketing Ads</td>
+                    <td class="monthly-data">$2,000</td>
+                </tr>
+                <tr>
+                    <td>Insurance</td>
+                    <td class="monthly-data">$2,000</td>
+                </tr>
+                <tr>
+                    <td>Interest</td>
+                    <td class="monthly-data">$2,000</td>
+                </tr>
+                <tr>
+                    <td>Wages</td>
+                    <td class="monthly-data">$2,000</td>
+                </tr>
+                <tr>
+                    <td>Travel</td>
+                    <td class="monthly-data">$2,000</td>
+                </tr>
+                <tr>
+                    <td>Other</td>
+                    <td class="monthly-data">$2,000</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+
+    {% if  request.resolver_match.url_name == 'forecasting_income_statement_table' %}
+        <button type="button" class="btn btn-secondary" style="position: absolute;right: 400px;top: 400px;">Forecast</button>
+    {% endif %}
+</div>
+<!-- Bootstrap JS (Optional for components like modals or dropdowns) -->
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+
+{% endblock content %}

@@ -1,0 +1,201 @@
+{% include 'admin/company_profile.html' %}
+
+{% block styles %}
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .container {
+            padding-left: 180px;
+        }
+        .pivot-table {
+            border-collapse: collapse;
+            width: 40%!important;
+        }
+        .pivot-table th, .pivot-table td {
+            padding: 0.75rem;
+            text-align: center;
+            vertical-align: middle;
+        }
+        .pivot-table th {
+            background-color: #f8f9fa;
+            border-bottom: 2px solid #dee2e6;
+        }
+        .pivot-table td {
+            border-bottom: 1px solid #dee2e6;
+        }
+        .pivot-table thead th {
+            background-color: #e9ecef;
+        }
+        .pivot-table .header-row {
+            background-color: #f1f3f5;
+        }
+        .pivot-table .header-col {
+            font-weight: bold;
+        }
+        .pivot-table .monthly-data {
+            font-size: 0.875rem;
+        }
+        /* Add scroll functionality */
+        .table-container {
+            max-height: 400px; /* Adjust height as needed */
+            overflow-y: auto;
+        }
+    </style>
+{% endblock styles %}
+
+{% block content  %}
+
+    <div class="container mt-5">
+        
+
+
+
+        <div class="row">
+            <div class="col-md-4">
+                <h6 class="mb-4">Corporate Finance - Planning & Budgeting - <b>Balance Sheet Statement</b></h6>
+    
+            </div>
+            <div class="col-md-4">
+                <div class="d-flex">
+                    <label for="user_type">Past Statements</label>
+                    <select class="form-select w-50" id="user_type" name="user_type" required>
+                        <option value="">2020</option>
+                        <option value="">2021</option>
+                    </select>
+                </div>
+            </div>
+    
+            <div class="col-md-4 text-center">
+                {% if not request.resolver_match.url_name == 'forecasting_balance_sheet_table' %}
+                <a href="{% url 'balance_sheet' company.company_id %}"><i class="fas fa-plus"></i></a>
+                {% endif %}
+            </div>
+    
+        </div>
+    
+    
+
+        <div class="table-container">
+            <table class="pivot-table table table-bordered">
+                <thead>
+                    <tr class="header-row">
+                        <th class="header-col">Metrics</th>
+                        <th class="header-col" colspan="12">Monthly Data</th>
+                    </tr>
+                    <tr>
+                        <th class="header-col"></th>
+                        <th class="header-col">Jan</th>
+                        <!-- Add more months as needed -->
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Total Current Assets</td>
+                        <td class="monthly-data">$10,000</td>
+                    </tr>
+                    <tr>
+                        <td>Cash</td>
+                        <td class="monthly-data">$6,000</td>
+                    </tr>
+                    <tr>
+                        <td>Accounts Receivable</td>
+                        <td class="monthly-data">$2,000</td>
+                    </tr>
+                    <tr>
+                        <td>Prepaid Expenses</td>
+                        <td class="monthly-data">$2,000</td>
+                    </tr>
+                    <tr>
+                        <td>Inventory</td>
+                        <td class="monthly-data">$2,000</td>
+                    </tr>
+                    <tr>
+                        <td>Other</td>
+                        <td class="monthly-data">$2,000</td>
+                    </tr>
+                    <tr>
+                        <td>Total Non Current Assets</td>
+                        <td class="monthly-data">$2,000</td>
+                    </tr>
+                    <tr>
+                        <td>Property</td>
+                        <td class="monthly-data">$2,000</td>
+                    </tr>
+                    <tr>
+                        <td>Charity</td>
+                        <td class="monthly-data">$2,000</td>
+                    </tr>
+                    <tr>
+                        <td>Equipment</td>
+                        <td class="monthly-data">$2,000</td>
+                    </tr>
+                    <tr>
+                        <td>Leases</td>
+                        <td class="monthly-data">$2,000</td>
+                    </tr>
+                    <tr>
+                        <td>Others</td>
+                        <td class="monthly-data">$2,000</td>
+                    </tr>
+                    <tr>
+                        <td>Total Current Liabilities</td>
+                        <td class="monthly-data">$2,000</td>
+                    </tr>
+                    <tr>
+                        <td>Accounts Payable</td>
+                        <td class="monthly-data">$2,000</td>
+                    </tr>
+                    <tr>
+                        <td>Accrued Expenses</td>
+                        <td class="monthly-data">$2,000</td>
+                    </tr>
+                    <tr>
+                        <td>Unearned Revenue</td>
+                        <td class="monthly-data">$2,000</td>
+                    </tr>
+                    <tr>
+                        <td>Other</td>
+                        <td class="monthly-data">$2,000</td>
+                    </tr>
+                    <tr>
+                        <td>Total Non Current Liabilities</td>
+                        <td class="monthly-data">$2,000</td>
+                    </tr>
+                    <tr>
+                        <td>Long Term Debt</td>
+                        <td class="monthly-data">$2,000</td>
+                    </tr>
+                    <tr>
+                        <td>Other</td>
+                        <td class="monthly-data">$2,000</td>
+                    </tr>
+                    <tr>
+                        <td>Shareholder Equity</td>
+                        <td class="monthly-data">$2,000</td>
+                    </tr>
+                    <tr>
+                        <td>Equity Investment Capital</td>
+                        <td class="monthly-data">$2,000</td>
+                    </tr>
+                    <tr>
+                        <td>Equity Retained Earnings</td>
+                        <td class="monthly-data">$2,000</td>
+                    </tr>
+                    <!-- Add more rows as needed -->
+                </tbody>
+            </table>
+        </div>
+
+    {% if  request.resolver_match.url_name == 'forecasting_balance_sheet_table' %}
+        <button type="button" class="btn btn-secondary" style="position: absolute;right: 400px;top: 400px;">Forecast</button>
+    {% endif %}
+    
+    </div>
+
+   
+
+    
+    <!-- Bootstrap JS (Optional for components like modals or dropdowns) -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+
+{% endblock content %}
