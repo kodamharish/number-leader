@@ -1537,6 +1537,7 @@ def cashFlow(request,id):
 
 
 from calendar import month_abbr
+from datetime import date
 
 # def get_period_label(begin_date, end_date):
 #     # Define financial quarters
@@ -1589,29 +1590,45 @@ def get_period_label(begin_date, end_date):
     # Custom or irregular period
     return f'{begin_date.strftime("%b %d, %Y")} - {end_date.strftime("%b %d, %Y")}', 'Irregular Data'
 
+# def get_last_seven_years_labels():
+#     current_year = date.today().year
+#     return [str(year) for year in range(current_year - 7, current_year)]
+
+
+# def get_last_seven_years_labels():
+#     current_year = date.today().year
+#     return [str(year) for year in range(current_year, current_year - 7, -1)]
+
+def get_last_seven_years_labels():
+    current_year = date.today().year
+    return [str(year) for year in range(current_year - 1, current_year - 8, -1)]
 
 def incomeStatementTable(request,id):
     company = Company.objects.get(company_id = id)
     income_statements = IncomeStatement.objects.filter(company_id = id)
+    last_seven_years_labels = get_last_seven_years_labels()
     for income_statement in income_statements:
         income_statement.period_label,income_statement.data_name = get_period_label(income_statement.begin_date, income_statement.end_date)
-    context = {'company':company,'income_statements':income_statements}
+    context = {'company':company,'income_statements':income_statements,'last_seven_years_labels': last_seven_years_labels}
     return render(request,'admin/income_statement_table.html',context)
 
 def balanceSheetTable(request,id):
     company = Company.objects.get(company_id = id)
     balance_sheets = BalanceSheet.objects.filter(company_id = id)
+    last_seven_years_labels = get_last_seven_years_labels()
     for balance_sheet in balance_sheets:
         balance_sheet.period_label,balance_sheet.data_name = get_period_label(balance_sheet.begin_date, balance_sheet.end_date)
-    context = {'company':company,'balance_sheets':balance_sheets}
+    context = {'company':company,'balance_sheets':balance_sheets,'last_seven_years_labels':last_seven_years_labels }
     return render(request,'admin/balance_sheet_table.html',context)
 
 def cashFlowTable(request,id):
     company = Company.objects.get(company_id = id)
     cash_flows = CashFlow.objects.filter(company_id = id)
+    last_seven_years_labels = get_last_seven_years_labels()
+
     for cash_flow in cash_flows:
         cash_flow.period_label,cash_flow.data_name = get_period_label(cash_flow.begin_date, cash_flow.end_date)
-    context = {'company':company,'cash_flows':cash_flows}
+    context = {'company':company,'cash_flows':cash_flows,'last_seven_years_labels':last_seven_years_labels }
     return render(request,'admin/cash_flow_table.html',context)
 
 

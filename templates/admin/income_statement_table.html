@@ -71,8 +71,10 @@
             <div class="d-flex">
                 <label for="user_type">Past Statements</label>
                 <select class="form-select w-50" id="user_type" name="user_type" required>
-                    <option value="">2020</option>
-                    <option value="">2021</option>
+                    <option value="">Select</option>
+                    {% for year in last_seven_years_labels %}
+                    <option value="{{ year }}">{{ year }}</option>
+                    {% endfor %}
                 </select>
             </div>
         </div>
