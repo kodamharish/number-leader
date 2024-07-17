@@ -307,8 +307,8 @@ class IncomeStatement(models.Model):
     creator_id = models.CharField(max_length=12)
     modifier_id = models.CharField(max_length=12,null=True)
 
-    created_date = models.DateTimeField()
-    modified_date = models.DateTimeField()
+    created_date = models.DateTimeField(auto_now_add=True)
+    modified_date = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         db_table = 'nl_income_statement'
@@ -362,8 +362,8 @@ class BalanceSheet(models.Model):
 
 class CashFlow(models.Model):
     company_id = models.ForeignKey(Company,on_delete=models.CASCADE)
-    begin_date = models.DateTimeField(auto_now_add=True)
-    end_date = models.DateTimeField(auto_now_add=True)
+    begin_date = models.DateTimeField()
+    end_date = models.DateTimeField()
 
     net_financing = models.DecimalField(max_digits=10, decimal_places=2)
     cf_finance_inflow_drawing = models.DecimalField(max_digits=10, decimal_places=2)
@@ -408,7 +408,7 @@ class CashFlow(models.Model):
     modifier_id = models.CharField(max_length=12,null=True)
 
     created_date = models.DateTimeField(auto_now_add=True)
-    modified_date = models.DateTimeField(auto_now=True)
+    modified_date = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         db_table = 'nl_cash_flow'
