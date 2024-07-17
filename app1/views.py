@@ -1347,7 +1347,7 @@ def incomeStatement(request,id):
 
         )
         income_statement.save()
-        return redirect('income_statement',company.company_id)
+        return redirect('planning_budgeting_income_statement_table',company.company_id)
 
 
     else:
@@ -1435,7 +1435,7 @@ def balanceSheet(request,id):
 
         )
         balance_sheet.save()
-        return redirect('balance_sheet',company.company_id)
+        return redirect('planning_budgeting_balance_sheet_table',company.company_id)
 
 
 
@@ -1528,35 +1528,90 @@ def cashFlow(request,id):
             
        )
         cash_flow.save()
-        return redirect('cash_flow',company.company_id)
+        return redirect('planning_budgeting_cash_flow_table',company.company_id)
 
 
     else:
         context = {'company':company}
         return render(request,'admin/cash_flow.html',context)
 
+
+from calendar import month_abbr
+
+# def get_period_label(begin_date, end_date):
+#     # Define financial quarters
+#     quarters = {
+#         'Q1': (1, 3),  # January to March
+#         'Q2': (4, 6),  # April to June
+#         'Q3': (7, 9),  # July to September
+#         'Q4': (10, 12)  # October to December
+#     }
+
+#     if begin_date.month == end_date.month:
+#         # Same month
+#         return month_abbr[begin_date.month],f'Monthly Data'
+#     for quarter, (start_month, end_month) in quarters.items():
+#         if begin_date.month == start_month and end_date.month == end_month:
+#             months = [month_abbr[m] for m in range(start_month, end_month + 1)]
+#             return f'{quarter} ({", ".join(months)})',f'Quarterly Data'
+#     # Custom or irregular period
+#     return f'{begin_date.strftime("%b %d, %Y")} - {end_date.strftime("%b %d, %Y")}',f'irregular data'
+
+
+
+def get_period_label(begin_date, end_date):
+    # Define financial quarters
+    quarters = {
+        'Q1': (1, 3),  # January to March
+        'Q2': (4, 6),  # April to June
+        'Q3': (7, 9),  # July to September
+        'Q4': (10, 12)  # October to December
+    }
+
+    # Check if dates span a full year
+    if begin_date == begin_date.replace(month=1, day=1) and end_date == end_date.replace(month=12, day=31):
+        return f'{begin_date.strftime("%b %d, %Y")} - {end_date.strftime("%b %d, %Y")}', 'Annually Data'
+
+    # Check if dates span more than one year
+    if begin_date.year != end_date.year:
+        return f'{begin_date.strftime("%b %d, %Y")} - {end_date.strftime("%b %d, %Y")}', 'Irregular Data'
+
+    # Same month case
+    if begin_date.month == end_date.month:
+        return month_abbr[begin_date.month], 'Monthly Data'
+    
+    # Quarterly cases
+    for quarter, (start_month, end_month) in quarters.items():
+        if begin_date.month == start_month and end_date.month == end_month:
+            months = [month_abbr[m] for m in range(start_month, end_month + 1)]
+            return f'{quarter} ({", ".join(months)})', 'Quarterly Data'
+    
+    # Custom or irregular period
+    return f'{begin_date.strftime("%b %d, %Y")} - {end_date.strftime("%b %d, %Y")}', 'Irregular Data'
+
+
 def incomeStatementTable(request,id):
     company = Company.objects.get(company_id = id)
-    context = {'company':company}
-
-
-
+    income_statements = IncomeStatement.objects.filter(company_id = id)
+    for income_statement in income_statements:
+        income_statement.period_label,income_statement.data_name = get_period_label(income_statement.begin_date, income_statement.end_date)
+    context = {'company':company,'income_statements':income_statements}
     return render(request,'admin/income_statement_table.html',context)
 
 def balanceSheetTable(request,id):
     company = Company.objects.get(company_id = id)
-
-    context = {'company':company}
-
-
+    balance_sheets = BalanceSheet.objects.filter(company_id = id)
+    for balance_sheet in balance_sheets:
+        balance_sheet.period_label,balance_sheet.data_name = get_period_label(balance_sheet.begin_date, balance_sheet.end_date)
+    context = {'company':company,'balance_sheets':balance_sheets}
     return render(request,'admin/balance_sheet_table.html',context)
 
 def cashFlowTable(request,id):
     company = Company.objects.get(company_id = id)
-    context = {'company':company}
-
-
-
+    cash_flows = CashFlow.objects.filter(company_id = id)
+    for cash_flow in cash_flows:
+        cash_flow.period_label,cash_flow.data_name = get_period_label(cash_flow.begin_date, cash_flow.end_date)
+    context = {'company':company,'cash_flows':cash_flows}
     return render(request,'admin/cash_flow_table.html',context)
 
 

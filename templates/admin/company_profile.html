@@ -121,9 +121,9 @@
             <div class="dropdown-container">
                 <a class="dropdown-btn" href="#">Planning and Budgeting</a>
                 <div class="dropdown-container">
-                    <a href="{% url 'income_statement_table' company.company_id  %}" data-info="Income Statement details...">Income Statement</a>
-                    <a href="{% url 'balance_sheet_table' company.company_id %}" data-info="Balance Sheet details...">Balance Sheet</a>
-                    <a href="{% url 'cash_flow_table' company.company_id %}" data-info="Cash Flow details...">Cash Flow</a>
+                    <a href="{% url 'planning_budgeting_income_statement_table' company.company_id  %}" data-info="Income Statement details...">Income Statement</a>
+                    <a href="{% url 'planning_budgeting_balance_sheet_table' company.company_id %}" data-info="Balance Sheet details...">Balance Sheet</a>
+                    <a href="{% url 'planning_budgeting_cash_flow_table' company.company_id %}" data-info="Cash Flow details...">Cash Flow</a>
                 </div>
                 <a href="#" data-info="Forecasting details...">Industry Benchmarking</a>
                 <a class="dropdown-btn" href="#">Forecasting</a>

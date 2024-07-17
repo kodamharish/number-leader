@@ -57,7 +57,10 @@
 
     <div class="row">
         <div class="col-md-4">
-            <h6 class="mb-4">Corporate Finance - Planning & Budgeting - <b>Cash Flow Statement</b></h6>
+
+
+            <h6 class="mb-4">Corporate Finance - {% if request.resolver_match.url_name == 'planning_budgeting_cash_flow_table' %} Planning & Budgeting {% elif request.resolver_match.url_name == 'forecasting_cash_flow_table' %} Forecasting {% endif %} - <b>Cash Flow Statement</b></h6>
+
 
         </div>
         <div class="col-md-4">
@@ -71,7 +74,7 @@
         </div>
 
         <div class="col-md-4 text-center">
-            {% if not request.resolver_match.url_name == 'forecasting_cash_flow_table' %}
+            {% if  request.resolver_match.url_name == 'planning_budgeting_cash_flow_table' %}
             <a href="{% url 'cash_flow' company.company_id %}"><i class="fas fa-plus"></i></a>
             {% endif %}
         </div>
@@ -81,45 +84,47 @@
 
     <div class="table-container">
         <table class="pivot-table table table-bordered">
+            {% for cash_flow in cash_flows %}
             <thead>
                 <tr class="header-row">
                     <th class="header-col">Metrics</th>
-                    <th class="header-col" colspan="12">Monthly Data</th>
+                    <th class="header-col" colspan="12">{{cash_flow.data_name}}</th>
                 </tr>
                 <tr>
                     <th class="header-col"></th>
-                    <th class="header-col">Jan</th>
+                    <th class="header-col">{{cash_flow.period_label}}</th>
                     <!-- Add more months as needed -->
                 </tr>
             </thead>
             <tbody>
+                
                 <!-- Financing Section -->
                 <tr class="section-header">
                     <td colspan="2">Financing</td>
                 </tr>
                 <tr>
                     <td>Net Financing</td>
-                    <td class="monthly-data">$10,000</td>
+                    <td class="monthly-data">{{cash_flow.net_financing}}</td>
                 </tr>
                 <tr>
                     <td>Finance Inflow Drawing</td>
-                    <td class="monthly-data">$6,000</td>
+                    <td class="monthly-data">{{cash_flow.cf_finance_inflow_drawing}}</td>
                 </tr>
                 <tr>
                     <td>Finance Inflow Distribution</td>
-                    <td class="monthly-data">$2,000</td>
+                    <td class="monthly-data">{{cash_flow.cf_finance_inflow_distribution}}</td>
                 </tr>
                 <tr>
                     <td>Finance Inflow Other</td>
-                    <td class="monthly-data">$2,000</td>
+                    <td class="monthly-data">{{cash_flow.cf_finance_inflow_other}}</td>
                 </tr>
                 <tr>
                     <td>Finance Outflow Loan Payments</td>
-                    <td class="monthly-data">$2,000</td>
+                    <td class="monthly-data">{{cash_flow.cf_finance_outflow_loan_payments}}</td>
                 </tr>
                 <tr>
                     <td>Finance Outflow Other</td>
-                    <td class="monthly-data">$2,000</td>
+                    <td class="monthly-data">{{cash_flow.cf_finance_outflow_other}}</td>
                 </tr>
 
                 <!-- Investments Section -->
@@ -128,35 +133,35 @@
                 </tr>
                 <tr>
                     <td>Net Investments</td>
-                    <td class="monthly-data">$2,000</td>
+                    <td class="monthly-data">{{cash_flow.net_investments}}</td>
                 </tr>
                 <tr>
                     <td>Invest Inflow Loans</td>
-                    <td class="monthly-data">$2,000</td>
+                    <td class="monthly-data">{{cash_flow.cf_invest_inflow_loans}}</td>
                 </tr>
                 <tr>
                     <td>Invest Inflow Sell Property</td>
-                    <td class="monthly-data">$2,000</td>
+                    <td class="monthly-data">{{cash_flow.cf_invest_inflow_sell_property}}</td>
                 </tr>
                 <tr>
                     <td>Invest Inflow Sell Equip</td>
-                    <td class="monthly-data">$2,000</td>
+                    <td class="monthly-data">{{cash_flow.cf_invest_inflow_sell_equip}}</td>
                 </tr>
                 <tr>
                     <td>Invest Inflow Other</td>
-                    <td class="monthly-data">$2,000</td>
+                    <td class="monthly-data">{{cash_flow.cf_invest_inflow_other}}</td>
                 </tr>
                 <tr>
                     <td>Invest Outflow Buy Property</td>
-                    <td class="monthly-data">$2,000</td>
+                    <td class="monthly-data">{{cash_flow.cf_invest_outflow_buy_property}}</td>
                 </tr>
                 <tr>
                     <td>Invest Outflow Buy Equip</td>
-                    <td class="monthly-data">$2,000</td>
+                    <td class="monthly-data">{{cash_flow.cf_invest_outflow_buy_equip}}</td>
                 </tr>
                 <tr>
                     <td>Invest Outflow Other</td>
-                    <td class="monthly-data">$2,000</td>
+                    <td class="monthly-data">{{cash_flow.cf_invest_outflow_other}}</td>
                 </tr>
 
                 <!-- Operations Section -->
@@ -165,51 +170,51 @@
                 </tr>
                 <tr>
                     <td>Net Operations</td>
-                    <td class="monthly-data">$2,000</td>
+                    <td class="monthly-data">{{cash_flow.net_operations}}</td>
                 </tr>
                 <tr>
                     <td>Ops Inflow Customers</td>
-                    <td class="monthly-data">$2,000</td>
+                    <td class="monthly-data">{{cash_flow.cf_ops_inflow_customers}}</td>
                 </tr>
                 <tr>
                     <td>Ops Inflow Depreciation</td>
-                    <td class="monthly-data">$2,000</td>
+                    <td class="monthly-data">{{cash_flow.cf_ops_inflow_depreciation}}</td>
                 </tr>
                 <tr>
                     <td>Ops Inflow Amortization</td>
-                    <td class="monthly-data">$2,000</td>
+                    <td class="monthly-data">{{cash_flow.cf_ops_inflow_amortization}}</td>
                 </tr>
                 <tr>
                     <td>Ops Inflow Other</td>
-                    <td class="monthly-data">$2,000</td>
+                    <td class="monthly-data">{{cash_flow.cf_ops_inflow_other}}</td>
                 </tr>
                 <tr>
                     <td>Ops Outflow Wages</td>
-                    <td class="monthly-data">$2,000</td>
+                    <td class="monthly-data">{{cash_flow.cf_ops_outflow_wages}}</td>
                 </tr>
                 <tr>
                     <td>Ops Outflow Overhead</td>
-                    <td class="monthly-data">$2,000</td>
+                    <td class="monthly-data">{{cash_flow.cf_ops_outflow_overhead}}</td>
                 </tr>
                 <tr>
                     <td>Ops Outflow Interest</td>
-                    <td class="monthly-data">$2,000</td>
+                    <td class="monthly-data">{{cash_flow.cf_ops_outflow_interest}}</td>
                 </tr>
                 <tr>
                     <td>Ops Outflow Taxes</td>
-                    <td class="monthly-data">$2,000</td>
+                    <td class="monthly-data">{{cash_flow.cf_ops_outflow_taxes}}</td>
                 </tr>
                 <tr>
                     <td>Ops Outflow Accounts Receivable</td>
-                    <td class="monthly-data">$2,000</td>
+                    <td class="monthly-data">{{cash_flow.cf_ops_outflow_accounts_receivable}}</td>
                 </tr>
                 <tr>
                     <td>Ops Outflow Inventory Increase</td>
-                    <td class="monthly-data">$2,000</td>
+                    <td class="monthly-data">{{cash_flow.cf_ops_outflow_inventory_increase}}</td>
                 </tr>
                 <tr>
                     <td>Ops Outflow Other</td>
-                    <td class="monthly-data">$2,000</td>
+                    <td class="monthly-data">{{cash_flow.cf_ops_outflow_other}}</td>
                 </tr>
 
                 <!-- Final Section -->
@@ -218,18 +223,20 @@
                 </tr>
                 <tr>
                     <td>Beginning Balance</td>
-                    <td class="monthly-data">$2,000</td>
+                    <td class="monthly-data">{{cash_flow.cf_beginning_balance}}</td>
                 </tr>
                 <tr>
                     <td>Change in Cash</td>
-                    <td class="monthly-data">$2,000</td>
+                    <td class="monthly-data">{{cash_flow.cf_change_in_cash}}</td>
                 </tr>
                 <!-- Add more rows as needed -->
             </tbody>
+            {% endfor %}
+
         </table>
     </div>
 
-    {% if  request.resolver_match.url_name == 'forecasting_cash_flow_table' %}
+    {% if  cash_flows and request.resolver_match.url_name == 'forecasting_cash_flow_table' %}
         <button type="button" class="btn btn-secondary" style="position:absolute;right: 400px;top: 400px;">Forecast</button>
     {% endif %}
 </div>

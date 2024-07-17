@@ -62,10 +62,9 @@
 {% block content %}
 
 <div class="container mt-5">
-
     <div class="row">
         <div class="col-md-4">
-            <h6 class="mb-4">Corporate Finance - Planning & Budgeting - <b>Income Statement</b></h6>
+            <h6 class="mb-4">Corporate Finance - {% if request.resolver_match.url_name == 'planning_budgeting_income_statement_table' %} Planning & Budgeting {% elif request.resolver_match.url_name == 'forecasting_income_statement_table' %} Forecasting {% endif %} - <b>Income Statement</b></h6>
 
         </div>
         <div class="col-md-4">
@@ -79,7 +78,7 @@
         </div>
 
         <div class="col-md-4 text-center">
-            {% if not request.resolver_match.url_name == 'forecasting_income_statement_table' %}
+            {% if request.resolver_match.url_name == 'planning_budgeting_income_statement_table' %}
             <a href="{% url 'income_statement' company.company_id %}"><i class="fas fa-plus"></i></a>
             {% endif %}
         </div>
@@ -91,37 +90,40 @@
 
     <div class="table-container mt-3">
         <table class="pivot-table table table-bordered">
+            {% for income_statement in income_statements%}
             <thead>
                 <tr class="header-row">
                     <th class="header-col">Metrics</th>
-                    <th class="header-col" colspan="12">Monthly Data</th>
+                    <th class="header-col" colspan="12">{{income_statement.data_name }}</th>
                 </tr>
                 <tr>
                     <th class="header-col"></th>
-                    <th class="header-col">Jan</th>
+                    <th class="header-col">{{income_statement.period_label}}</th>
                     <!-- Add more months as needed -->
                 </tr>
             </thead>
             <tbody>
+                
+                
                 <!-- Financing Section -->
                 <tr class="section-header">
-                    <td colspan="2">Product Details </td>
+                    <td colspan="2">Product Details</td>
                 </tr>
                 <tr>
                     <td>Product Name</td>
-                    <td class="monthly-data">$10,000</td>
+                    <td class="monthly-data">{{income_statement.product_name}}</td>
                 </tr>
                 <tr>
                     <td>Total Revenue</td>
-                    <td class="monthly-data">$6,000</td>
+                    <td class="monthly-data">{{income_statement.total_revenue}}</td>
                 </tr>
                 <tr>
                     <td>Total Taxes</td>
-                    <td class="monthly-data">$2,000</td>
+                    <td class="monthly-data">{{income_statement.total_taxes}}</td>
                 </tr>
                 <tr>
                     <td>Total Dividends</td>
-                    <td class="monthly-data">$2,000</td>
+                    <td class="monthly-data">{{income_statement.total_dividends}}</td>
                 </tr>
                 <!-- Investments Section -->
                 <tr class="section-header">
@@ -129,27 +131,27 @@
                 </tr>
                 <tr>
                     <td>Total Cost of Goods Sold</td>
-                    <td class="monthly-data">$2,000</td>
+                    <td class="monthly-data">{{income_statement.total_cogs}}</td>
                 </tr>
                 <tr>
                     <td>Direct Labor</td>
-                    <td class="monthly-data">$2,000</td>
+                    <td class="monthly-data">{{income_statement.cogs_direct_labor}}</td>
                 </tr>
                 <tr>
                     <td>Material</td>
-                    <td class="monthly-data">$2,000</td>
+                    <td class="monthly-data">{{income_statement.cogs_material}}</td>
                 </tr>
                 <tr>
                     <td>Parts</td>
-                    <td class="monthly-data">$2,000</td>
+                    <td class="monthly-data">{{income_statement.cogs_parts}}</td>
                 </tr>
                 <tr>
                     <td>Distribution</td>
-                    <td class="monthly-data">$2,000</td>
+                    <td class="monthly-data">{{income_statement.cogs_distribution}}</td>
                 </tr>
                 <tr>
                     <td>Other</td>
-                    <td class="monthly-data">$2,000</td>
+                    <td class="monthly-data">{{income_statement.cogs_other}}</td>
                 </tr>
 
                 <!-- Operations Section -->
@@ -158,58 +160,62 @@
                 </tr>
                 <tr>
                     <td>Total Operating Expenses</td>
-                    <td class="monthly-data">$2,000</td>
+                    <td class="monthly-data">{{income_statement.total_operating_expenses}}</td>
                 </tr>
                 <tr>
                     <td>Rent</td>
-                    <td class="monthly-data">$2,000</td>
+                    <td class="monthly-data">{{income_statement.opexpense_rent}}</td>
                 </tr>
                 <tr>
                     <td>OUtilities</td>
-                    <td class="monthly-data">$2,000</td>
+                    <td class="monthly-data">{{income_statement.opexpense_utilities}}</td>
                 </tr>
                 <tr>
                     <td>Overhead</td>
-                    <td class="monthly-data">$2,000</td>
+                    <td class="monthly-data">{{income_statement.opexpense_overhead}}</td>
                 </tr>
                 <tr>
                     <td>Legal</td>
-                    <td class="monthly-data">$2,000</td>
+                    <td class="monthly-data">{{income_statement.opexpense_legal}}</td>
                 </tr>
                 <tr>
                     <td>Depreciation</td>
-                    <td class="monthly-data">$2,000</td>
+                    <td class="monthly-data">{{income_statement.opexpense_depreciation}}</td>
                 </tr>
                 <tr>
                     <td>Marketing Ads</td>
-                    <td class="monthly-data">$2,000</td>
+                    <td class="monthly-data">{{income_statement.opexpense_marketing_ads}}</td>
                 </tr>
                 <tr>
                     <td>Insurance</td>
-                    <td class="monthly-data">$2,000</td>
+                    <td class="monthly-data">{{income_statement.opexpense_insurance}}</td>
                 </tr>
                 <tr>
                     <td>Interest</td>
-                    <td class="monthly-data">$2,000</td>
-                </tr>
-                <tr>
-                    <td>Wages</td>
-                    <td class="monthly-data">$2,000</td>
+                    <td class="monthly-data">{{income_statement.opexpense_interest}}</td>
                 </tr>
                 <tr>
                     <td>Travel</td>
-                    <td class="monthly-data">$2,000</td>
+                    <td class="monthly-data">{{income_statement.opexpense_travel}}</td>
                 </tr>
                 <tr>
-                    <td>Other</td>
-                    <td class="monthly-data">$2,000</td>
+                    <td>Wages</td>
+                    <td class="monthly-data">{{income_statement.opexpense_wages}}</td>
                 </tr>
+                
+                <tr>
+                    <td>Other</td>
+                    <td class="monthly-data">{{income_statement.opexpense_other}}</td>
+                </tr>
+
             </tbody>
+            {% endfor %}
+
         </table>
     </div>
 
 
-    {% if  request.resolver_match.url_name == 'forecasting_income_statement_table' %}
+    {% if income_statements and  request.resolver_match.url_name == 'forecasting_income_statement_table' %}
         <button type="button" class="btn btn-secondary" style="position: absolute;right: 400px;top: 400px;">Forecast</button>
     {% endif %}
 </div>

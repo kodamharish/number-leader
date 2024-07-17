@@ -47,13 +47,9 @@
 
     <div class="container mt-5">
         
-
-
-
         <div class="row">
             <div class="col-md-4">
-                <h6 class="mb-4">Corporate Finance - Planning & Budgeting - <b>Balance Sheet Statement</b></h6>
-    
+            <h6 class="mb-4">Corporate Finance - {% if request.resolver_match.url_name == 'planning_budgeting_balance_sheet_table' %} Planning & Budgeting {% elif request.resolver_match.url_name == 'forecasting_balance_sheet_table' %} Forecasting {% endif %} - <b>Balance Sheet Statement</b></h6>
             </div>
             <div class="col-md-4">
                 <div class="d-flex">
@@ -66,127 +62,130 @@
             </div>
     
             <div class="col-md-4 text-center">
-                {% if not request.resolver_match.url_name == 'forecasting_balance_sheet_table' %}
+                {% if  request.resolver_match.url_name == 'planning_budgeting_balance_sheet_table' %}
                 <a href="{% url 'balance_sheet' company.company_id %}"><i class="fas fa-plus"></i></a>
                 {% endif %}
             </div>
     
         </div>
     
-    
 
         <div class="table-container">
             <table class="pivot-table table table-bordered">
+                {% for balance_sheet in balance_sheets %}
                 <thead>
                     <tr class="header-row">
                         <th class="header-col">Metrics</th>
-                        <th class="header-col" colspan="12">Monthly Data</th>
+                        <th class="header-col" colspan="12">{{balance_sheet.data_name}}</th>
                     </tr>
                     <tr>
                         <th class="header-col"></th>
-                        <th class="header-col">Jan</th>
+                        <th class="header-col">{{balance_sheet.period_label}}</th>
                         <!-- Add more months as needed -->
                     </tr>
                 </thead>
                 <tbody>
+                   
                     <tr>
                         <td>Total Current Assets</td>
-                        <td class="monthly-data">$10,000</td>
+                        <td class="monthly-data">{{balance_sheet.total_current_assets}}</td>
                     </tr>
                     <tr>
                         <td>Cash</td>
-                        <td class="monthly-data">$6,000</td>
+                        <td class="monthly-data">{{balance_sheet.ca_cash}}</td>
                     </tr>
                     <tr>
                         <td>Accounts Receivable</td>
-                        <td class="monthly-data">$2,000</td>
+                        <td class="monthly-data">{{balance_sheet.ca_accounts_receivables}}</td>
                     </tr>
                     <tr>
                         <td>Prepaid Expenses</td>
-                        <td class="monthly-data">$2,000</td>
+                        <td class="monthly-data">{{balance_sheet.ca_prepaid_expenses}}</td>
                     </tr>
                     <tr>
                         <td>Inventory</td>
-                        <td class="monthly-data">$2,000</td>
+                        <td class="monthly-data">{{balance_sheet.ca_inventory}}</td>
                     </tr>
                     <tr>
                         <td>Other</td>
-                        <td class="monthly-data">$2,000</td>
+                        <td class="monthly-data">{{balance_sheet.ca_other}}</td>
                     </tr>
                     <tr>
                         <td>Total Non Current Assets</td>
-                        <td class="monthly-data">$2,000</td>
+                        <td class="monthly-data">{{balance_sheet.total_non_current_assets}}</td>
                     </tr>
                     <tr>
                         <td>Property</td>
-                        <td class="monthly-data">$2,000</td>
+                        <td class="monthly-data">{{balance_sheet.nca_property}}</td>
                     </tr>
                     <tr>
                         <td>Charity</td>
-                        <td class="monthly-data">$2,000</td>
+                        <td class="monthly-data">{{balance_sheet.nca_charity}}</td>
                     </tr>
                     <tr>
                         <td>Equipment</td>
-                        <td class="monthly-data">$2,000</td>
+                        <td class="monthly-data">{{balance_sheet.nca_equipment}}</td>
                     </tr>
                     <tr>
                         <td>Leases</td>
-                        <td class="monthly-data">$2,000</td>
+                        <td class="monthly-data">{{balance_sheet.nca_leases}}</td>
                     </tr>
                     <tr>
                         <td>Others</td>
-                        <td class="monthly-data">$2,000</td>
+                        <td class="monthly-data">{{balance_sheet.nca_other}}</td>
                     </tr>
                     <tr>
                         <td>Total Current Liabilities</td>
-                        <td class="monthly-data">$2,000</td>
+                        <td class="monthly-data">{{balance_sheet.total_current_liabilities}}</td>
                     </tr>
                     <tr>
                         <td>Accounts Payable</td>
-                        <td class="monthly-data">$2,000</td>
+                        <td class="monthly-data">{{balance_sheet.cl_accounts_payable}}</td>
                     </tr>
                     <tr>
                         <td>Accrued Expenses</td>
-                        <td class="monthly-data">$2,000</td>
+                        <td class="monthly-data">{{balance_sheet.cl_accrued_expenses}}</td>
                     </tr>
                     <tr>
                         <td>Unearned Revenue</td>
-                        <td class="monthly-data">$2,000</td>
+                        <td class="monthly-data">{{balance_sheet.cl_unearned_revenue}}</td>
                     </tr>
                     <tr>
                         <td>Other</td>
-                        <td class="monthly-data">$2,000</td>
+                        <td class="monthly-data">{{balance_sheet.cl_other}}</td>
                     </tr>
                     <tr>
                         <td>Total Non Current Liabilities</td>
-                        <td class="monthly-data">$2,000</td>
+                        <td class="monthly-data">{{balance_sheet.total_non_current_liabilities}}</td>
                     </tr>
                     <tr>
                         <td>Long Term Debt</td>
-                        <td class="monthly-data">$2,000</td>
+                        <td class="monthly-data">{{balance_sheet.ncl_longterm_debt}}</td>
                     </tr>
                     <tr>
                         <td>Other</td>
-                        <td class="monthly-data">$2,000</td>
+                        <td class="monthly-data">{{balance_sheet.ncl_other}}</td>
                     </tr>
                     <tr>
                         <td>Shareholder Equity</td>
-                        <td class="monthly-data">$2,000</td>
+                        <td class="monthly-data">{{balance_sheet.shareholder_equity}}</td>
                     </tr>
                     <tr>
                         <td>Equity Investment Capital</td>
-                        <td class="monthly-data">$2,000</td>
+                        <td class="monthly-data">{{balance_sheet.equity_investment_capital}}</td>
                     </tr>
                     <tr>
                         <td>Equity Retained Earnings</td>
-                        <td class="monthly-data">$2,000</td>
+                        <td class="monthly-data">{{balance_sheet.equity_retained_earnings}}</td>
                     </tr>
                     <!-- Add more rows as needed -->
                 </tbody>
+                {% endfor %}
+
             </table>
         </div>
 
-    {% if  request.resolver_match.url_name == 'forecasting_balance_sheet_table' %}
+    {% if  balance_sheets and request.resolver_match.url_name == 'forecasting_balance_sheet_table' %}
         <button type="button" class="btn btn-secondary" style="position: absolute;right: 400px;top: 400px;">Forecast</button>
     {% endif %}
     

@@ -52,9 +52,9 @@ urlpatterns = [
     path('balance_sheet/<str:id>/',balanceSheet,name='balance_sheet'), 
     path('cash_flow/<str:id>/',cashFlow,name='cash_flow'), 
 
-    path('income_statement_table/<str:id>/',incomeStatementTable,name='income_statement_table'), 
-    path('balance_sheet_table/<str:id>/',balanceSheetTable,name='balance_sheet_table'), 
-    path('cash_flow_table/<str:id>/',cashFlowTable,name='cash_flow_table'), 
+    path('planning_budgeting_income_statement_table/<str:id>/',incomeStatementTable,name='planning_budgeting_income_statement_table'), 
+    path('planning_budgeting_balance_sheet_table/<str:id>/',balanceSheetTable,name='planning_budgeting_balance_sheet_table'), 
+    path('planning_budgeting_cash_flow_table/<str:id>/',cashFlowTable,name='planning_budgeting_cash_flow_table'), 
 
     path('forecasting_income_statement_table/<str:id>/',incomeStatementTable,name='forecasting_income_statement_table'),
     path('forecasting_balance_sheet_table/<str:id>/',balanceSheetTable,name='forecasting_balance_sheet_table'), 
