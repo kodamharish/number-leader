@@ -13,84 +13,110 @@
 {% include './company_profile.html' %}
 
 <div class="main-content">
+
+
     <div class="container mt-5">
-        
         <div class="row">
             <div class="col-md-4">
-                <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#addBusinessPlan">
-                    Add Business Plan
+                <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#addProductVideo">
+                    Add Product Video
                 </button>
                 <!-- The Modal -->
-                <div class="modal" id="addBusinessPlan">
+                <div class="modal" id="addProductVideo">
                     <div class="modal-dialog">
                         <div class="modal-content">
+    
                             <!-- Modal Header -->
                             <div class="modal-header">
-                                <h4 class="modal-title">Business Plan</h4>
+                                <h4 class="modal-title">Product Video </h4>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                             </div>
+    
                             <!-- Modal body -->
                             <div class="modal-body text-center">
                                 <form method="POST" action="#" enctype="multipart/form-data">
                                     {% csrf_token %}
                                     <div class="mb-3 mt-3 inline">
-                                        <label for="business_plan">Business Plan</label>
-                                        <input type="file" class="w-50" name="business_plan" required>
+                                        <label for="pitch_and_product">Product Video File</label>
+                                        <input type="file" class="w-50" name="pitch_and_product" required>
                                     </div>
-                                    <button type="submit" class="btn btn-primary">Submit</button>
+                                 <button type="submit" class="btn btn-primary">Submit</button>
                                 </form>
+                                
                             </div>
+    
                             <!-- Modal footer -->
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
                             </div>
+    
                         </div>
                     </div>
                 </div>
             </div>
+    
             <div class="col-md-4">
-                <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#updateBusinessPlan">
-                    Update Business Plan
+                <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#updateProductVideo">
+                    Update Product Video
                 </button>
                 <!-- The Modal -->
-                <div class="modal" id="updateBusinessPlan">
+                <div class="modal" id="updateProductVideo">
                     <div class="modal-dialog">
                         <div class="modal-content">
+    
                             <!-- Modal Header -->
                             <div class="modal-header">
-                                <h4 class="modal-title">Update Business Plan</h4>
+                                <h4 class="modal-title">Update Product Video</h4>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                             </div>
+    
                             <!-- Modal body -->
                             <div class="modal-body text-center">
                                 <form method="POST" action="#" enctype="multipart/form-data">
                                     {% csrf_token %}
                                     <div class="mb-3 mt-3 inline">
-                                        <label for="new_business_plan">New Business Plan</label>
-                                        <input type="file" class="w-50" name="new_business_plan" required>
+                                        <label for="new_pitch_and_product">New Product Video File</label>
+                                        <input type="file" class="w-50" name="new_pitch_and_product" required>
                                     </div>
-                                    <button type="submit" class="btn btn-primary">Submit</button>
+                                 <button type="submit" class="btn btn-primary">Submit</button>
                                 </form>
+                                
                             </div>
+    
                             <!-- Modal footer -->
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
                             </div>
+    
                         </div>
                     </div>
                 </div>
             </div>
+    
             <div class="col-md-4"></div>
+    
+    
+    
         </div>
-
-        {% if company_profile.business_plan %}
+    
+    
+        {% if company_profile.pitch_and_product %}
         <div class="row mt-4 text-center">
             <div class="col-md-12">
-                <embed src="{% static company_profile.business_plan.url %}"  width="800px"  height="550px"   type="application/pdf">
-
+                <video controls id="video" width="800px"  height="400px">
+                    <source
+                        src="{% static company_profile.pitch_and_product.url %}"
+                        type="video/mp4"  >
+                    Your browser does not support the video tag.
+                </video>
             </div>
         </div>
         {% endif %}
+    
     </div>
+
+
 </div>
+
+
 {% endblock %}

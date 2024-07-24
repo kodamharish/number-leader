@@ -114,23 +114,20 @@
 
 
 <div class="container mt-4">
-
     <form method="POST" action="#" enctype="multipart/form-data">
-        {% csrf_token %}
         <div class="table-responsive table-container">
             <table class="table table-bordered table-wrapper">
                 <thead>
                     <tr>
                         <th>Breakdown</th> 
-                        <th class="rowview1">TTM   {{income_statement.date|date:'d-m-Y'}}</th>
+                        <th>TTM  {{income_statement.date|date:'d-m-Y'}}</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <!-- <tr>
+                    <tr>
                         <td>Total Revenue</td>
                         <td><input type="number" class="form-control" name="total_revenue" readonly></td>
-                    </tr> -->
-
+                    </tr>
                     <tr>
                         <td>Operating Revenue</td>
                         <td><input type="number" class="form-control" name="operating_revenue"></td>
@@ -139,158 +136,187 @@
                         <td>Cost of Revenue</td>
                         <td><input type="number" class="form-control" name="cost_of_revenue"></td>
                     </tr>
-                    <!-- <tr>
+                    <tr>
                         <td>Gross Profit</td>
-                        <td><input type="number" class="form-control" name="gross_profit"></td>
-                    </tr> -->
-                    <!-- <tr>
+                        <td><input type="number" class="form-control" name="gross_profit" readonly></td>
+                    </tr>
+                    <tr>
                         <td>Operating Expense</td>
-                        <td><input type="number" class="form-control" name="operating_expense"></td>
-                    </tr> -->
-
-                    <!-- <tr>
+                        <td><input type="number" class="form-control" name="operating_expense" readonly></td>
+                    </tr>
+                    <tr>
                         <td>Selling, General and Administrative Expense</td>
-                        <td><input type="number" class="form-control" name="selling_general_and_administrative_expense"></td>
-                    </tr> -->
-
+                        <td><input type="number" class="form-control" name="selling_general_and_administrative_expense" readonly></td>
+                    </tr>
                     <tr>
                         <td>General & Administrative Expenses</td>
                         <td><input type="number" class="form-control" name="general_and_administrative_expenses"></td>
                     </tr>
-
                     <tr>
                         <td>Selling and Marketing Expense</td>
                         <td><input type="number" class="form-control" name="selling_and_marketing_expense"></td>
                     </tr>
-
                     <tr>
-                        <td>Research and Development Expense </td>
+                        <td>Research and Development Expense</td>
                         <td><input type="number" class="form-control" name="research_and_development_expense"></td>
                     </tr>
-
-                    <!-- <tr>
+                    <tr>
                         <td>Operating Income</td>
-                        <td><input type="number" class="form-control" name="operating_income"></td>
-                    </tr> -->
-
-                    <!-- <tr>
+                        <td><input type="number" class="form-control" name="operating_income" readonly></td>
+                    </tr>
+                    <tr>
                         <td>Net Non Operating Interest Income / Expense</td>
-                        <td><input type="number" class="form-control" name="net_non_operating_interest_income_expense">
-                        </td>
-                    </tr> -->
-
+                        <td><input type="number" class="form-control" name="net_non_operating_interest_income_expense" readonly></td>
+                    </tr>
                     <tr>
                         <td>Interest Income Non Operating</td>
                         <td><input type="number" class="form-control" name="interest_income_non_operating"></td>
                     </tr>
-
                     <tr>
                         <td>Interest Expense Non Operating</td>
                         <td><input type="number" class="form-control" name="interest_expense_non_operating"></td>
                     </tr>
-
-                    <!-- <tr>
+                    <tr>
                         <td>Other Income/(Expense)</td>
-                        <td><input type="number" class="form-control" name="other_income_or_expense"></td>
-                    </tr> -->
-
+                        <td><input type="number" class="form-control" name="other_income_or_expense" readonly></td>
+                    </tr>
                     <tr>
                         <td>Gain/(Loss) on Sale of Security</td>
                         <td><input type="number" class="form-control" name="gain_or_loss_on_sale_of_security"></td>
                     </tr>
-
                     <tr>
                         <td>Special Income/(Charges)</td>
                         <td><input type="number" class="form-control" name="special_income_or_charges"></td>
                     </tr>
-
                     <tr>
                         <td>Write Off</td>
                         <td><input type="number" class="form-control" name="write_off"></td>
                     </tr>
-
                     <tr>
-                        <td>Other Non Operating Income/ (Expenses)</td>
+                        <td>Other Non Operating Income/(Expenses)</td>
                         <td><input type="number" class="form-control" name="other_non_operating_income_or_expenses"></td>
                     </tr>
-                    
-                    <!-- <tr>
+                    <tr>
                         <td>Pretax Income</td>
-                        <td><input type="number" class="form-control" name="pretax_income"></td>
-                    </tr> -->
+                        <td><input type="number" class="form-control" name="pretax_income" readonly></td>
+                    </tr>
                     <tr>
                         <td>Tax Provision</td>
                         <td><input type="number" class="form-control" name="tax_provision"></td>
                     </tr>
-                    
-                    <!-- <tr>
+                    <tr>
                         <td>Net Income</td>
-                        <td><input type="number" class="form-control" name="net_income">
-                        </td>
-                    </tr> -->
+                        <td><input type="number" class="form-control" name="net_income" readonly></td>
+                    </tr>
                     <tr>
                         <td>Preference Share Dividends</td>
-                        <td><input type="number" class="form-control" name="preference_share_dividends">
-                        </td>
+                        <td><input type="number" class="form-control" name="preference_share_dividends"></td>
                     </tr>
-
-                    <!-- <tr>
+                    <tr>
                         <td>Net Income to Common Stockholders</td>
-                        <td><input type="number" class="form-control" name="net_income_to_common_stockholders">
-                        </td>
-                    </tr> -->
-
+                        <td><input type="number" class="form-control" name="net_income_to_common_stockholders" readonly></td>
+                    </tr>
                     <tr>
                         <td>Equity Share Dividends</td>
-                        <td><input type="number" class="form-control" name="equity_share_dividends">
-                        </td>
+                        <td><input type="number" class="form-control" name="equity_share_dividends"></td>
                     </tr>
-
-                    <!-- <tr>
+                    <tr>
                         <td>Retained Earnings</td>
-                        <td><input type="number" class="form-control" name="retained_earnings">
-                        </td>
-                    </tr> -->
-
-
-                    <!-- <tr>
+                        <td><input type="number" class="form-control" name="retained_earnings" readonly></td>
+                    </tr>
+                    <tr>
                         <td>Basic EPS</td>
                         <td><input type="number" class="form-control" name="basic_eps"></td>
-                    </tr> -->
+                    </tr>
                     <tr>
                         <td>Diluted EPS</td>
                         <td><input type="number" class="form-control" name="diluted_eps"></td>
                     </tr>
-
                     <tr>
                         <td>Depreciation and Amortization</td>
                         <td><input type="number" class="form-control" name="depreciation_and_amortization"></td>
                     </tr>
-
-                    <!-- <tr>
+                    <tr>
                         <td>EBITDA</td>
-                        <td><input type="number" class="form-control" name="ebitda"></td>
-                    </tr> -->
-
-                    
-
-
-
-
+                        <td><input type="number" class="form-control" name="ebitda" readonly></td>
+                    </tr>
                 </tbody>
             </table>
         </div>
-
-
-        <!-- Button to Add More Advisors -->
         <div class="row mt-5">
             <div class="col-md-12 text-center">
                 <button type="submit" class="btn btn-primary" id="submit_income_statement">Submit</button>
             </div>
         </div>
-
     </form>
 </div>
+
+
+
+
+<script>
+    function calculateValues() {
+        // Get all input values
+        const operatingRevenue = parseFloat(document.querySelector('input[name="operating_revenue"]').value) || 0;
+        const costOfRevenue = parseFloat(document.querySelector('input[name="cost_of_revenue"]').value) || 0;
+        const operatingExpense = parseFloat(document.querySelector('input[name="operating_expense"]').value) || 0;
+        const sgnaExpense = parseFloat(document.querySelector('input[name="selling_general_and_administrative_expense"]').value) || 0;
+        const gaExpense = parseFloat(document.querySelector('input[name="general_and_administrative_expenses"]').value) || 0;
+        const smExpense = parseFloat(document.querySelector('input[name="selling_and_marketing_expense"]').value) || 0;
+        const rdExpense = parseFloat(document.querySelector('input[name="research_and_development_expense"]').value) || 0;
+        const interestIncomeNonOp = parseFloat(document.querySelector('input[name="interest_income_non_operating"]').value) || 0;
+        const interestExpenseNonOp = parseFloat(document.querySelector('input[name="interest_expense_non_operating"]').value) || 0;
+        const otherIncomeExpense = parseFloat(document.querySelector('input[name="other_income_or_expense"]').value) || 0;
+        const gainLossSaleSecurity = parseFloat(document.querySelector('input[name="gain_or_loss_on_sale_of_security"]').value) || 0;
+        const specialIncomeCharges = parseFloat(document.querySelector('input[name="special_income_or_charges"]').value) || 0;
+        const writeOff = parseFloat(document.querySelector('input[name="write_off"]').value) || 0;
+        const otherNonOpIncomeExpense = parseFloat(document.querySelector('input[name="other_non_operating_income_or_expenses"]').value) || 0;
+        const taxProvision = parseFloat(document.querySelector('input[name="tax_provision"]').value) || 0;
+        const prefShareDividends = parseFloat(document.querySelector('input[name="preference_share_dividends"]').value) || 0;
+        const equityShareDividends = parseFloat(document.querySelector('input[name="equity_share_dividends"]').value) || 0;
+        const depreciationAmortization = parseFloat(document.querySelector('input[name="depreciation_and_amortization"]').value) || 0;
+
+        // Calculations
+        const totalRevenue = operatingRevenue;
+        const grossProfit = totalRevenue - costOfRevenue;
+        const operating_expense = sgnaExpense + rdExpense;
+        const sgnaExpense1 =  gaExpense + smExpense;
+
+        const operatingIncome = grossProfit - operatingExpense;
+        const netNonOpInterestIncomeExpense = interestIncomeNonOp - interestExpenseNonOp;
+        const otherIncome = gainLossSaleSecurity + specialIncomeCharges + writeOff + otherNonOpIncomeExpense;
+        const pretaxIncome = operatingIncome + netNonOpInterestIncomeExpense + otherIncome;
+        const netIncome = pretaxIncome - taxProvision;
+        const netIncomeToCommonStockholders = netIncome - prefShareDividends;
+        const retainedEarnings = netIncomeToCommonStockholders - equityShareDividends;
+        const ebitda = operatingIncome + depreciationAmortization;
+
+        // Set calculated values
+        document.querySelector('input[name="total_revenue"]').value = totalRevenue.toFixed(2);
+        document.querySelector('input[name="gross_profit"]').value = grossProfit.toFixed(2);
+        document.querySelector('input[name="selling_general_and_administrative_expense"]').value = sgnaExpense1.toFixed(2)
+
+        document.querySelector('input[name="operating_expense"]').value = operating_expense.toFixed(2);
+
+
+
+        document.querySelector('input[name="operating_income"]').value = operatingIncome.toFixed(2);
+        document.querySelector('input[name="net_non_operating_interest_income_expense"]').value = netNonOpInterestIncomeExpense.toFixed(2);
+        document.querySelector('input[name="other_income_or_expense"]').value = otherIncome.toFixed(2);
+        document.querySelector('input[name="pretax_income"]').value = pretaxIncome.toFixed(2);
+        document.querySelector('input[name="net_income"]').value = netIncome.toFixed(2);
+        document.querySelector('input[name="net_income_to_common_stockholders"]').value = netIncomeToCommonStockholders.toFixed(2);
+        document.querySelector('input[name="retained_earnings"]').value = retainedEarnings.toFixed(2);
+        document.querySelector('input[name="ebitda"]').value = ebitda.toFixed(2);
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const inputs = document.querySelectorAll('input[type="number"]');
+        inputs.forEach(input => {
+            input.addEventListener('input', calculateValues);
+        });
+    });
+</script>
 
 
 

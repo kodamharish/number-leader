@@ -1,42 +1,61 @@
 {% extends '../base.html' %}
 {% load static %}
 {% block content %}
-<div class="container">
-    <div class="row mt-5 mb-5 text-center">
-        <div class="col-md-6 mb-4">
-            <div class="card">
-                <div class="card-body">
-                    <h3>My Companies</h3>
-                    <ul>
-                        {% if current_user_companies %}
-                        {% for company in current_user_companies %}
-                        <li><button type="button"
-                                class="btn btn-secondary  pl pr w-50 mt-2 mb-2">{{company.name}}
-                            </button></li>
-                        {% endfor %}
-                        {% endif %}
-                    </ul>
+<style>
+    .main-content {
+        margin-left: 290px;
+        /* Adjust according to sidebar width */
+        padding: 40px;
+        /* Reduce padding for a cleaner look */
+        transition: margin-left 0.3s;
+        /* Smooth transition for sidebar width changes */
+    }
+</style>
+
+
+<div class="main-content">
+    <div class="container">
+        <div class="row mt-5 mb-5 text-center">
+            <div class="col-md-6 mb-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h3>My Companies</h3>
+                        <ul>
+                            {% if current_user_companies %}
+                            {% for company in current_user_companies %}
+                            <li><button type="button" class="btn btn-secondary  pl pr w-50 mt-2 mb-2">{{company.name}}
+                                </button></li>
+                            {% endfor %}
+                            {% endif %}
+                        </ul>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="col-md-6">
-            <div class="card">
-                <div class="card-body">
-                    <h3>My Team</h3>
-                    <ul>
-                      
-                
-                       
-                        <!-- <li><button type="button" class="btn btn-secondary pl pr w-50  mt-3 mb-3">Team
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h3>My Team</h3>
+                        <ul>
+
+
+
+                            <!-- <li><button type="button" class="btn btn-secondary pl pr w-50  mt-3 mb-3">Team
                                 X</button>
                         </li> -->
 
-                    </ul>
+                            
+
+                            <!-- {{first_company_id}} -->
+
+
+                            
+
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-    <!-- <div class="row mt-5">
+        <!-- <div class="row mt-5">
         <div class="col-md-6 mb-4">
             <div class="card align-items-center">
                 <div class="card-body ">
@@ -95,5 +114,6 @@
     </div> -->
 
 
+    </div>
 </div>
 {% endblock content %}

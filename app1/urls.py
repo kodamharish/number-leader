@@ -32,7 +32,9 @@ urlpatterns = [
 
 
     #Admin
+    #path('admin_dashboard/<str:id>/',adminDashboard,name='admin_dashboard'),
     path('admin_dashboard',adminDashboard,name='admin_dashboard'),
+
     
     #company
     path('add_company',addCompany,name='add_company'), 
@@ -44,21 +46,27 @@ urlpatterns = [
 
     path('basic_information/<str:id>/',basicInformation,name='basic_information'),
     path('business_plan/<str:id>/',businessPlan,name='business_plan'),
+    path('pitch_and_product/<str:id>/',pitchAndProduct,name='pitch_and_product'),
+
     path('cap_table/<str:id>/',capTable,name='cap_table'),
     path('cap_table_form/<str:id>/',capTableForm,name='cap_table_form'),
 
 
     path('income_statement/<str:id>/',incomeStatement,name='income_statement'), 
-    path('balance_sheet/<str:id>/',balanceSheet,name='balance_sheet'), 
-    path('cash_flow/<str:id>/',cashFlow,name='cash_flow'), 
+    #path('balance_sheet/<str:id>/',balanceSheet,name='balance_sheet'), 
+    #path('cash_flow/<str:id>/',cashFlow,name='cash_flow'), 
+
+    path('admin_investor',adminInvestor,name='admin_investor'),
+    path('investor_details/<str:id>/',investordetails,name='investor_details'),
+
 
     path('planning_budgeting_income_statement_table/<str:id>/',incomeStatementTable,name='planning_budgeting_income_statement_table'), 
-    path('planning_budgeting_balance_sheet_table/<str:id>/',balanceSheetTable,name='planning_budgeting_balance_sheet_table'), 
-    path('planning_budgeting_cash_flow_table/<str:id>/',cashFlowTable,name='planning_budgeting_cash_flow_table'), 
+    #path('planning_budgeting_balance_sheet_table/<str:id>/',balanceSheetTable,name='planning_budgeting_balance_sheet_table'), 
+    #path('planning_budgeting_cash_flow_table/<str:id>/',cashFlowTable,name='planning_budgeting_cash_flow_table'), 
 
     path('forecasting_income_statement_table/<str:id>/',incomeStatementTable,name='forecasting_income_statement_table'),
-    path('forecasting_balance_sheet_table/<str:id>/',balanceSheetTable,name='forecasting_balance_sheet_table'), 
-    path('forecasting_cash_flow_table/<str:id>/',cashFlowTable,name='forecasting_cash_flow_table'), 
+    #path('forecasting_balance_sheet_table/<str:id>/',balanceSheetTable,name='forecasting_balance_sheet_table'), 
+    #path('forecasting_cash_flow_table/<str:id>/',cashFlowTable,name='forecasting_cash_flow_table'), 
 
 
 

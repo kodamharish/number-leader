@@ -47,8 +47,8 @@ admin.site.register(ExecutiveMember)
 admin.site.register(Advisor)
 admin.site.register(Challenge)
 admin.site.register(SolvedProblem)
-admin.site.register(BalanceSheet)
-admin.site.register(CashFlow)
+#admin.site.register(BalanceSheet)
+#admin.site.register(CashFlow)
 admin.site.register(IncomeStatement)
 
 

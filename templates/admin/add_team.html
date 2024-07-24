@@ -1,4 +1,10 @@
-{% extends '../base.html' %} {% block content %}
+{% extends '../base.html' %}
+ {% block content %}
+ <style>
+    label{
+        width:150px;
+    }
+ </style>
 <div class="container">
     <form method="post">
         {% csrf_token %}

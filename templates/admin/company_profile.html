@@ -111,26 +111,34 @@
 
             <div class="dropdown-container">
                 <a href="{% url 'basic_information' company.company_id %}" data-info="Basic Info">Basic Information</a>
-                <a href="#" data-info="Business Plan">Business Plan</a>
-                <a href="#" data-info="Pitch & Product">Pitch & Product</a>
+                <a href="{% url 'business_plan' company.company_id%}" data-info="Business Plan">Business Plan</a>
+                <a href="{% url 'pitch_and_product' company.company_id%}" data-info="Pitch & Product">Pitch & Product</a>
                 <a href="#" data-info="Organization">Organization</a>
-                <a href="#" data-info="Cap Table">Cap Table</a>
+                <a href="{% url 'cap_table' company.company_id %}" data-info="Cap Table">Cap Table</a>
             </div>
+
+            <!-- <div class="dropdown-container">
+                <a href="#" data-info="Basic Info">Basic Information</a>
+                <a href="#" data-info="Business Plan">Business Plan</a>
+                <a href="{% url 'pitch_and_product' company.company_id%}" data-info="Pitch & Product">Pitch & Product</a>
+                <a href="#" data-info="Organization">Organization</a>
+                <a href="{% url 'cap_table' company.company_id %}" data-info="Cap Table">Cap Table</a>
+            </div> -->
 
             <a class="dropdown-btn">Corporate Finance</a>
             <div class="dropdown-container">
                 <a class="dropdown-btn" href="#">Planning and Budgeting</a>
                 <div class="dropdown-container">
                     <a href="{% url 'planning_budgeting_income_statement_table' company.company_id  %}" data-info="Income Statement details...">Income Statement</a>
-                    <a href="{% url 'planning_budgeting_balance_sheet_table' company.company_id %}" data-info="Balance Sheet details...">Balance Sheet</a>
-                    <a href="{% url 'planning_budgeting_cash_flow_table' company.company_id %}" data-info="Cash Flow details...">Cash Flow</a>
+                    <a href="#" data-info="Balance Sheet details...">Balance Sheet</a>
+                    <a href="#" data-info="Cash Flow details...">Cash Flow</a>
                 </div>
                 <a href="#" data-info="Forecasting details...">Industry Benchmarking</a>
                 <a class="dropdown-btn" href="#">Forecasting</a>
                 <div class="dropdown-container">
                     <a href="{% url 'forecasting_income_statement_table' company.company_id %}" data-info="Income Statement details...">Income Statement</a>
-                    <a href="{% url 'forecasting_balance_sheet_table' company.company_id  %}" data-info="Balance Sheet details...">Balance Sheet</a>
-                    <a href="{% url 'forecasting_cash_flow_table'  company.company_id %}" data-info="Cash Flow details...">Cash Flow</a>
+                    <a href="#" data-info="Balance Sheet details...">Balance Sheet</a>
+                    <a href="#" data-info="Cash Flow details...">Cash Flow</a>
                 </div>
                 <a href="#" data-info="Performance Management details...">Business Modeling and Valuation</a>
             </div>

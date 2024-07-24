@@ -71,6 +71,7 @@ def contact(request):
 #         return render(request, 'login.html')
     
 def login1(request):
+    first_company_id = first_company_id
     if request.method == 'POST':
         username = request.POST.get('username')
         password = request.POST.get('password')
@@ -90,7 +91,7 @@ def login1(request):
                 else:
                     request.session.set_expiry(0)  # Browser close
                 if user.user_type == 'admin':
-                    return redirect('admin_dashboard')
+                    return redirect('admin_dashboard',first_company_id)
                 if user.user_type == 'super_admin':
                     return redirect('super_admin_dashboard')
                
@@ -120,7 +121,8 @@ def login1(request):
 
 
 
-def login(request):
+def login11(request):
+
     if request.method == 'POST':
         username = request.POST.get('username')
         password = request.POST.get('password')
@@ -137,9 +139,9 @@ def login(request):
                     request.session.set_expiry(86400)  # 1 day
                 else:
                     request.session.set_expiry(0)  # Browser close
-                
+                first_company_id = first_company_id
                 if user.user_type == 'admin':
-                    return redirect('admin_dashboard')
+                    return redirect('admin_dashboard',first_company_id)
                 elif user.user_type == 'super_admin':
                     return redirect('super_admin_dashboard')
                 # Uncomment and adjust these lines if needed
@@ -171,6 +173,72 @@ def login(request):
         return render(request, 'login.html')
     else:
         return render(request, 'login.html')
+
+
+from .context_processors import getAllCompanies
+def login(request):
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        remember_me = request.POST.get('remember_me')  # Get the "Remember Me" value
+
+        # Check if the user exists in both User and Team models
+        user = User.objects.filter(username=username).first()
+        team = Team.objects.filter(username=username).first()
+
+        if user:
+            if check_password(password, user.password):
+                request.session['current_user_id'] = user.user_id
+                if remember_me:
+                    request.session.set_expiry(86400)  # 1 day
+                else:
+                    request.session.set_expiry(0)  # Browser close
+
+                # Get the first_company_id using getAllCompanies function
+                companies_info = getAllCompanies(request)
+                current_user_company_profile1 = getAllCompanies(request)
+
+                first_company_id = companies_info.get('first_company_id')
+                current_user_company_profile2 = current_user_company_profile1.get('current_user_company_profiles')
+
+                print('current_user_company_profile2',current_user_company_profile2)
+                if user.user_type == 'admin':
+                    return redirect('admin_dashboard')
+                    
+
+                elif user.user_type == 'super_admin':
+                    return redirect('super_admin_dashboard')
+                # Uncomment and adjust these lines if needed
+                # elif user.user_type == 'editor':
+                #     return redirect('editor_dashboard')
+                # elif user.user_type == 'user':
+                #     return redirect('user_dashboard')
+            else:
+                messages.error(request, 'Invalid username or password')
+        elif team:
+            if check_password(password, team.password):
+                request.session['current_subuser_id'] = team.subuser_id
+                if remember_me:
+                    request.session.set_expiry(86400)  # 1 day
+                else:
+                    request.session.set_expiry(0)  # Browser close
+                
+                if team.user_type == 'admin':
+                    return redirect('admin_dashboard')
+                elif team.user_type == 'editor':
+                    return redirect('editor_dashboard')
+                elif team.user_type == 'user':
+                    return redirect('user_dashboard')
+            else:
+                messages.error(request, 'Invalid username or password')
+        else:
+            messages.error(request, 'Invalid username or password')
+        
+        return render(request, 'login.html')
+    else:
+        return render(request, 'login.html')
+
+
 def logout(request):
     request.session.flush()
     return redirect('login')
@@ -553,10 +621,22 @@ def deleteTeam(request,id):
     return redirect('my_team')
  
 
-def adminDashboard(request):
-    return render(request,'admin/dashboard.html')
 
+
+def adminDashboard(request):
+    # companys = Company.objects.all()
+    # company_profile = CompanyProfile.objects.get(company_id = id)
+    # founders = Founder.objects.filter(company_id = id)
+    # clients = Client.objects.filter(company_id = id)
+
+    # context = {
+    #     'companys':companys,
+    #     # 'company_profile': company_profile,
+    #     # 'founders':founders,
+    #     # 'clients':clients
+    # }
     
+    return render(request,'admin/dashboard.html') 
 
 def addCompany(request):
     if request.method == 'POST':
@@ -1203,8 +1283,6 @@ def basicInformation(request,id):
     founders = Founder.objects.filter(company_id = id)
     clients = Client.objects.filter(company_id = id)
 
-
-   
     context = {
         'company':company,
         'company_profile': company_profile,
@@ -1214,19 +1292,60 @@ def basicInformation(request,id):
     return render(request,'admin/basic_information.html',context)
 
 def businessPlan(request, id):
+    company = Company.objects.get(company_id = id)
     company_profile = CompanyProfile.objects.get(company_id = id)
-    
-   
-    context = {
-        'company_profile': company_profile,
-    }
+    if request.method == 'POST':
+        business_plan = request.FILES.get('business_plan')
+        new_business_plan = request.FILES.get('new_business_plan')
+        company_profile.business_plan= business_plan
+       
+        if new_business_plan:
+            company_profile.business_plan= new_business_plan
+            #company_profile.save()
+        company_profile.save()
 
-    return render(request, 'admin/business_plan.html', context)
+        return redirect('business_plan',company.company_id)
+
+    else:
+        
+        context = {
+            'company':company,
+            'company_profile': company_profile,
+        }
+
+        return render(request, 'admin/business_plan.html', context)
+    
+def pitchAndProduct(request, id):
+    company = Company.objects.get(company_id = id)
+    company_profile = CompanyProfile.objects.get(company_id = id)
+    if request.method == 'POST':
+        pitch_and_product = request.FILES.get('pitch_and_product')
+        new_pitch_and_product = request.FILES.get('new_pitch_and_product')
+        company_profile.pitch_and_product= pitch_and_product
+        if new_pitch_and_product:
+            company_profile.business_plan= new_pitch_and_product
+            #company_profile.save()
+        company_profile.save()
+        return redirect('pitch_and_product',company.company_id)
+
+    else:
+        
+        context = {
+            'company':company,
+            'company_profile': company_profile,
+        }
+
+        return render(request, 'admin/pitch_and_product.html', context)
 
 def capTable(request, id):
+    company = Company.objects.get(company_id = id)
     company_profile = CompanyProfile.objects.get(company_id = id)
     cap_table = CapTable.objects.filter(company_id = id)
-    context = {'company_profile': company_profile,'cap_table': cap_table }
+    context = {
+        'company':company,
+        'company_profile': company_profile,
+        'cap_table': cap_table 
+        }
    
 
     return render(request, 'admin/cap_table.html', context)
@@ -1255,9 +1374,10 @@ def capTableForm(request, id):
 
     else:
         company_profile = CompanyProfile.objects.get(company_id = id)
-        context ={'company_profile': company_profile}
+        
     
         context = {
+            'company':company,
             'company_profile': company_profile,
         }
 
@@ -1274,7 +1394,7 @@ def financialStatement(request,id):
     return render(request,'admin/financial_statement.html',context)
 
 
-def incomeStatement(request,id):
+def incomeStatement12(request,id):
     company = Company.objects.get(company_id=id)
 
     if request.method == 'POST':
@@ -1355,208 +1475,191 @@ def incomeStatement(request,id):
         return render(request,'admin/income_statement.html',context)
 
 
-def balanceSheet(request,id):
-    company = Company.objects.get(company_id = id)
+# def balanceSheet(request,id):
+#     company = Company.objects.get(company_id = id)
 
-    if request.method == 'POST':
-        company_id = request.POST.get('company_id')
-        begin_date = request.POST.get('begin_date')
-        end_date = request.POST.get('end_date')
-        #current assets
-        total_current_assets = request.POST.get('total_current_assets')
-        ca_cash = request.POST.get('ca_cash')
-        ca_accounts_receivables = request.POST.get('ca_accounts_receivables')
-        ca_prepaid_expenses = request.POST.get('ca_prepaid_expenses')
-        ca_inventory = request.POST.get('ca_inventory')
-        ca_other = request.POST.get('ca_other')
-        #non current assets
-        total_non_current_assets = request.POST.get('total_non_current_assets')
-        nca_property = request.POST.get('nca_property')
-        nca_charity = request.POST.get('nca_charity')
-        nca_equipment = request.POST.get('nca_equipment')
-        nca_leases = request.POST.get('nca_leases')
-        nca_other = request.POST.get('nca_other')
-        #current liabilities
-        total_current_liabilities = request.POST.get('total_current_liabilities')
-        cl_accounts_payable = request.POST.get('cl_accounts_payable')
-        cl_accrued_expenses = request.POST.get('cl_accrued_expenses')
-        cl_unearned_revenue = request.POST.get('cl_unearned_revenue')
-        cl_other = request.POST.get('cl_other')
-        #non current liabilities
-        total_non_current_liabilities = request.POST.get('total_non_current_liabilities')
-        ncl_longterm_debt = request.POST.get('ncl_longterm_debt')
-        ncl_other = request.POST.get('ncl_other')
-        #equity
-        shareholder_equity = request.POST.get('shareholder_equity')
-        equity_investment_capital = request.POST.get('equity_investment_capital')
-        equity_retained_earnings = request.POST.get('equity_retained_earnings')
+#     if request.method == 'POST':
+#         company_id = request.POST.get('company_id')
+#         begin_date = request.POST.get('begin_date')
+#         end_date = request.POST.get('end_date')
+#         #current assets
+#         total_current_assets = request.POST.get('total_current_assets')
+#         ca_cash = request.POST.get('ca_cash')
+#         ca_accounts_receivables = request.POST.get('ca_accounts_receivables')
+#         ca_prepaid_expenses = request.POST.get('ca_prepaid_expenses')
+#         ca_inventory = request.POST.get('ca_inventory')
+#         ca_other = request.POST.get('ca_other')
+#         #non current assets
+#         total_non_current_assets = request.POST.get('total_non_current_assets')
+#         nca_property = request.POST.get('nca_property')
+#         nca_charity = request.POST.get('nca_charity')
+#         nca_equipment = request.POST.get('nca_equipment')
+#         nca_leases = request.POST.get('nca_leases')
+#         nca_other = request.POST.get('nca_other')
+#         #current liabilities
+#         total_current_liabilities = request.POST.get('total_current_liabilities')
+#         cl_accounts_payable = request.POST.get('cl_accounts_payable')
+#         cl_accrued_expenses = request.POST.get('cl_accrued_expenses')
+#         cl_unearned_revenue = request.POST.get('cl_unearned_revenue')
+#         cl_other = request.POST.get('cl_other')
+#         #non current liabilities
+#         total_non_current_liabilities = request.POST.get('total_non_current_liabilities')
+#         ncl_longterm_debt = request.POST.get('ncl_longterm_debt')
+#         ncl_other = request.POST.get('ncl_other')
+#         #equity
+#         shareholder_equity = request.POST.get('shareholder_equity')
+#         equity_investment_capital = request.POST.get('equity_investment_capital')
+#         equity_retained_earnings = request.POST.get('equity_retained_earnings')
 
-        user_context = custom_user(request)
-        current_user = user_context.get('current_user') 
+#         user_context = custom_user(request)
+#         current_user = user_context.get('current_user') 
 
         
 
-        balance_sheet = BalanceSheet(
-            company_id = company,
-            begin_date = begin_date,
-            end_date = end_date,
+#         balance_sheet = BalanceSheet(
+#             company_id = company,
+#             begin_date = begin_date,
+#             end_date = end_date,
 
-            total_current_assets = total_current_assets,
-            ca_cash = ca_cash,
-            ca_accounts_receivables = ca_accounts_receivables,
-            ca_prepaid_expenses = ca_prepaid_expenses,
-            ca_inventory = ca_inventory,
-            ca_other = ca_other,
+#             total_current_assets = total_current_assets,
+#             ca_cash = ca_cash,
+#             ca_accounts_receivables = ca_accounts_receivables,
+#             ca_prepaid_expenses = ca_prepaid_expenses,
+#             ca_inventory = ca_inventory,
+#             ca_other = ca_other,
 
-            total_non_current_assets = total_non_current_assets,
-            nca_property = nca_property,
-            nca_charity = nca_charity,
-            nca_equipment = nca_equipment,
-            nca_leases = nca_leases,
-            nca_other = nca_other,
+#             total_non_current_assets = total_non_current_assets,
+#             nca_property = nca_property,
+#             nca_charity = nca_charity,
+#             nca_equipment = nca_equipment,
+#             nca_leases = nca_leases,
+#             nca_other = nca_other,
 
-            total_current_liabilities = total_current_liabilities,
-            cl_accounts_payable = cl_accounts_payable,
-            cl_accrued_expenses = cl_accrued_expenses,
-            cl_unearned_revenue = cl_unearned_revenue,
-            cl_other = cl_other,
+#             total_current_liabilities = total_current_liabilities,
+#             cl_accounts_payable = cl_accounts_payable,
+#             cl_accrued_expenses = cl_accrued_expenses,
+#             cl_unearned_revenue = cl_unearned_revenue,
+#             cl_other = cl_other,
 
-            total_non_current_liabilities = total_non_current_liabilities,
-            ncl_longterm_debt = ncl_longterm_debt,
-            ncl_other = ncl_other,
+#             total_non_current_liabilities = total_non_current_liabilities,
+#             ncl_longterm_debt = ncl_longterm_debt,
+#             ncl_other = ncl_other,
 
-            shareholder_equity = shareholder_equity,
-            equity_investment_capital = equity_investment_capital,
-            equity_retained_earnings = equity_retained_earnings,
+#             shareholder_equity = shareholder_equity,
+#             equity_investment_capital = equity_investment_capital,
+#             equity_retained_earnings = equity_retained_earnings,
 
-            creator_id = current_user.user_id,
-            #modifier_id = modifier_id,
+#             creator_id = current_user.user_id,
+#             #modifier_id = modifier_id,
             
 
-        )
-        balance_sheet.save()
-        return redirect('planning_budgeting_balance_sheet_table',company.company_id)
+#         )
+#         balance_sheet.save()
+#         return redirect('planning_budgeting_balance_sheet_table',company.company_id)
 
 
 
         
-    else:
-        context = {'company':company}
-        return render(request,'admin/balance_sheet.html',context)
+#     else:
+#         context = {'company':company}
+#         return render(request,'admin/balance_sheet.html',context)
 
-def cashFlow(request,id):
-    company = Company.objects.get(company_id = id)
+# def cashFlow(request,id):
+#     company = Company.objects.get(company_id = id)
 
-    if request.method == 'POST':
-        company_id = request.POST.get('company_id')
-        begin_date = request.POST.get('begin_date')
-        end_date = request.POST.get('end_date')
-        #financing
-        net_financing = request.POST.get('net_financing')
-        cf_finance_inflow_drawing = request.POST.get('cf_finance_inflow_drawing')
-        cf_finance_inflow_distribution = request.POST.get('cf_finance_inflow_distribution')
-        cf_finance_inflow_other = request.POST.get('cf_finance_inflow_other')
-        cf_finance_outflow_loan_payments = request.POST.get('cf_finance_outflow_loan_payments')
-        cf_finance_outflow_other = request.POST.get('cf_finance_outflow_other')
-        #investments
-        net_investments = request.POST.get('net_investments')
-        cf_invest_inflow_loans = request.POST.get('cf_invest_inflow_loans')
-        cf_invest_inflow_sell_property = request.POST.get('cf_invest_inflow_sell_property')
-        cf_invest_inflow_sell_equip = request.POST.get('cf_invest_inflow_sell_equip')
-        cf_invest_inflow_other = request.POST.get('cf_invest_inflow_other')
-        cf_invest_outflow_buy_property = request.POST.get('cf_invest_outflow_buy_property')
-        cf_invest_outflow_buy_equip = request.POST.get('cf_invest_outflow_buy_equip')
-        cf_invest_outflow_other = request.POST.get('cf_invest_outflow_other')
-        #operations
-        net_operations = request.POST.get('net_operations')
-        cf_ops_inflow_customers = request.POST.get('cf_ops_inflow_customers')
-        cf_ops_inflow_depreciation = request.POST.get('cf_ops_inflow_depreciation')
-        cf_ops_inflow_amortization = request.POST.get('cf_ops_inflow_amortization')
-        cf_ops_inflow_other = request.POST.get('cf_ops_inflow_other')
-        cf_ops_outflow_wages = request.POST.get('cf_ops_outflow_wages')
-        cf_ops_outflow_overhead = request.POST.get('cf_ops_outflow_overhead')
-        cf_ops_outflow_interest = request.POST.get('cf_ops_outflow_interest')
-        cf_ops_outflow_taxes = request.POST.get('cf_ops_outflow_taxes')
-        cf_ops_outflow_accounts_receivable = request.POST.get('cf_ops_outflow_accounts_receivable')
-        cf_ops_outflow_inventory_increase = request.POST.get('cf_ops_outflow_inventory_increase')
-        cf_ops_outflow_other = request.POST.get('cf_ops_outflow_other')
-        #cash flow
-        cf_beginning_balance = request.POST.get('cf_beginning_balance')
-        cf_change_in_cash = request.POST.get('cf_change_in_cash')
-        user_context = custom_user(request)
-        current_user = user_context.get('current_user') 
+#     if request.method == 'POST':
+#         company_id = request.POST.get('company_id')
+#         begin_date = request.POST.get('begin_date')
+#         end_date = request.POST.get('end_date')
+#         #financing
+#         net_financing = request.POST.get('net_financing')
+#         cf_finance_inflow_drawing = request.POST.get('cf_finance_inflow_drawing')
+#         cf_finance_inflow_distribution = request.POST.get('cf_finance_inflow_distribution')
+#         cf_finance_inflow_other = request.POST.get('cf_finance_inflow_other')
+#         cf_finance_outflow_loan_payments = request.POST.get('cf_finance_outflow_loan_payments')
+#         cf_finance_outflow_other = request.POST.get('cf_finance_outflow_other')
+#         #investments
+#         net_investments = request.POST.get('net_investments')
+#         cf_invest_inflow_loans = request.POST.get('cf_invest_inflow_loans')
+#         cf_invest_inflow_sell_property = request.POST.get('cf_invest_inflow_sell_property')
+#         cf_invest_inflow_sell_equip = request.POST.get('cf_invest_inflow_sell_equip')
+#         cf_invest_inflow_other = request.POST.get('cf_invest_inflow_other')
+#         cf_invest_outflow_buy_property = request.POST.get('cf_invest_outflow_buy_property')
+#         cf_invest_outflow_buy_equip = request.POST.get('cf_invest_outflow_buy_equip')
+#         cf_invest_outflow_other = request.POST.get('cf_invest_outflow_other')
+#         #operations
+#         net_operations = request.POST.get('net_operations')
+#         cf_ops_inflow_customers = request.POST.get('cf_ops_inflow_customers')
+#         cf_ops_inflow_depreciation = request.POST.get('cf_ops_inflow_depreciation')
+#         cf_ops_inflow_amortization = request.POST.get('cf_ops_inflow_amortization')
+#         cf_ops_inflow_other = request.POST.get('cf_ops_inflow_other')
+#         cf_ops_outflow_wages = request.POST.get('cf_ops_outflow_wages')
+#         cf_ops_outflow_overhead = request.POST.get('cf_ops_outflow_overhead')
+#         cf_ops_outflow_interest = request.POST.get('cf_ops_outflow_interest')
+#         cf_ops_outflow_taxes = request.POST.get('cf_ops_outflow_taxes')
+#         cf_ops_outflow_accounts_receivable = request.POST.get('cf_ops_outflow_accounts_receivable')
+#         cf_ops_outflow_inventory_increase = request.POST.get('cf_ops_outflow_inventory_increase')
+#         cf_ops_outflow_other = request.POST.get('cf_ops_outflow_other')
+#         #cash flow
+#         cf_beginning_balance = request.POST.get('cf_beginning_balance')
+#         cf_change_in_cash = request.POST.get('cf_change_in_cash')
+#         user_context = custom_user(request)
+#         current_user = user_context.get('current_user') 
        
-        cash_flow = CashFlow(
-           company_id = company,
-           begin_date = begin_date,
-           end_date = end_date,
+#         cash_flow = CashFlow(
+#            company_id = company,
+#            begin_date = begin_date,
+#            end_date = end_date,
 
-           net_financing = net_financing,
-           cf_finance_inflow_drawing = cf_finance_inflow_drawing,
-           cf_finance_inflow_distribution = cf_finance_inflow_distribution,
-           cf_finance_inflow_other = cf_finance_inflow_other,
-           cf_finance_outflow_loan_payments = cf_finance_outflow_loan_payments,
-           cf_finance_outflow_other = cf_finance_outflow_other,
+#            net_financing = net_financing,
+#            cf_finance_inflow_drawing = cf_finance_inflow_drawing,
+#            cf_finance_inflow_distribution = cf_finance_inflow_distribution,
+#            cf_finance_inflow_other = cf_finance_inflow_other,
+#            cf_finance_outflow_loan_payments = cf_finance_outflow_loan_payments,
+#            cf_finance_outflow_other = cf_finance_outflow_other,
 
-           net_investments = net_investments,
-           cf_invest_inflow_loans = cf_invest_inflow_loans,
-           cf_invest_inflow_sell_property = cf_invest_inflow_sell_property,
-           cf_invest_inflow_sell_equip = cf_invest_inflow_sell_equip,
-           cf_invest_inflow_other = cf_invest_inflow_other,
-           cf_invest_outflow_buy_property = cf_invest_outflow_buy_property,
-           cf_invest_outflow_buy_equip = cf_invest_outflow_buy_equip,
-           cf_invest_outflow_other = cf_invest_outflow_other,
+#            net_investments = net_investments,
+#            cf_invest_inflow_loans = cf_invest_inflow_loans,
+#            cf_invest_inflow_sell_property = cf_invest_inflow_sell_property,
+#            cf_invest_inflow_sell_equip = cf_invest_inflow_sell_equip,
+#            cf_invest_inflow_other = cf_invest_inflow_other,
+#            cf_invest_outflow_buy_property = cf_invest_outflow_buy_property,
+#            cf_invest_outflow_buy_equip = cf_invest_outflow_buy_equip,
+#            cf_invest_outflow_other = cf_invest_outflow_other,
 
-           net_operations = net_operations,
-           cf_ops_inflow_customers = cf_ops_inflow_customers,
-           cf_ops_inflow_depreciation = cf_ops_inflow_depreciation,
-           cf_ops_inflow_amortization = cf_ops_inflow_amortization,
-           cf_ops_inflow_other = cf_ops_inflow_other,
-           cf_ops_outflow_wages = cf_ops_outflow_wages,
-           cf_ops_outflow_overhead = cf_ops_outflow_overhead,
-           cf_ops_outflow_interest = cf_ops_outflow_interest,
-           cf_ops_outflow_taxes = cf_ops_outflow_taxes,
-           cf_ops_outflow_accounts_receivable = cf_ops_outflow_accounts_receivable,
-           cf_ops_outflow_inventory_increase = cf_ops_outflow_inventory_increase,
-           cf_ops_outflow_other = cf_ops_outflow_other,
+#            net_operations = net_operations,
+#            cf_ops_inflow_customers = cf_ops_inflow_customers,
+#            cf_ops_inflow_depreciation = cf_ops_inflow_depreciation,
+#            cf_ops_inflow_amortization = cf_ops_inflow_amortization,
+#            cf_ops_inflow_other = cf_ops_inflow_other,
+#            cf_ops_outflow_wages = cf_ops_outflow_wages,
+#            cf_ops_outflow_overhead = cf_ops_outflow_overhead,
+#            cf_ops_outflow_interest = cf_ops_outflow_interest,
+#            cf_ops_outflow_taxes = cf_ops_outflow_taxes,
+#            cf_ops_outflow_accounts_receivable = cf_ops_outflow_accounts_receivable,
+#            cf_ops_outflow_inventory_increase = cf_ops_outflow_inventory_increase,
+#            cf_ops_outflow_other = cf_ops_outflow_other,
 
-           cf_beginning_balance = cf_beginning_balance,
-           cf_change_in_cash = cf_change_in_cash,
+#            cf_beginning_balance = cf_beginning_balance,
+#            cf_change_in_cash = cf_change_in_cash,
 
-           creator_id = current_user.user_id,
-           #modifier_id = modifier_id
+#            creator_id = current_user.user_id,
+#            #modifier_id = modifier_id
             
-       )
-        cash_flow.save()
-        return redirect('planning_budgeting_cash_flow_table',company.company_id)
+#        )
+#         cash_flow.save()
+#         return redirect('planning_budgeting_cash_flow_table',company.company_id)
 
 
-    else:
-        context = {'company':company}
-        return render(request,'admin/cash_flow.html',context)
+#     else:
+#         context = {'company':company}
+#         return render(request,'admin/cash_flow.html',context)
 
 
 from calendar import month_abbr
 from datetime import date
 
-# def get_period_label(begin_date, end_date):
-#     # Define financial quarters
-#     quarters = {
-#         'Q1': (1, 3),  # January to March
-#         'Q2': (4, 6),  # April to June
-#         'Q3': (7, 9),  # July to September
-#         'Q4': (10, 12)  # October to December
-#     }
 
-#     if begin_date.month == end_date.month:
-#         # Same month
-#         return month_abbr[begin_date.month],f'Monthly Data'
-#     for quarter, (start_month, end_month) in quarters.items():
-#         if begin_date.month == start_month and end_date.month == end_month:
-#             months = [month_abbr[m] for m in range(start_month, end_month + 1)]
-#             return f'{quarter} ({", ".join(months)})',f'Quarterly Data'
-#     # Custom or irregular period
-#     return f'{begin_date.strftime("%b %d, %Y")} - {end_date.strftime("%b %d, %Y")}',f'irregular data'
 
 
 
@@ -1590,46 +1693,375 @@ def get_period_label(begin_date, end_date):
     # Custom or irregular period
     return f'{begin_date.strftime("%b %d, %Y")} - {end_date.strftime("%b %d, %Y")}', 'Irregular Data'
 
-# def get_last_seven_years_labels():
-#     current_year = date.today().year
-#     return [str(year) for year in range(current_year - 7, current_year)]
 
 
-# def get_last_seven_years_labels():
-#     current_year = date.today().year
-#     return [str(year) for year in range(current_year, current_year - 7, -1)]
+import calendar
+import json
+from datetime import datetime
+
+def get_months_quarters_years():
+    # Get all month names
+    months = list(calendar.month_name)[1:]  # Exclude empty string at index 0
+    
+    # Define quarters
+    # quarters = {
+    #     'Q1': months[0:3],   # January, February, March
+    #     'Q2': months[3:6],   # April, May, June
+    #     'Q3': months[6:9],   # July, August, September
+    #     'Q4': months[9:12]   # October, November, December
+    # }
+
+    # Define quarters with month names
+    quarters = {
+        'Q1': 'Jan,Feb,Mar',
+        'Q2': 'Apr,May,Jun',
+        'Q3': 'Jul,Aug,Sep',
+        'Q4': 'Oct,Nov,Dec'
+    }
+    
+    # Get the last seven years
+    current_year = datetime.now().year
+    years = [str(current_year - i) for i in range(7)]
+    
+    return months, quarters, years
+
+# Example usage
+months, quarters, years = get_months_quarters_years()
+
+# # Convert to JSON for embedding in HTML/JavaScript
+months_json = json.dumps(months)
+#quarters_json = json.dumps(list(quarters.keys()))
+quarters_json = json.dumps(quarters)  # No need to list keys; use values directly
+years_json = json.dumps(years)
+
+# # Print JSON strings (or send them to your template rendering system)
+# print(months_json)
+# print(quarters_json)
+# print(years_json)
+
 
 def get_last_seven_years_labels():
     current_year = date.today().year
     return [str(year) for year in range(current_year - 1, current_year - 8, -1)]
 
-def incomeStatementTable(request,id):
-    company = Company.objects.get(company_id = id)
-    income_statements = IncomeStatement.objects.filter(company_id = id)
-    last_seven_years_labels = get_last_seven_years_labels()
-    for income_statement in income_statements:
-        income_statement.period_label,income_statement.data_name = get_period_label(income_statement.begin_date, income_statement.end_date)
-    context = {'company':company,'income_statements':income_statements,'last_seven_years_labels': last_seven_years_labels}
-    return render(request,'admin/income_statement_table.html',context)
 
-def balanceSheetTable(request,id):
-    company = Company.objects.get(company_id = id)
-    balance_sheets = BalanceSheet.objects.filter(company_id = id)
-    last_seven_years_labels = get_last_seven_years_labels()
-    for balance_sheet in balance_sheets:
-        balance_sheet.period_label,balance_sheet.data_name = get_period_label(balance_sheet.begin_date, balance_sheet.end_date)
-    context = {'company':company,'balance_sheets':balance_sheets,'last_seven_years_labels':last_seven_years_labels }
-    return render(request,'admin/balance_sheet_table.html',context)
 
-def cashFlowTable(request,id):
-    company = Company.objects.get(company_id = id)
-    cash_flows = CashFlow.objects.filter(company_id = id)
-    last_seven_years_labels = get_last_seven_years_labels()
 
-    for cash_flow in cash_flows:
-        cash_flow.period_label,cash_flow.data_name = get_period_label(cash_flow.begin_date, cash_flow.end_date)
-    context = {'company':company,'cash_flows':cash_flows,'last_seven_years_labels':last_seven_years_labels }
-    return render(request,'admin/cash_flow_table.html',context)
+
+
+
+
+
+
+    
+from datetime import datetime
+
+
+def incomeStatementOld(request,id):
+    company = Company.objects.get(company_id=id)
+    income_statement = IncomeStatement.objects.filter(company_id=id).last()
+
+
+    if request.method == 'POST':
+        #income_statement.total_revenue = request.POST.get('total_revenue')
+        operating_revenue = int(request.POST.get('operating_revenue'))
+        cost_of_revenue = int(request.POST.get('cost_of_revenue'))
+        research_and_development_expense = int(request.POST.get('research_and_development_expense'))
+        general_and_administrative_expenses = int(request.POST.get('general_and_administrative_expenses'))
+        selling_and_marketing_expense = int(request.POST.get('selling_and_marketing_expense'))
+        interest_income_non_operating = int(request.POST.get('interest_income_non_operating'))
+        interest_expense_non_operating = int(request.POST.get('interest_expense_non_operating'))
+
+        gain_or_loss_on_sale_of_security = int(request.POST.get('gain_or_loss_on_sale_of_security'))
+        special_income_or_charges = int(request.POST.get('special_income_or_charges'))
+        write_off = int(request.POST.get('write_off'))
+        other_non_operating_income_or_expenses = int(request.POST.get('other_non_operating_income_or_expenses'))
+        tax_provision = int(request.POST.get('tax_provision'))
+        preference_share_dividends = int(request.POST.get('preference_share_dividends'))
+        equity_share_dividends = int(request.POST.get('equity_share_dividends'))
+        diluted_eps = int(request.POST.get('diluted_eps'))
+        depreciation_and_amortization = int(request.POST.get('depreciation_and_amortization'))
+
+        
+
+        income_statement.operating_revenue = operating_revenue
+        income_statement.cost_of_revenue = cost_of_revenue
+        #income_statement.gross_profit = request.POST.get('gross_profit')
+        #income_statement.operating_expense = request.POST.get('operating_expense')
+        #income_statement.selling_general_and_administrative_expense = request.POST.get('selling_general_and_administrative_expense')
+        income_statement.general_and_administrative_expenses = general_and_administrative_expenses
+        income_statement.selling_and_marketing_expense = selling_and_marketing_expense
+
+        income_statement.research_and_development_expense = research_and_development_expense
+        #income_statement.operating_income = request.POST.get('operating_income')
+        #income_statement.net_non_operating_interest_income_expense = request.POST.get('net_non_operating_interest_income_expense')
+        income_statement.interest_income_non_operating = interest_income_non_operating
+        income_statement.interest_expense_non_operating = interest_expense_non_operating
+        #income_statement.other_income_or_expense = request.POST.get('other_income_or_expense')
+        income_statement.gain_or_loss_on_sale_of_security = gain_or_loss_on_sale_of_security
+        income_statement.special_income_or_charges = special_income_or_charges
+        income_statement.write_off = write_off
+        income_statement.other_non_operating_income_or_expenses = other_non_operating_income_or_expenses
+        #income_statement.pretax_income = request.POST.get('pretax_income')
+        income_statement.tax_provision = tax_provision
+
+        #income_statement.net_income = request.POST.get('net_income')
+        income_statement.preference_share_dividends = preference_share_dividends
+        #income_statement.net_income_to_common_stockholders = request.POST.get('net_income_to_common_stockholders')
+        income_statement.equity_share_dividends = equity_share_dividends
+        #income_statement.retained_earnings = request.POST.get('retained_earnings')
+        #income_statement.basic_eps = request.POST.get('basic_eps')
+        income_statement.diluted_eps = diluted_eps
+        income_statement.depreciation_and_amortization = depreciation_and_amortization
+        #income_statement.ebitda = request.POST.get('ebitda')
+        income_statement.total_revenue = operating_revenue
+        income_statement.gross_profit = income_statement.total_revenue - cost_of_revenue
+        income_statement.operating_expense =  income_statement.selling_general_and_administrative_expense + research_and_development_expense 
+        income_statement.selling_general_and_administrative_expense = general_and_administrative_expenses + selling_and_marketing_expense
+
+        income_statement.operating_income = income_statement.gross_profit - income_statement.operating_expense
+        income_statement.net_non_operating_interest_income_expense = interest_income_non_operating - interest_expense_non_operating
+
+        income_statement.other_income_or_expense = gain_or_loss_on_sale_of_security + special_income_or_charges + write_off + other_non_operating_income_or_expenses
+
+        income_statement.pretax_income = income_statement.operating_income + income_statement.net_non_operating_interest_income_expense + income_statement.other_income_or_expense
+        income_statement.net_income = income_statement.pretax_income - tax_provision
+        income_statement.net_income_to_common_stockholders = income_statement.net_income - preference_share_dividends
+        income_statement.retained_earnings = income_statement.net_income_to_common_stockholders - equity_share_dividends
+        income_statement.basic_eps = income_statement.net_income_to_common_stockholders
+        income_statement.ebitda = income_statement.operating_income + depreciation_and_amortization
+
+
+
+
+
+        
+        income_statement.save()
+        return redirect('planning_budgeting_income_statement_table',id)
+
+
+    else:
+        context = {'company':company,'income_statement':income_statement}
+        return render(request,'admin/income_statement.html',context)
+    
+
+
+def incomeStatement(request, id):
+    company = Company.objects.get(company_id=id)
+    income_statement = IncomeStatement.objects.filter(company_id=id).last()
+
+    if request.method == 'POST':
+        # Retrieve and validate POST data
+        operating_revenue = request.POST.get('operating_revenue')
+        cost_of_revenue = request.POST.get('cost_of_revenue')
+        research_and_development_expense = request.POST.get('research_and_development_expense')
+        general_and_administrative_expenses = request.POST.get('general_and_administrative_expenses')
+        selling_and_marketing_expense = request.POST.get('selling_and_marketing_expense')
+        interest_income_non_operating = request.POST.get('interest_income_non_operating')
+        interest_expense_non_operating = request.POST.get('interest_expense_non_operating')
+        gain_or_loss_on_sale_of_security = request.POST.get('gain_or_loss_on_sale_of_security')
+        special_income_or_charges = request.POST.get('special_income_or_charges')
+        write_off = request.POST.get('write_off')
+        other_non_operating_income_or_expenses = request.POST.get('other_non_operating_income_or_expenses')
+        tax_provision = request.POST.get('tax_provision')
+        preference_share_dividends = request.POST.get('preference_share_dividends')
+        equity_share_dividends = request.POST.get('equity_share_dividends')
+        diluted_eps = request.POST.get('diluted_eps')
+        depreciation_and_amortization = request.POST.get('depreciation_and_amortization')
+
+        # Convert to integers if not None, otherwise set to 0
+        operating_revenue = int(operating_revenue) if operating_revenue else 0
+        cost_of_revenue = int(cost_of_revenue) if cost_of_revenue else 0
+        research_and_development_expense = int(research_and_development_expense) if research_and_development_expense else 0
+        general_and_administrative_expenses = int(general_and_administrative_expenses) if general_and_administrative_expenses else 0
+        selling_and_marketing_expense = int(selling_and_marketing_expense) if selling_and_marketing_expense else 0
+        interest_income_non_operating = int(interest_income_non_operating) if interest_income_non_operating else 0
+        interest_expense_non_operating = int(interest_expense_non_operating) if interest_expense_non_operating else 0
+        gain_or_loss_on_sale_of_security = int(gain_or_loss_on_sale_of_security) if gain_or_loss_on_sale_of_security else 0
+        special_income_or_charges = int(special_income_or_charges) if special_income_or_charges else 0
+        write_off = int(write_off) if write_off else 0
+        other_non_operating_income_or_expenses = int(other_non_operating_income_or_expenses) if other_non_operating_income_or_expenses else 0
+        tax_provision = int(tax_provision) if tax_provision else 0
+        preference_share_dividends = int(preference_share_dividends) if preference_share_dividends else 0
+        equity_share_dividends = int(equity_share_dividends) if equity_share_dividends else 0
+        diluted_eps = int(diluted_eps) if diluted_eps else 0
+        depreciation_and_amortization = int(depreciation_and_amortization) if depreciation_and_amortization else 0
+
+        # Ensure income_statement is not None
+        # if income_statement is None:
+        #     income_statement = IncomeStatement(company_id=id)
+
+        # Update income statement fields
+        income_statement.operating_revenue = operating_revenue
+        income_statement.cost_of_revenue = cost_of_revenue
+        income_statement.general_and_administrative_expenses = general_and_administrative_expenses
+        income_statement.selling_and_marketing_expense = selling_and_marketing_expense
+        income_statement.research_and_development_expense = research_and_development_expense
+        income_statement.interest_income_non_operating = interest_income_non_operating
+        income_statement.interest_expense_non_operating = interest_expense_non_operating
+        income_statement.gain_or_loss_on_sale_of_security = gain_or_loss_on_sale_of_security
+        income_statement.special_income_or_charges = special_income_or_charges
+        income_statement.write_off = write_off
+        income_statement.other_non_operating_income_or_expenses = other_non_operating_income_or_expenses
+        income_statement.tax_provision = tax_provision
+        income_statement.preference_share_dividends = preference_share_dividends
+        income_statement.equity_share_dividends = equity_share_dividends
+        income_statement.diluted_eps = diluted_eps
+        income_statement.depreciation_and_amortization = depreciation_and_amortization
+
+        # Calculate derived fields
+        income_statement.total_revenue = operating_revenue
+        income_statement.gross_profit = income_statement.total_revenue - cost_of_revenue
+        income_statement.selling_general_and_administrative_expense = general_and_administrative_expenses + selling_and_marketing_expense
+        income_statement.operating_expense = income_statement.selling_general_and_administrative_expense + research_and_development_expense
+        income_statement.operating_income = income_statement.gross_profit - income_statement.operating_expense
+        income_statement.net_non_operating_interest_income_expense = interest_income_non_operating - interest_expense_non_operating
+        income_statement.other_income_or_expense = gain_or_loss_on_sale_of_security + special_income_or_charges + write_off + other_non_operating_income_or_expenses
+        income_statement.pretax_income = income_statement.operating_income + income_statement.net_non_operating_interest_income_expense + income_statement.other_income_or_expense
+        income_statement.net_income = income_statement.pretax_income - tax_provision
+        income_statement.net_income_to_common_stockholders = income_statement.net_income - preference_share_dividends
+        income_statement.retained_earnings = income_statement.net_income_to_common_stockholders - equity_share_dividends
+        income_statement.basic_eps = income_statement.net_income_to_common_stockholders
+        income_statement.ebitda = income_statement.operating_income + depreciation_and_amortization
+
+        # Save income statement
+        income_statement.save()
+
+        return redirect('planning_budgeting_income_statement_table', id)
+    else:
+        context = {'company': company, 'income_statement': income_statement}
+        return render(request, 'admin/income_statement.html', context)
+
+
+def incomeStatementTable(request, id):
+    company = Company.objects.get(company_id=id)
+    if request.method == 'POST':
+        select_type_of_data = request.POST.get('select_type_of_data')
+
+        if select_type_of_data == 'monthly':
+            year = int(request.POST.get('year'))
+            month_name = request.POST.get('month')
+            #print(year, month_name, 'monthly')
+
+            # Convert month name to month number
+            month = datetime.strptime(month_name, '%B').month
+            date = datetime(year, month, 1)
+            
+            income_statement = IncomeStatement(
+                company_id=company,
+                date=date,
+                monthly_or_quarterly_or_yearly = month_name 
+            )
+            income_statement.save()
+            return redirect('income_statement', id)
+
+        elif select_type_of_data == 'quarterly':
+            year = int(request.POST.get('year'))
+            quarter = request.POST.get('quarter').split()[0]
+            quarter_value = request.POST.get('quarter')
+            #print(year, quarter, 'quarterly')
+
+            # Map quarters to starting months
+            quarter_start_months = {
+                'Q1': 1,
+                'Q2': 4,
+                'Q3': 7,
+                'Q4': 10
+            }
+            month = quarter_start_months[quarter]
+            date = datetime(year, month, 1)
+            
+            income_statement = IncomeStatement(
+                company_id=company,
+                date=date,
+                #monthly_or_quarterly_or_yearly = quarter_value +" "+ str(year)
+                monthly_or_quarterly_or_yearly = quarter_value 
+
+            )
+            income_statement.save()
+            return redirect('income_statement', id)
+
+        elif select_type_of_data == 'yearly':
+            year = int(request.POST.get('year'))
+            #print(year, 'yearly')
+            date = datetime(year, 1, 1)
+            
+            income_statement = IncomeStatement(
+                company_id=company,
+                date=date,
+                monthly_or_quarterly_or_yearly = year
+            )
+            income_statement.save()
+            return redirect('income_statement', id)
+    
+    else:
+        company = Company.objects.get(company_id=id)
+        income_statements = IncomeStatement.objects.filter(company_id=id)
+        months, quarters, years = get_months_quarters_years()
+        
+        context = {
+            'company': company,
+            'income_statements': income_statements,
+            'months': months,
+            'quarters': quarters,
+            'years': years,
+            'months_json': months_json,
+            'quarters_json': quarters_json,
+            'years_json': years_json
+        }
+        return render(request, 'admin/income_statement_table.html', context)
+
+
+
+
+# def balanceSheetTable(request,id):
+#     company = Company.objects.get(company_id = id)
+#     balance_sheets = BalanceSheet.objects.filter(company_id = id)
+#     last_seven_years_labels = get_last_seven_years_labels()
+#     for balance_sheet in balance_sheets:
+#         balance_sheet.period_label,balance_sheet.data_name = get_period_label(balance_sheet.begin_date, balance_sheet.end_date)
+#     context = {'company':company,'balance_sheets':balance_sheets,'last_seven_years_labels':last_seven_years_labels }
+#     return render(request,'admin/balance_sheet_table.html',context)
+
+# def cashFlowTable(request,id):
+#     company = Company.objects.get(company_id = id)
+#     cash_flows = CashFlow.objects.filter(company_id = id)
+#     last_seven_years_labels = get_last_seven_years_labels()
+
+#     for cash_flow in cash_flows:
+#         cash_flow.period_label,cash_flow.data_name = get_period_label(cash_flow.begin_date, cash_flow.end_date)
+#     context = {'company':company,'cash_flows':cash_flows,'last_seven_years_labels':last_seven_years_labels }
+#     return render(request,'admin/cash_flow_table.html',context)
+
+
+
+
+def adminInvestor1(request):
+    return render(request,'admin/investorbase.html')
+
+
+def adminInvestor(request):
+    users = User.objects.filter(company_type='investor')
+    companies = []
+    for user in users:
+        companies.extend(user.companies.all())
+    
+    sector=Sector.objects.all()    
+    # for company in companies:
+    #     print(company.company_type)
+    return render(request, 'admin/investordash.html', {'companies': companies, 'industries':sector})
+
+def investordetails(request,id):
+    comp=Company.objects.get(company_id=id)
+    user=User.objects.get(user_id=comp.user_id)
+    context={
+        'company':comp,
+        'user':user
+    }
+    return render(request, 'admin/investorbase.html', context)
+
+
+
 
 
 #New one

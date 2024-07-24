@@ -102,12 +102,12 @@ input[type="number"]
 /* Forms */
 
 /* Login */
-label
+/* label
 {
     margin-right:25px;
     width:160px;
   
-}
+} */
 .inline
 {
     display:flex;

@@ -81,6 +81,8 @@ class CompanyProfile(models.Model):
     business_stage = models.ForeignKey('BusinessStage', on_delete=models.CASCADE)
     equity_funds_raised_so_far = models.FloatField()
     funds_needed = models.FloatField()
+    business_plan = models.FileField(upload_to='business_plan',null=True)
+    pitch_and_product = models.FileField(upload_to='pitch_and_product',null=True)
 
     
 
@@ -268,153 +270,201 @@ class CompanyRevenue(models.Model):
 
 
 
+# class IncomeStatementOld(models.Model):
+#     company_id = models.ForeignKey(Company,on_delete=models.CASCADE)
+#     begin_date = models.DateTimeField()
+#     end_date = models.DateTimeField()
+
+#     product_name = models.CharField(max_length=100)
+#     total_revenue = models.DecimalField(max_digits=10, decimal_places=2)
+#     total_taxes = models.DecimalField(max_digits=10, decimal_places=2)
+#     total_dividends = models.DecimalField(max_digits=10, decimal_places=2)
+    
+
+    
+#     total_cogs = models.DecimalField(max_digits=10, decimal_places=2)
+#     cogs_direct_labor = models.DecimalField(max_digits=10, decimal_places=2)
+#     cogs_material = models.DecimalField(max_digits=10, decimal_places=2)
+#     cogs_parts = models.DecimalField(max_digits=10, decimal_places=2)
+#     cogs_distribution = models.DecimalField(max_digits=10, decimal_places=2)
+#     cogs_other = models.DecimalField(max_digits=10, decimal_places=2)
+
+#     total_operating_expenses = models.DecimalField(max_digits=10, decimal_places=2)
+#     opexpense_rent = models.DecimalField(max_digits=10, decimal_places=2)
+#     opexpense_utilities = models.DecimalField(max_digits=10, decimal_places=2)
+#     opexpense_overhead = models.DecimalField(max_digits=10, decimal_places=2)
+#     opexpense_legal = models.DecimalField(max_digits=10, decimal_places=2)
+#     opexpense_depreciation = models.DecimalField(max_digits=10, decimal_places=2)
+#     opexpense_marketing_ads = models.DecimalField(max_digits=10, decimal_places=2)
+#     opexpense_insurance = models.DecimalField(max_digits=10, decimal_places=2)
+#     opexpense_interest = models.DecimalField(max_digits=10, decimal_places=2)
+#     opexpense_travel = models.DecimalField(max_digits=10, decimal_places=2)
+#     opexpense_wages = models.DecimalField(max_digits=10, decimal_places=2)
+#     opexpense_other = models.DecimalField(max_digits=10, decimal_places=2)
+
+    
+
+#     #creator_id = models.IntegerField()
+#     #modifier_id = models.IntegerField(null=True)
+#     creator_id = models.CharField(max_length=12)
+#     modifier_id = models.CharField(max_length=12,null=True)
+
+#     created_date = models.DateTimeField(auto_now_add=True)
+#     modified_date = models.DateTimeField(auto_now_add=True)
+
+    
+
+#     class Meta:
+#         db_table = 'nl_income_statement'
+
+
+# class BalanceSheet(models.Model):
+#     company_id = models.ForeignKey(Company,on_delete=models.CASCADE)
+#     begin_date = models.DateTimeField()
+#     end_date = models.DateTimeField()
+
+#     total_current_assets = models.DecimalField(max_digits=10, decimal_places=2)
+#     ca_cash = models.DecimalField(max_digits=10, decimal_places=2)
+#     ca_accounts_receivables = models.DecimalField(max_digits=10, decimal_places=2)
+#     ca_prepaid_expenses = models.DecimalField(max_digits=10, decimal_places=2)
+#     ca_inventory = models.DecimalField(max_digits=10, decimal_places=2)
+#     ca_other = models.DecimalField(max_digits=10, decimal_places=2)
+
+#     total_non_current_assets = models.DecimalField(max_digits=10, decimal_places=2)
+#     nca_property = models.DecimalField(max_digits=10, decimal_places=2)
+#     nca_charity = models.DecimalField(max_digits=10, decimal_places=2)
+#     nca_equipment = models.DecimalField(max_digits=10, decimal_places=2)
+#     nca_leases = models.DecimalField(max_digits=10, decimal_places=2)
+#     nca_other = models.DecimalField(max_digits=10, decimal_places=2)
+
+#     total_current_liabilities = models.DecimalField(max_digits=10, decimal_places=2)
+#     cl_accounts_payable = models.DecimalField(max_digits=10, decimal_places=2)
+#     cl_accrued_expenses = models.DecimalField(max_digits=10, decimal_places=2)
+#     cl_unearned_revenue = models.DecimalField(max_digits=10, decimal_places=2)
+#     cl_other = models.DecimalField(max_digits=10, decimal_places=2)
+
+#     total_non_current_liabilities = models.DecimalField(max_digits=10, decimal_places=2)
+#     ncl_longterm_debt = models.DecimalField(max_digits=10, decimal_places=2)
+#     ncl_other = models.DecimalField(max_digits=10, decimal_places=2)
+
+#     shareholder_equity = models.DecimalField(max_digits=10, decimal_places=2)
+#     equity_investment_capital = models.DecimalField(max_digits=10, decimal_places=2)
+#     equity_retained_earnings = models.DecimalField(max_digits=10, decimal_places=2)
+
+#     # creator_id = models.IntegerField()
+#     # modifier_id = models.IntegerField(null=True)
+    
+#     creator_id = models.CharField(max_length=12)
+#     modifier_id = models.CharField(max_length=12,null=True)
+
+#     created_date = models.DateTimeField(auto_now_add=True)
+#     modified_date = models.DateTimeField(auto_now=True)
+
+#     class Meta:
+#         db_table = 'nl_balance_sheet'
+
+
+# class CashFlow(models.Model):
+#     company_id = models.ForeignKey(Company,on_delete=models.CASCADE)
+#     begin_date = models.DateTimeField()
+#     end_date = models.DateTimeField()
+
+#     net_financing = models.DecimalField(max_digits=10, decimal_places=2)
+#     cf_finance_inflow_drawing = models.DecimalField(max_digits=10, decimal_places=2)
+#     cf_finance_inflow_distribution = models.DecimalField(max_digits=10, decimal_places=2)
+#     cf_finance_inflow_other = models.DecimalField(max_digits=10, decimal_places=2)
+#     cf_finance_outflow_loan_payments = models.DecimalField(max_digits=10, decimal_places=2)
+#     cf_finance_outflow_other = models.DecimalField(max_digits=10, decimal_places=2)
+
+
+#     net_investments = models.DecimalField(max_digits=10, decimal_places=2)
+#     cf_invest_inflow_loans = models.DecimalField(max_digits=10, decimal_places=2)
+#     cf_invest_inflow_sell_property = models.DecimalField(max_digits=10, decimal_places=2)
+#     cf_invest_inflow_sell_equip = models.DecimalField(max_digits=10, decimal_places=2)
+#     cf_invest_inflow_other = models.DecimalField(max_digits=10, decimal_places=2)
+#     cf_invest_outflow_buy_property = models.DecimalField(max_digits=10, decimal_places=2)
+#     cf_invest_outflow_buy_equip = models.DecimalField(max_digits=10, decimal_places=2)
+#     cf_invest_outflow_other = models.DecimalField(max_digits=10, decimal_places=2)
+
+
+#     net_operations = models.DecimalField(max_digits=10, decimal_places=2)
+#     cf_ops_inflow_customers = models.DecimalField(max_digits=10, decimal_places=2)
+#     cf_ops_inflow_depreciation = models.DecimalField(max_digits=10, decimal_places=2)
+#     cf_ops_inflow_amortization = models.DecimalField(max_digits=10, decimal_places=2)
+#     cf_ops_inflow_other = models.DecimalField(max_digits=10, decimal_places=2)
+#     cf_ops_outflow_wages = models.DecimalField(max_digits=10, decimal_places=2)
+#     cf_ops_outflow_overhead = models.DecimalField(max_digits=10, decimal_places=2)
+#     cf_ops_outflow_interest = models.DecimalField(max_digits=10, decimal_places=2)
+#     cf_ops_outflow_taxes = models.DecimalField(max_digits=10, decimal_places=2)
+#     cf_ops_outflow_accounts_receivable = models.DecimalField(max_digits=10, decimal_places=2)
+#     cf_ops_outflow_inventory_increase = models.DecimalField(max_digits=10, decimal_places=2)
+#     cf_ops_outflow_other = models.DecimalField(max_digits=10, decimal_places=2)
+
+    
+    
+#     cf_beginning_balance = models.DecimalField(max_digits=10, decimal_places=2)
+#     cf_change_in_cash = models.DecimalField(max_digits=10, decimal_places=2)
+
+#     # creator_id = models.IntegerField()
+#     # modifier_id = models.IntegerField(null=True)
+
+#     creator_id = models.CharField(max_length=12)
+#     modifier_id = models.CharField(max_length=12,null=True)
+
+#     created_date = models.DateTimeField(auto_now_add=True)
+#     modified_date = models.DateTimeField(auto_now_add=True)
+
+#     class Meta:
+#         db_table = 'nl_cash_flow'
+
+
 class IncomeStatement(models.Model):
     company_id = models.ForeignKey(Company,on_delete=models.CASCADE)
-    begin_date = models.DateTimeField()
-    end_date = models.DateTimeField()
+    date = models.DateTimeField()
 
-    product_name = models.CharField(max_length=100)
-    total_revenue = models.DecimalField(max_digits=10, decimal_places=2)
-    total_taxes = models.DecimalField(max_digits=10, decimal_places=2)
-    total_dividends = models.DecimalField(max_digits=10, decimal_places=2)
+    total_revenue = models.DecimalField(max_digits=10, decimal_places=2,null=True)
+    operating_revenue = models.DecimalField(max_digits=10, decimal_places=2,null=True)
+    cost_of_revenue = models.DecimalField(max_digits=10, decimal_places=2,null=True)
+    gross_profit = models.DecimalField(max_digits=10, decimal_places=2,null=True)
+    operating_expense = models.DecimalField(max_digits=10, decimal_places=2,null=True)
+    selling_general_and_administrative_expense = models.DecimalField(max_digits=10, decimal_places=2,null=True)
+    general_and_administrative_expenses = models.DecimalField(max_digits=10, decimal_places=2,null=True)
+    selling_and_marketing_expense = models.DecimalField(max_digits=10, decimal_places=2,null=True)
+    research_and_development_expense = models.DecimalField(max_digits=10, decimal_places=2,null=True)
+    operating_income = models.DecimalField(max_digits=10, decimal_places=2,null=True)
+    net_non_operating_interest_income_expense= models.DecimalField(max_digits=10, decimal_places=2,null=True)
+    interest_income_non_operating = models.DecimalField(max_digits=10, decimal_places=2,null=True)
+    interest_expense_non_operating = models.DecimalField(max_digits=10, decimal_places=2,null=True)
+    other_income_or_expense = models.DecimalField(max_digits=10, decimal_places=2,null=True)
+    gain_or_loss_on_sale_of_security = models.DecimalField(max_digits=10, decimal_places=2,null=True)
+    special_income_or_charges = models.DecimalField(max_digits=10, decimal_places=2,null=True)
+    write_off = models.DecimalField(max_digits=10, decimal_places=2,null=True)
+    other_non_operating_income_or_expenses = models.DecimalField(max_digits=10, decimal_places=2,null=True)
+    pretax_income = models.DecimalField(max_digits=10, decimal_places=2,null=True)
+    tax_provision = models.DecimalField(max_digits=10, decimal_places=2,null=True)
+    net_income = models.DecimalField(max_digits=10, decimal_places=2,null=True)
+    preference_share_dividends = models.DecimalField(max_digits=10, decimal_places=2,null=True)
+    net_income_to_common_stockholders = models.DecimalField(max_digits=10, decimal_places=2,null=True)
+    equity_share_dividends = models.DecimalField(max_digits=10, decimal_places=2,null=True)
+    retained_earnings = models.DecimalField(max_digits=10, decimal_places=2,null=True)
+    basic_eps = models.DecimalField(max_digits=10, decimal_places=2,null=True)
+    diluted_eps = models.DecimalField(max_digits=10, decimal_places=2,null=True)
+    depreciation_and_amortization = models.DecimalField(max_digits=10, decimal_places=2,null=True)
+    ebitda = models.DecimalField(max_digits=10, decimal_places=2,null=True)
     
+    monthly_or_quarterly_or_yearly = models.CharField(max_length=15,null=True)
 
-    
-    total_cogs = models.DecimalField(max_digits=10, decimal_places=2)
-    cogs_direct_labor = models.DecimalField(max_digits=10, decimal_places=2)
-    cogs_material = models.DecimalField(max_digits=10, decimal_places=2)
-    cogs_parts = models.DecimalField(max_digits=10, decimal_places=2)
-    cogs_distribution = models.DecimalField(max_digits=10, decimal_places=2)
-    cogs_other = models.DecimalField(max_digits=10, decimal_places=2)
-
-    total_operating_expenses = models.DecimalField(max_digits=10, decimal_places=2)
-    opexpense_rent = models.DecimalField(max_digits=10, decimal_places=2)
-    opexpense_utilities = models.DecimalField(max_digits=10, decimal_places=2)
-    opexpense_overhead = models.DecimalField(max_digits=10, decimal_places=2)
-    opexpense_legal = models.DecimalField(max_digits=10, decimal_places=2)
-    opexpense_depreciation = models.DecimalField(max_digits=10, decimal_places=2)
-    opexpense_marketing_ads = models.DecimalField(max_digits=10, decimal_places=2)
-    opexpense_insurance = models.DecimalField(max_digits=10, decimal_places=2)
-    opexpense_interest = models.DecimalField(max_digits=10, decimal_places=2)
-    opexpense_travel = models.DecimalField(max_digits=10, decimal_places=2)
-    opexpense_wages = models.DecimalField(max_digits=10, decimal_places=2)
-    opexpense_other = models.DecimalField(max_digits=10, decimal_places=2)
-
-    
-
-    #creator_id = models.IntegerField()
-    #modifier_id = models.IntegerField(null=True)
-    creator_id = models.CharField(max_length=12)
+    creator_id = models.CharField(max_length=12,null=True)
     modifier_id = models.CharField(max_length=12,null=True)
 
     created_date = models.DateTimeField(auto_now_add=True)
     modified_date = models.DateTimeField(auto_now_add=True)
 
-    
-
-    class Meta:
-        db_table = 'nl_income_statement'
-
-
-class BalanceSheet(models.Model):
-    company_id = models.ForeignKey(Company,on_delete=models.CASCADE)
-    begin_date = models.DateTimeField()
-    end_date = models.DateTimeField()
-
-    total_current_assets = models.DecimalField(max_digits=10, decimal_places=2)
-    ca_cash = models.DecimalField(max_digits=10, decimal_places=2)
-    ca_accounts_receivables = models.DecimalField(max_digits=10, decimal_places=2)
-    ca_prepaid_expenses = models.DecimalField(max_digits=10, decimal_places=2)
-    ca_inventory = models.DecimalField(max_digits=10, decimal_places=2)
-    ca_other = models.DecimalField(max_digits=10, decimal_places=2)
-
-    total_non_current_assets = models.DecimalField(max_digits=10, decimal_places=2)
-    nca_property = models.DecimalField(max_digits=10, decimal_places=2)
-    nca_charity = models.DecimalField(max_digits=10, decimal_places=2)
-    nca_equipment = models.DecimalField(max_digits=10, decimal_places=2)
-    nca_leases = models.DecimalField(max_digits=10, decimal_places=2)
-    nca_other = models.DecimalField(max_digits=10, decimal_places=2)
-
-    total_current_liabilities = models.DecimalField(max_digits=10, decimal_places=2)
-    cl_accounts_payable = models.DecimalField(max_digits=10, decimal_places=2)
-    cl_accrued_expenses = models.DecimalField(max_digits=10, decimal_places=2)
-    cl_unearned_revenue = models.DecimalField(max_digits=10, decimal_places=2)
-    cl_other = models.DecimalField(max_digits=10, decimal_places=2)
-
-    total_non_current_liabilities = models.DecimalField(max_digits=10, decimal_places=2)
-    ncl_longterm_debt = models.DecimalField(max_digits=10, decimal_places=2)
-    ncl_other = models.DecimalField(max_digits=10, decimal_places=2)
-
-    shareholder_equity = models.DecimalField(max_digits=10, decimal_places=2)
-    equity_investment_capital = models.DecimalField(max_digits=10, decimal_places=2)
-    equity_retained_earnings = models.DecimalField(max_digits=10, decimal_places=2)
-
-    # creator_id = models.IntegerField()
-    # modifier_id = models.IntegerField(null=True)
-    
-    creator_id = models.CharField(max_length=12)
-    modifier_id = models.CharField(max_length=12,null=True)
-
-    created_date = models.DateTimeField(auto_now_add=True)
-    modified_date = models.DateTimeField(auto_now=True)
-
-    class Meta:
-        db_table = 'nl_balance_sheet'
-
-
-class CashFlow(models.Model):
-    company_id = models.ForeignKey(Company,on_delete=models.CASCADE)
-    begin_date = models.DateTimeField()
-    end_date = models.DateTimeField()
-
-    net_financing = models.DecimalField(max_digits=10, decimal_places=2)
-    cf_finance_inflow_drawing = models.DecimalField(max_digits=10, decimal_places=2)
-    cf_finance_inflow_distribution = models.DecimalField(max_digits=10, decimal_places=2)
-    cf_finance_inflow_other = models.DecimalField(max_digits=10, decimal_places=2)
-    cf_finance_outflow_loan_payments = models.DecimalField(max_digits=10, decimal_places=2)
-    cf_finance_outflow_other = models.DecimalField(max_digits=10, decimal_places=2)
-
-
-    net_investments = models.DecimalField(max_digits=10, decimal_places=2)
-    cf_invest_inflow_loans = models.DecimalField(max_digits=10, decimal_places=2)
-    cf_invest_inflow_sell_property = models.DecimalField(max_digits=10, decimal_places=2)
-    cf_invest_inflow_sell_equip = models.DecimalField(max_digits=10, decimal_places=2)
-    cf_invest_inflow_other = models.DecimalField(max_digits=10, decimal_places=2)
-    cf_invest_outflow_buy_property = models.DecimalField(max_digits=10, decimal_places=2)
-    cf_invest_outflow_buy_equip = models.DecimalField(max_digits=10, decimal_places=2)
-    cf_invest_outflow_other = models.DecimalField(max_digits=10, decimal_places=2)
-
-
-    net_operations = models.DecimalField(max_digits=10, decimal_places=2)
-    cf_ops_inflow_customers = models.DecimalField(max_digits=10, decimal_places=2)
-    cf_ops_inflow_depreciation = models.DecimalField(max_digits=10, decimal_places=2)
-    cf_ops_inflow_amortization = models.DecimalField(max_digits=10, decimal_places=2)
-    cf_ops_inflow_other = models.DecimalField(max_digits=10, decimal_places=2)
-    cf_ops_outflow_wages = models.DecimalField(max_digits=10, decimal_places=2)
-    cf_ops_outflow_overhead = models.DecimalField(max_digits=10, decimal_places=2)
-    cf_ops_outflow_interest = models.DecimalField(max_digits=10, decimal_places=2)
-    cf_ops_outflow_taxes = models.DecimalField(max_digits=10, decimal_places=2)
-    cf_ops_outflow_accounts_receivable = models.DecimalField(max_digits=10, decimal_places=2)
-    cf_ops_outflow_inventory_increase = models.DecimalField(max_digits=10, decimal_places=2)
-    cf_ops_outflow_other = models.DecimalField(max_digits=10, decimal_places=2)
 
     
+
+
     
-    cf_beginning_balance = models.DecimalField(max_digits=10, decimal_places=2)
-    cf_change_in_cash = models.DecimalField(max_digits=10, decimal_places=2)
-
-    # creator_id = models.IntegerField()
-    # modifier_id = models.IntegerField(null=True)
-
-    creator_id = models.CharField(max_length=12)
-    modifier_id = models.CharField(max_length=12,null=True)
-
-    created_date = models.DateTimeField(auto_now_add=True)
-    modified_date = models.DateTimeField(auto_now_add=True)
-
-    class Meta:
-        db_table = 'nl_cash_flow'
-
 
 
 
