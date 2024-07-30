@@ -141,13 +141,11 @@
         }
 
         .founder-card {
-            background: white;
+            background: rgb(238, 234, 234);
             border-radius: 15px;
             overflow: hidden;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.807);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.632);
             transition: transform 0.3s ease;
-            display: flex;
-            flex-direction: column;
         }
 
         .founder-card:hover {
@@ -155,23 +153,25 @@
         }
 
         .founder-image {
-            height: 380px;
+            height: 500px;
             overflow: hidden;
+            position: relative;
         }
 
         .founder-image img {
             width: 100%;
-            height: 110%;
+            height: 150%;
             object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .founder-card:hover .founder-image img {
+            transform: scale(1.1);
         }
 
         .founder-info {
             padding: 1.5rem;
             text-align: center;
-            flex-grow: 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
         }
 
         .founder-info h3 {
@@ -187,72 +187,14 @@
             color: var(--primary-color);
             margin: 0 0.5rem;
             font-size: 1.2rem;
+            transition: color 0.3s ease;
         }
 
-        .vision-mission {
-            display: flex;
-            flex-direction: column;
-            gap: 2rem;
+        .founder-social a:hover {
+            color: var(--secondary-color);
         }
 
-        .vision,
-        .mission {
-            display: flex;
-            align-items: center;
-            background: white;
-            padding: 0.8rem;
-            border-radius: 15px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.488);
-        }
-
-        .vision img,
-        .mission img {
-            width: 45%;
-            height: 280px;
-            border-radius: 15px;
-            padding-left: 15px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        .vision {
-            flex-direction: row;
-        }
-
-        .vision h2,
-        .vision p,
-        .mission h2,
-        .mission p {
-            width: 50%;
-            padding: 0 2rem;
-        }
-
-        .mission {
-            flex-direction: row-reverse;
-        }
-
-        @media (max-width: 768px) {
-
-            .vision,
-            .mission {
-                flex-direction: column;
-            }
-
-            .vision img,
-            .mission img {
-                width: 100%;
-            }
-
-            .vision h2,
-            .vision p,
-            .mission h2,
-            .mission p {
-                width: 100%;
-                padding: 0;
-            }
-        }
-
-
+      
         .card-image {
             width: 100%;
             height: 250px;
@@ -260,31 +202,100 @@
             border-radius: 10px;
             margin-bottom: 1rem;
         }
-
-        .usp {
-            background: url('https://png.pngtree.com/background/20210709/original/pngtree-hd-abstract-tech-background-picture-image_578452.jpg') no-repeat center center;
-            background-size: cover;
-            color: white;
-            padding: 4rem 2rem;
-            text-align: center;
-            margin: 4rem 0;
-            position: relative;
+        .company-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
         }
-
-        .usp::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.5);
+        .detail-card {
+            background: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
         }
-
-        .usp-content {
-            position: relative;
-            z-index: 1;
+        .detail-card h3 {
+            color: var(--primary-color);
+            margin-bottom: 1rem;
         }
+        .detail-card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+        }
+        .company-overview {
+    background-color: #ffffff;
+    padding: 3rem 0;
+}
+
+.overview-container {
+    display: flex;
+    max-width: 1200px;
+    margin: 0 auto;
+    background-color: #dae1e142;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+}
+
+.overview-nav {
+    width: 200px;
+    background-color: #f1f3f5;
+    padding: 2rem 0;
+}
+
+.nav-item {
+    display: block;
+    width: 100%;
+    padding: 1rem;
+    border: none;
+    background: none;
+    text-align: left;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.nav-item:hover, .nav-item.active {
+    background-color: #e9ecef;
+}
+
+.overview-content {
+    flex-grow: 1;
+    padding: 2rem;
+}
+
+.content-item {
+    display: none;
+}
+
+.content-item.active {
+    display: block;
+}
+
+.content-item img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 10px;
+    margin-bottom: 1rem;
+}
+
+.content-item h3 {
+    margin-bottom: 1rem;
+    color: #333;
+}
+
+.content-item ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.content-item li {
+    margin-bottom: 0.5rem;
+}
+
 
         .clients {
             display: flex;
@@ -389,7 +400,7 @@
 </head>
 
 <body>
-    {% include './company_profile.html' %}
+    {% include '../admin/company_profile.html' %}
     <div class="main-content">
         <header>
             <div class="container header-content">
@@ -420,19 +431,95 @@
         </header>
 
         <main class="container">
+            <section class="section company-overview">
+                <h2 class="section-title">Company Overview</h2>
+                <div class="overview-container">
+                    <div class="overview-nav">
+                        <button class="nav-item active" data-target="basic-info">Basic Info</button>
+                        <button class="nav-item" data-target="product-service">Product/Service</button>
+                        <button class="nav-item" data-target="market-info">Market</button>
+                        <button class="nav-item" data-target="financial-info">Financials</button>
+                        <button class="nav-item" data-target="business-stage">Business Stage</button>
+                        <button class="nav-item" data-target="team-info">Team</button>
+                    </div>
+                    <div class="overview-content">
+                        <div class="content-item active" id="basic-info">
+                            <img src="https://wallpapers.com/images/featured/information-background-dx3hozo5gn8p1rg0.jpg" alt="Company Image">
+                            <h3>Basic Information</h3>
+                            <ul>
+                                <li><strong>Startup Name:</strong> {{company.name}}</li>
+                                <li><strong>Founded In:</strong> {{company.date_of_incorporation}}</li>
+                                <li><strong>Industry/Sector:</strong> {{company.sector}}</li>
+                                <li><strong>Type of Business:</strong> {{company.business_type}}</li>
+                                <li><strong>Location:</strong> {{company.location}}</li>
+                                <li><strong>Website:</strong> <a href="{{company.website_url}}" target="_blank">{{company.website_url}}</a></li>
+                            </ul>
+                        </div>
+                        <div class="content-item" id="product-service">
+                            <img src="https://www.shutterstock.com/image-photo/close-girls-hand-placing-last-260nw-411097417.jpg" alt="Product/Service Image">
+                            <h3>Product/Service</h3>
+                            <ul>
+                                <li><strong>Offering:</strong> {{company_profile.product_service}}</li>
+                                <li><strong>Problems Solved:</strong> {{company_profile.problems_solved}}</li>
+                                <li><strong>Competitors:</strong> {{company_profile.competitors}}</li>
+                            </ul>
+                        </div>
+                        <div class="content-item" id="market-info">
+                            <img src="https://media.licdn.com/dms/image/D4D12AQExRT5-VKiBhg/article-cover_image-shrink_600_2000/0/1707273200401?e=2147483647&v=beta&t=34HurnaAqIkw89PMJkLFC3eJ7ZW0KpwG9st6iU7paU8" alt="Market Image">
+                            <h3>Market Information</h3>
+                            <ul>
+                                <li><strong>TAM:</strong> {{company_profile.tam}}</li>
+                                <li><strong>CAGR:</strong> {{company_profile.cagr}}</li>
+                                <li><strong>No. of clients/users:</strong> {{company_profile.number_of_clients_users}}</li>
+                            </ul>
+                        </div>
+                        <div class="content-item" id="financial-info">
+                            <img src="https://media.istockphoto.com/id/1463624487/vector/business-growth-and-earning-and-profit-performance-concept.jpg?s=612x612&w=0&k=20&c=bJ3wnRO9_IkRGAhmyXJRI8jNctWMf8rmqfYvG881I1Y=" alt="Financial Image">
+                            <h3>Financial Information</h3>
+                            <ul>
+                                <li><strong>Previous Year Revenue:</strong> {{company_profile.previous_year_revenue}}</li>
+                                <li><strong>Current Year Revenue (ARR):</strong> {{company_profile.current_year_revenue_arr}}</li>
+                                <li><strong>Current Monthly Burn Rate:</strong> {{company_profile.current_monthly_burn_rate}}</li>
+                                <li><strong>Forecasted Revenue (Next Year):</strong> {{company_profile.forecasted_revenue_for_next_year}}</li>
+                            </ul>
+                        </div>
+                        <div class="content-item" id="business-stage">
+                            <img src="https://wallpapers.com/images/hd/business-background-l3j8pv97uundywgw.jpg" alt="Business Stage Image">
+                            <h3>Business Stage</h3>
+                            <ul>
+                                <li><strong>Stage:</strong> {{company_profile.business_stage}}</li>
+                                <li><strong>Equity Funds Raised:</strong> {{company_profile.equity_funds_raised_so_far}}</li>
+                                <li><strong>Funds Needed:</strong> {{company_profile.funds_needed}}</li>
+                                <li><strong>Challenges:</strong> {{company_profile.challenges}}</li>
+                            </ul>
+                        </div>
+                        <div class="content-item" id="team-info">
+                            <img src="https://png.pngtree.com/thumb_back/fh260/back_our/20190622/ourmid/pngtree-creative-synthetic-city-business-elite-silhouette-background-image_215431.jpg" alt="Team Image">
+                            <h3>Team</h3>
+                            <ul>
+                                <li><strong>Founders:</strong> {{company_profile.founders}}</li>
+                                <li><strong>No. of Employees:</strong> {{company_profile.number_of_clients_users}}</li>
+                                <li><strong>Advisors:</strong> {{company_profile.advisors}}</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
             <section class="section">
-                <h2 class="section-title">Meet the Founders</h2>
+                <h2 class="section-title">Meet the our Founders</h2>
                 <div class="founders">
 
                     {% for founder in founders %}
 
                     <div class="founder-card">
                         <div class="founder-image">
-                            <img src="{{ founder.photo.url }}" alt="Founder 1">
+                            <img src="{{founder.photo.url }}" alt="Founder 1">
                             
                         </div>
                         <div class="founder-info">
                             <h3>{{founder.name}}</h3>
+                            <p>Machine Learning Specialist & CEO</p>
                             <p>{{founder.short_profile}}</p>
                             <p>Email: <a href="{{founder.email}}">{{founder.email}}</a></p>
                             <div class="founder-social">
@@ -478,27 +565,7 @@
                 </div>
             </section>
 
-            <section class="section vision-mission">
-                <h2 class="section-title">Our Vision and Mission</h2>
-                <div class="vision">
-                    <p id="vision">{{company_profile.vision}}</p>
-                    <img src="https://img.freepik.com/premium-photo/compass-with-needle-pointing-word-vision-with-blur-effect-plus-blue-black-tones-conceptual-image-immustration-company-business-anticipation-strategy_556904-1981.jpg"
-                        alt="Vision" class="card-image">
-                </div>
-                <div class="mission">
-                    <p id="mission">{{company_profile.mission}}</p>
-                    <img src="https://img.freepik.com/free-photo/3d-rendering-arrow-hitting-target_23-2151266523.jpg"
-                        alt="Mission" class="card-image">
-                </div>
-            </section>
-
-            <section class="usp">
-                <div class="usp-content">
-                    <h2>Unique Selling Proposition (USP)</h2>
-                    <p id="usp">{{company_profile.usp}}
-                    </p>
-                </div>
-            </section>
+           
 
             <section class="section">
                 <h2 class="section-title">Our Valued Clients</h2>
@@ -551,6 +618,24 @@
         });
     </script>
 </body>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+    const navItems = document.querySelectorAll('.nav-item');
+    const contentItems = document.querySelectorAll('.content-item');
+
+    navItems.forEach(item => {
+        item.addEventListener('click', function() {
+            const target = this.dataset.target;
+
+            navItems.forEach(navItem => navItem.classList.remove('active'));
+            contentItems.forEach(contentItem => contentItem.classList.remove('active'));
+
+            this.classList.add('active');
+            document.getElementById(target).classList.add('active');
+        });
+    });
+});
+</script>
 
 </html>
 {% endblock content %}

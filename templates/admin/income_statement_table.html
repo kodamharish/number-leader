@@ -2,8 +2,28 @@
 
 {% block styles %}
 <style>
-    table {
+    .container {
+        padding-left: 280px;
+        max-width: 100%;
+        position: relative;
+        height: calc(100vh - 135px);
+        overflow-y: auto;
+        max-height: 100%;
+    }
 
+    .content {
+        margin: 40px auto;
+        padding-top: 30px;
+        padding-left: 200px;
+        width: calc(100% - 200px);
+    }
+
+    /* .table-wrapper {
+        overflow-y: auto !important;
+        max-height: 100% !important;
+    } */
+    table {
+        width: 100%;
         font-family: 'Times New Roman', Times, serif;
         border-collapse: collapse;
         table-layout: fixed;
@@ -14,24 +34,104 @@
         border: 1px solid #ddd;
         padding: 8px;
         text-align: left !important;
-
-        /* Set width for each cell */
     }
 
-    .container {
-        padding-left: 180px;
+    td {
+        text-align: right;
     }
-
-
 
     th {
-        background-color: #f2f2f2;
+        background-color: #f2f2f2 !important;
         position: sticky;
         top: 0;
         z-index: 2;
     }
 
+    tr:nth-child(even) {
+        background-color: #f9f9f9;
+    }
 
+    tr:hover {
+        background-color: #f1f1f1;
+    }
+
+    .rowview {
+        width: 35%;
+    }
+
+    .rowview1 {
+        width: 10%;
+    }
+
+    .btn-plus {
+        font-size: 24px;
+        color: #007bff;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .btn-plus:hover {
+        color: #0056b3;
+    }
+
+    tr.hidden {
+        display: none;
+    }
+
+    .cell button {
+        font-size: 50%;
+        color: #000;
+
+        background-color: #fff;
+        padding: 0.3em 0.2em 0 0.2em;
+        border: 0.2em solid #00f;
+        border-radius: 50%;
+        line-height: 1;
+        text-align: center;
+        text-indent: 0;
+        transform: rotate(270deg);
+    }
+
+    .cell button svg {
+        width: 1.25em;
+        height: 1.25em;
+        fill: #00f;
+        transition: transform 0.25s ease-in;
+        transform-origin: center 45%;
+    }
+
+    /* .cell button:hover,
+    .cell button:focus {
+        background-color: #fff;
+        outline: none;
+    }
+    .cell button:hover svg,
+    .cell button:focus svg {
+        fill: #00f;
+    } */
+    .cell button[aria-expanded="true"] svg {
+        transform: rotate(90deg);
+    }
+
+    /* .controls {
+        display: flex;
+        align-items: center;
+        margin-bottom: 10px;
+        justify-content: space-between;
+    } */
+    .indent-level-1 td:first-child {
+        padding-left: 2em;
+    }
+
+    .indent-level-2 td:first-child {
+        padding-left: 4em;
+    }
+
+    .indent-level-3 td:first-child {
+        padding-left: 6em;
+    }
 
 
 
@@ -75,7 +175,8 @@
 {% endblock styles %}
 
 {% block content %}
-<div class="container  mt-5">
+<div class="container mt-5">
+
     <div class="row">
         <div class="col-md-4">
             <h6 class="mb-4">
@@ -135,69 +236,49 @@
             </div>
         </div>
     </div>
-</div>
 
-<!-- <div class="table-container mt-5">
-    <div class="table-wrapper">
-        <table id="financialTable">
-            <thead>
-                <tr id="td1">
-                    <th class="rowview">Breakdown</th>
-                    <th class="rowview1">TTM</th>
-                    {% for income_statement in income_statements  %}
-                    <th class="rowview1">{{income_statement.date|date:'Y-m-d'}}</th>
-                    {% endfor %}
-                    
-                </tr>
-            </thead>
-            <tbody>
-                
-            </tbody>
-        </table>
-    </div>
-</div> -->
-
-
-<div class="container mt-4">
-
-    <form method="POST" action="#" enctype="multipart/form-data">
-        {% csrf_token %}
-        <div class="table-responsive table-container">
-            <table class="table table-bordered table-wrapper">
+    <div class="table-container mt-1">
+        <div class="table-wrapper">
+            <table class="cell">
                 <thead>
                     <tr>
-
-                        <th>Breakdown</th>
+                        <th class="rowview">Breakdown</th>
+                        <!-- <th class="rowview1">TTM</th> -->
 
                         {% for income_statement in income_statements %}
                         <th class="rowview1">{{income_statement.date|date:'d-m-Y'}}
                             ({{income_statement.monthly_or_quarterly_or_yearly}})</th>
                         {% endfor %}
 
+
                     </tr>
                 </thead>
                 <tbody>
-
-
                     <tr>
-                        <td>Total Revenue</td>
+                        <td>
+                            <button type="button" id="btnMSb" aria-expanded="false" onclick="toggle(this.id,'#MS01b');"
+                                aria-controls="MS01b" aria-label="1 more from" aria-labelledby="btnMSb lblMSb">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" focusable="false">
+                                    <path d="M70.3 13.8L40 66.3 9.7 13.8z"></path>
+                                </svg>
+                            </button> Total Revenue
+                        </td>
                         {% for income_statement in income_statements %}
                         <td>
                             {{income_statement.total_revenue}}
                         </td>
                         {% endfor %}
-                    </tr>
 
-                    <tr>
+                    </tr>
+                    <tr id="MS01b" class="hidden indent-level-1">
                         <td>Operating Revenue</td>
                         {% for income_statement in income_statements %}
                         <td>
                             {{income_statement.operating_revenue}}
                         </td>
                         {% endfor %}
+
                     </tr>
-
-
                     <tr>
                         <td>Cost of Revenue</td>
                         {% for income_statement in income_statements %}
@@ -205,150 +286,192 @@
                             {{income_statement.cost_of_revenue}}
                         </td>
                         {% endfor %}
+
                     </tr>
                     <tr>
-                        <td>Gross Profit</td>
+                        <td>
+                            <button type="button" id="btnEDENSb" aria-expanded="false"
+                                onclick="toggle(this.id,'#EDENS01b');" aria-controls="EDENS01b" aria-label="1 more from"
+                                aria-labelledby="btnEDENSb lblEDENSb">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" focusable="false">
+                                    <path d="M70.3 13.8L40 66.3 9.7 13.8z"></path>
+                                </svg>
+                            </button> Gross Profit
+                        </td>
                         {% for income_statement in income_statements %}
                         <td>
                             {{income_statement.gross_profit}}
                         </td>
                         {% endfor %}
+
                     </tr>
-                    <tr>
-                        <td>Operating Expense</td>
+                    <tr id="EDENS01b" class="hidden indent-level-1">
+                        <td>
+                            <button type="button" id="btnOPb" aria-expanded="false"
+                                onclick="toggle(this.id,'#SE01,#SE02');" aria-controls="SE01 SE02"
+                                aria-label="2 more from" aria-labelledby="btnOPb lblOPb">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" focusable="false">
+                                    <path d="M70.3 13.8L40 66.3 9.7 13.8z"></path>
+                                </svg>
+                            </button> Operating Expenses
+                        </td>
                         {% for income_statement in income_statements %}
                         <td>
                             {{income_statement.operating_expense}}
                         </td>
                         {% endfor %}
+
                     </tr>
-                    <tr>
-                        <td>selling_general_and_administrative_expense</td>
+                    <tr id="SE01" class="hidden indent-level-2">
+                        <td>
+                            <button type="button" id="btnGEb" aria-expanded="false"
+                                onclick="toggle(this.id,'#GE01,#GE02');" aria-controls="GE01 GE02"
+                                aria-label="2 more from" aria-labelledby="btnGEb lblGEb">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" focusable="false">
+                                    <path d="M70.3 13.8L40 66.3 9.7 13.8z"></path>
+                                </svg>
+                            </button> Selling, General and Administrative Expense
+                        </td>
                         {% for income_statement in income_statements %}
                         <td>
                             {{income_statement.selling_general_and_administrative_expense}}
                         </td>
                         {% endfor %}
-                    </tr>
 
-                    <tr>
-                        <td>General and administrative Expenses</td>
+                    </tr>
+                    <tr id="GE01" class="hidden indent-level-3">
+                        <td>General & Administrative Expenses</td>
                         {% for income_statement in income_statements %}
                         <td>
                             {{income_statement.general_and_administrative_expenses}}
                         </td>
                         {% endfor %}
+
                     </tr>
-
-
-                    <tr>
-                        <td>Selling and Marketing Expense</td>
+                    <tr id="GE02" class="hidden indent-level-3">
+                        <td> Selling and Marketing Expense</td>
                         {% for income_statement in income_statements %}
                         <td>
                             {{income_statement.selling_and_marketing_expense}}
                         </td>
                         {% endfor %}
+
                     </tr>
-
-
-                    <tr>
+                    <tr id="SE02" class="hidden indent-level-2">
                         <td>Research and Development Expense</td>
                         {% for income_statement in income_statements %}
                         <td>
                             {{income_statement.research_and_development_expense}}
                         </td>
                         {% endfor %}
-                    </tr>
 
+                    </tr>
                     <tr>
-                        <td>Operating Income</td>
+                        <td>
+                            <button type="button" id="btnOIb" aria-expanded="false"
+                                onclick="toggle(this.id,'#NE01,#NE02');" aria-controls="NE01 NE02"
+                                aria-label="2 more from" aria-labelledby="btnOIb lblOIb">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" focusable="false">
+                                    <path d="M70.3 13.8L40 66.3 9.7 13.8z"></path>
+                                </svg>
+                            </button> Operating Income
+                        </td>
                         {% for income_statement in income_statements %}
                         <td>
                             {{income_statement.operating_income}}
                         </td>
                         {% endfor %}
-                    </tr>
 
-                    <tr>
-                        <td>Net Non Operating Interest Income Expense</td>
+                    </tr>
+                    <tr id="NE01" class="hidden indent-level-1">
+                        <td>
+                            <button type="button" id="btnNNEIb" aria-expanded="false"
+                                onclick="toggle(this.id,'#II01,#II02');" aria-controls="II01 II02"
+                                aria-label="2 more from" aria-labelledby="btnNNEIb lblNNEIb">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" focusable="false">
+                                    <path d="M70.3 13.8L40 66.3 9.7 13.8z"></path>
+                                </svg>
+                            </button> Net Non Operating Interest Income/ (Expense)
+                        </td>
                         {% for income_statement in income_statements %}
                         <td>
                             {{income_statement.net_non_operating_interest_income_expense}}
                         </td>
                         {% endfor %}
+
                     </tr>
-
-
-                    <tr>
+                    <tr id="II01" class="hidden indent-level-2">
                         <td>Interest Income Non Operating</td>
                         {% for income_statement in income_statements %}
                         <td>
                             {{income_statement.interest_income_non_operating}}
                         </td>
                         {% endfor %}
+
                     </tr>
-
-
-
-                    <tr>
+                    <tr id="II02" class="hidden indent-level-2">
                         <td>Interest Expense Non Operating</td>
                         {% for income_statement in income_statements %}
                         <td>
                             {{income_statement.interest_expense_non_operating}}
                         </td>
                         {% endfor %}
-                    </tr>
 
-                    <tr>
-                        <td>Other Income or Expense</td>
+                    </tr>
+                    <tr id="NE02" class="hidden indent-level-1">
+                        <td>
+                            <button type="button" id="btnOIbOther" aria-expanded="false"
+                                onclick="toggle(this.id,'#GS01,#SIC02,#WO02,#ON02');"
+                                aria-controls="GS01 SIC02 WO02 ON02" aria-label="4 more from"
+                                aria-labelledby="btnOIbOther lblOIbOther">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" focusable="false">
+                                    <path d="M70.3 13.8L40 66.3 9.7 13.8z"></path>
+                                </svg>
+                            </button> Other Income/(Expense)
+                        </td>
                         {% for income_statement in income_statements %}
                         <td>
                             {{income_statement.other_income_or_expense}}
                         </td>
                         {% endfor %}
+
                     </tr>
-
-
-                    <tr>
-                        <td>Gain or Loss on sale of security</td>
+                    <tr id="GS01" class="hidden indent-level-2">
+                        <td>Gain/(Loss) on Sale of Security</td>
                         {% for income_statement in income_statements %}
                         <td>
                             {{income_statement.gain_or_loss_on_sale_of_security}}
                         </td>
                         {% endfor %}
+
                     </tr>
-
-
-                    <tr>
-                        <td>Special Income or charges</td>
+                    <tr id="SIC02" class="hidden indent-level-2">
+                        <td>Special Income/(Charges)</td>
                         {% for income_statement in income_statements %}
                         <td>
                             {{income_statement.special_income_or_charges}}
                         </td>
                         {% endfor %}
+
                     </tr>
-
-
-                    <tr>
-                        <td>Write off</td>
+                    <tr id="WO02" class="hidden indent-level-2">
+                        <td>Write Off</td>
                         {% for income_statement in income_statements %}
                         <td>
                             {{income_statement.write_off}}
                         </td>
                         {% endfor %}
+
                     </tr>
-
-
-                    <tr>
+                    <tr id="ON02" class="hidden indent-level-2">
                         <td>Other Non Operating Income/ (Expenses)</td>
                         {% for income_statement in income_statements %}
                         <td>
                             {{income_statement.other_non_operating_income_or_expenses}}
                         </td>
                         {% endfor %}
+
                     </tr>
-
-
                     <tr>
                         <td>Pretax Income</td>
                         {% for income_statement in income_statements %}
@@ -356,9 +479,8 @@
                             {{income_statement.pretax_income}}
                         </td>
                         {% endfor %}
+
                     </tr>
-
-
                     <tr>
                         <td>Tax Provision</td>
                         {% for income_statement in income_statements %}
@@ -366,8 +488,8 @@
                             {{income_statement.tax_provision}}
                         </td>
                         {% endfor %}
-                    </tr>
 
+                    </tr>
                     <tr>
                         <td>Net Income</td>
                         {% for income_statement in income_statements %}
@@ -375,8 +497,8 @@
                             {{income_statement.net_income}}
                         </td>
                         {% endfor %}
-                    </tr>
 
+                    </tr>
                     <tr>
                         <td>Preference Share Dividends</td>
                         {% for income_statement in income_statements %}
@@ -384,8 +506,8 @@
                             {{income_statement.preference_share_dividends}}
                         </td>
                         {% endfor %}
-                    </tr>
 
+                    </tr>
                     <tr>
                         <td>Net Income to Common Stockholders</td>
                         {% for income_statement in income_statements %}
@@ -393,27 +515,34 @@
                             {{income_statement.net_income_to_common_stockholders}}
                         </td>
                         {% endfor %}
+
                     </tr>
+                    <tr>
+                        <td>Equity Share Dividends</td>
+                        {% for income_statement in income_statements %}
+                        <td>
+                            {{income_statement.equity_share_dividends}}
+                        </td>
+                        {% endfor %}
 
                     </tr>
 
-                    <td>Equity Share Dividends</td>
+                    <td>No of Equity Shares</td>
                     {% for income_statement in income_statements %}
                     <td>
-                        {{income_statement.equity_share_dividends}}
+                        {{income_statement.no_of_equity_shares}}
                     </td>
                     {% endfor %}
                     </tr>
+                    <tr>
+                        <td>Retained Earnings</td>
+                        {% for income_statement in income_statements %}
+                        <td>
+                            {{income_statement.retained_earnings}}
+                        </td>
+                        {% endfor %}
 
-                    <td>Retained Earnings</td>
-                    {% for income_statement in income_statements %}
-                    <td>
-                        {{income_statement.retained_earnings}}
-                    </td>
-                    {% endfor %}
                     </tr>
-
-
                     <tr>
                         <td>Basic EPS</td>
                         {% for income_statement in income_statements %}
@@ -421,9 +550,8 @@
                             {{income_statement.basic_eps}}
                         </td>
                         {% endfor %}
+
                     </tr>
-
-
                     <tr>
                         <td>Diluted EPS</td>
                         {% for income_statement in income_statements %}
@@ -432,6 +560,7 @@
                         </td>
                         {% endfor %}
 
+                    </tr>
                     <tr>
                         <td>Depreciation and Amortization</td>
                         {% for income_statement in income_statements %}
@@ -439,9 +568,8 @@
                             {{income_statement.depreciation_and_amortization}}
                         </td>
                         {% endfor %}
+
                     </tr>
-
-
                     <tr>
                         <td>EBITDA</td>
                         {% for income_statement in income_statements %}
@@ -449,31 +577,39 @@
                             {{income_statement.ebitda}}
                         </td>
                         {% endfor %}
+
                     </tr>
-
-
-
-
-
-
-
                 </tbody>
             </table>
         </div>
-
-
-        <!-- Button to Add More Advisors -->
-        <!-- <div class="row mt-5">
-            <div class="col-md-12 text-center">
-                <button type="button" class="btn btn-primary" id="submit_income_statement">Submit</button>
-            </div>
-        </div> -->
-
-    </form>
+    </div>
 </div>
 
 
+<script>
+    function toggle(btnID, eIDs) {
+        var theRows = document.querySelectorAll(eIDs);
+        var theButton = document.getElementById(btnID);
+        if (theButton.getAttribute("aria-expanded") == "false") {
+            for (var i = 0; i < theRows.length; i++) {
+                theRows[i].classList.add("shown");
+                theRows[i].classList.remove("hidden");
+            }
+            theButton.setAttribute("aria-expanded", "true");
+        } else {
+            for (var i = 0; i < theRows.length; i++) {
+                theRows[i].classList.add("hidden");
+                theRows[i].classList.remove("shown");
+            }
+            theButton.setAttribute("aria-expanded", "false");
+        }
+    }
 
+    function expandAll() {
+        const buttons = document.querySelectorAll('.row button[aria-expanded="false"]');
+        buttons.forEach(button => button.click());
+    }
+</script>
 
 
 <script>

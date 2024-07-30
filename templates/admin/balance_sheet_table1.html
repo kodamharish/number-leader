@@ -2,28 +2,8 @@
 
 {% block styles %}
 <style>
-    .container {
-        padding-left: 280px;
-        max-width: 100%;
-        position: relative;
-        height: calc(100vh - 135px);
-        overflow-y: auto;
-        max-height: 100%;
-    }
-
-    .content {
-        margin: 40px auto;
-        padding-top: 30px;
-        padding-left: 200px;
-        width: calc(100% - 200px);
-    }
-
-    /* .table-wrapper {
-        overflow-y: auto !important;
-        max-height: 100% !important;
-    } */
     table {
-        width: 100%;
+
         font-family: 'Times New Roman', Times, serif;
         border-collapse: collapse;
         table-layout: fixed;
@@ -34,108 +14,26 @@
         border: 1px solid #ddd;
         padding: 8px;
         text-align: left !important;
+
+        /* Set width for each cell */
     }
 
-    td {
-        text-align: right;
+    .container {
+        padding-left: 180px;
     }
+
+
 
     th {
-        background-color: #f2f2f2 !important;
+        background-color: #f2f2f2;
         position: sticky;
         top: 0;
         z-index: 2;
     }
 
-    tr:nth-child(even) {
-        background-color: #f9f9f9;
-    }
 
-    tr:hover {
-        background-color: #f1f1f1;
-    }
 
-    .rowview {
-        width: 35%;
-    }
 
-    .rowview1 {
-        width: 10%;
-    }
-
-    .btn-plus {
-        font-size: 24px;
-        color: #007bff;
-        text-decoration: none;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-    }
-
-    .btn-plus:hover {
-        color: #0056b3;
-    }
-
-    tr.hidden {
-        display: none;
-    }
-
-    .cell button {
-        font-size: 50%;
-        color: #000;
-
-        background-color: #fff;
-        padding: 0.3em 0.2em 0 0.2em;
-        border: 0.2em solid #00f;
-        border-radius: 50%;
-        line-height: 1;
-        text-align: center;
-        text-indent: 0;
-        transform: rotate(270deg);
-    }
-
-    .cell button svg {
-        width: 1.25em;
-        height: 1.25em;
-        fill: #00f;
-        transition: transform 0.25s ease-in;
-        transform-origin: center 45%;
-    }
-
-    /* .cell button:hover,
-    .cell button:focus {
-        background-color: #fff;
-        outline: none;
-    }
-    .cell button:hover svg,
-    .cell button:focus svg {
-        fill: #00f;
-    } */
-    .cell button[aria-expanded="true"] svg {
-        transform: rotate(90deg);
-    }
-
-    /* .controls {
-        display: flex;
-        align-items: center;
-        margin-bottom: 10px;
-        justify-content: space-between;
-    } */
-    .indent-level-1 td:first-child {
-        padding-left: 2em;
-    }
-
-    .indent-level-2 td:first-child {
-        padding-left: 4em;
-    }
-
-    .indent-level-3 td:first-child {
-        padding-left: 6em;
-    }
-
-    .indent-level-4 td:first-child {
-        padding-left: 8em;
-    }
 
     /* Ensure the label and dropdowns are inline */
     .dropdown-wrapper {
@@ -177,7 +75,7 @@
 {% endblock styles %}
 
 {% block content %}
-<div class="container mt-5">
+<div class="container  mt-5">
     <div class="row">
         <div class="col-md-4">
             <h6 class="mb-4">
@@ -237,12 +135,22 @@
             </div>
         </div>
     </div>
-    <div class="table-container mt-1">
-        <div class="table-wrapper">
-            <table class="cell">
+</div>
+
+
+
+
+<div class="container mt-4">
+
+    <form method="POST" action="#" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="table-responsive table-container">
+            <table class="table table-bordered table-wrapper">
                 <thead>
                     <tr>
-                        <th class="rowview">Breakdown</th>
+
+                        <th>Breakdown</th>
+
                         {% for balance_sheet in balance_sheets %}
                         <th class="rowview1">{{balance_sheet.date|date:'d-m-Y'}}
                             ({{balance_sheet.monthly_or_quarterly_or_yearly}})</th>
@@ -251,215 +159,166 @@
                     </tr>
                 </thead>
                 <tbody>
+
+
                     <tr>
-                        <td>
-                            <button type="button" id="btnMSa" aria-expanded="false"
-                                onclick="toggle(this.id,'#MS01a,#MS01bb');" aria-controls="MS01a"
-                                aria-label="1 more from" aria-labelledby="btnMSa lblMSa">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" focusable="false">
-                                    <path d="M70.3 13.8L40 66.3 9.7 13.8z"></path>
-                                </svg>
-                            </button> Total Assets
-                        </td>
+                        <td>Total Assets</td>
                         {% for balance_sheet in balance_sheets %}
                         <td>
                             {{balance_sheet.total_assets}}
                         </td>
                         {% endfor %}
-
                     </tr>
-                    <tr id="MS01a" class="hidden indent-level-1">
-                        <td>
-                            <button type="button" id="btnMSb" aria-expanded="false"
-                                onclick="toggle(this.id,'#MS01b,#MS01I,#MS01H,#MS01O');"
-                                aria-controls="MS01b,MS01I,MS01H,MS01O" aria-label="1 more from"
-                                aria-labelledby="btnMSb lblMSb">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" focusable="false">
-                                    <path d="M70.3 13.8L40 66.3 9.7 13.8z"></path>
-                                </svg>
-                            </button> Current Assets
-                        </td>
+
+                    <tr>
+                        <td>Current Assets</td>
                         {% for balance_sheet in balance_sheets %}
                         <td>
                             {{balance_sheet.current_assets}}
                         </td>
                         {% endfor %}
-
                     </tr>
-                    <tr id="MS01b" class="hidden indent-level-2">
-                        <td>
-                            <button type="button" id="btnMSc" aria-expanded="false" onclick="toggle(this.id,'#MS01c');"
-                                aria-controls="MS01c" aria-label="1 more from" aria-labelledby="btnMSc lblMSc">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" focusable="false">
-                                    <path d="M70.3 13.8L40 66.3 9.7 13.8z"></path>
-                                </svg>
-                            </button> Cash, Cash Equivalents & Short Term Investments
-                        </td>
+
+
+                    <tr>
+                        <td>Cash,Cash Equivalents and Short Term Investments</td>
                         {% for balance_sheet in balance_sheets %}
                         <td>
                             {{balance_sheet.cash_cash_equivalents_and_short_term_investments}}
                         </td>
                         {% endfor %}
-
                     </tr>
-                    <tr id="MS01c" class="hidden indent-level-3">
-                        <td>
-                            <button type="button" id="btnMSd" aria-expanded="false" onclick="toggle(this.id,'#MS01d');"
-                                aria-controls="MS01d" aria-label="1 more from" aria-labelledby="btnMSd lblMSd">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" focusable="false">
-                                    <path d="M70.3 13.8L40 66.3 9.7 13.8z"></path>
-                                </svg>
-                            </button> Cash And Cash Equivalents
-                        </td>
+                    <tr>
+                        <td>Cash and Cash Equivalents</td>
                         {% for balance_sheet in balance_sheets %}
                         <td>
                             {{balance_sheet.cash_and_cash_equivalents}}
                         </td>
                         {% endfor %}
-
                     </tr>
-                    <tr id="MS01d" class="hidden indent-level-4">
-                        <td> Cash</td>
+                    <tr>
+                        <td>Cash</td>
                         {% for balance_sheet in balance_sheets %}
                         <td>
                             {{balance_sheet.cash}}
                         </td>
                         {% endfor %}
-
                     </tr>
-                    <tr id="MS01d" class="hidden indent-level-4">
-                        <td> Cash Equivalents </td>
+                    <tr>
+                        <td>Cash Equivalents</td>
                         {% for balance_sheet in balance_sheets %}
                         <td>
                             {{balance_sheet.cash_equivalents}}
                         </td>
                         {% endfor %}
-
                     </tr>
-                    <tr id="MS01c" class="hidden indent-level-3">
-                        <td> Other Short Term Investments</td>
+
+                    <tr>
+                        <td>Other Short Term Investments</td>
                         {% for balance_sheet in balance_sheets %}
                         <td>
                             {{balance_sheet.other_short_term_investments}}
                         </td>
                         {% endfor %}
-
                     </tr>
-                    <tr id="MS01b" class="hidden indent-level-2">
-                        <td>
-                            <button type="button" id="btnMSe" aria-expanded="false"
-                                onclick="toggle(this.id,'#MS01e,#MS01f');" aria-controls="MS01e,MS01f"
-                                aria-label="1 more from" aria-labelledby="btnMSe lblMSe">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" focusable="false">
-                                    <path d="M70.3 13.8L40 66.3 9.7 13.8z"></path>
-                                </svg>
-                            </button> Receivables
-                        </td>
+
+                    <tr>
+                        <td>Receivables</td>
                         {% for balance_sheet in balance_sheets %}
                         <td>
                             {{balance_sheet.receivables}}
                         </td>
                         {% endfor %}
-
                     </tr>
-                    <tr id="MS01e" class="hidden indent-level-3">
-                        <td>
-                            <button type="button" id="btnMSf" aria-expanded="false"
-                                onclick="toggle(this.id,'#MS01g,#MS01gg');" aria-controls="MS01g,MS01gg"
-                                aria-label="1 more from" aria-labelledby="btnMSf lblMSf">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" focusable="false">
-                                    <path d="M70.3 13.8L40 66.3 9.7 13.8z"></path>
-                                </svg>
-                            </button> Accounts receivable
-                        </td>
+
+                    <tr>
+                        <td>Accounts Receivable</td>
                         {% for balance_sheet in balance_sheets %}
                         <td>
                             {{balance_sheet.accounts_receivable}}
                         </td>
                         {% endfor %}
-
                     </tr>
-                    <tr id="MS01g" class="hidden indent-level-4">
-                        <td> Gross Accounts Receivable</td>
+
+                    <tr>
+                        <td>Gross Accounts Receivable</td>
                         {% for balance_sheet in balance_sheets %}
                         <td>
                             {{balance_sheet.gross_accounts_receivable}}
                         </td>
                         {% endfor %}
-
                     </tr>
-                    <tr id="MS01gg" class="hidden indent-level-4">
-                        <td> Allowance For Doubtful Accounts Receivable</td>
+
+
+                    <tr>
+                        <td>Allowance for Doubtful Accounts Receivable</td>
                         {% for balance_sheet in balance_sheets %}
                         <td>
                             {{balance_sheet.allowance_for_doubtful_accounts_receivable}}
                         </td>
                         {% endfor %}
-
                     </tr>
-                    <tr id="MS01e" class="hidden indent-level-3">
-                        <td> Other receivables</td>
+
+
+                    <tr>
+                        <td>Other Receivables</td>
                         {% for balance_sheet in balance_sheets %}
                         <td>
                             {{balance_sheet.other_receivables}}
                         </td>
                         {% endfor %}
-
                     </tr>
-                    <tr id="MS01I" class="hidden indent-level-2">
-                        <td>
-                            <button type="button" id="btnMSi" aria-expanded="false"
-                                onclick="toggle(this.id,'#MS01R,#MS01W,#MS01ff');" aria-controls="MS01R,MS01W,MS01ff"
-                                aria-label="1 more from" aria-labelledby="btnMSi lblMSi">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" focusable="false">
-                                    <path d="M70.3 13.8L40 66.3 9.7 13.8z"></path>
-                                </svg>
-                            </button> Inventory
-                        </td>
+
+
+                    <tr>
+                        <td>Inventory</td>
                         {% for balance_sheet in balance_sheets %}
                         <td>
                             {{balance_sheet.inventory}}
                         </td>
                         {% endfor %}
-
                     </tr>
-                    <tr id="MS01R" class="hidden indent-level-3">
+
+
+                    <tr>
                         <td>Raw Materials</td>
                         {% for balance_sheet in balance_sheets %}
                         <td>
                             {{balance_sheet.raw_materials}}
                         </td>
                         {% endfor %}
-
                     </tr>
-                    <tr id="MS01W" class="hidden indent-level-3">
+
+
+                    <tr>
                         <td>Work in Process</td>
                         {% for balance_sheet in balance_sheets %}
                         <td>
                             {{balance_sheet.work_in_process}}
                         </td>
                         {% endfor %}
-
                     </tr>
-                    <tr id="MS01ff" class="hidden indent-level-3">
+
+                    <tr>
                         <td>Finished Goods</td>
                         {% for balance_sheet in balance_sheets %}
                         <td>
                             {{balance_sheet.finished_goods}}
                         </td>
                         {% endfor %}
-
                     </tr>
-                    <tr id="MS01H" class="hidden indent-level-2">
-                        <td>Hedging  Current Assets</td>
+
+                    <tr>
+                        <td>Hedging Current Assets</td>
                         {% for balance_sheet in balance_sheets %}
                         <td>
                             {{balance_sheet.hedging_current_assets}}
                         </td>
                         {% endfor %}
-
                     </tr>
-                    <tr id="MS01O" class="hidden indent-level-2">
+
+
+                    <tr>
                         <td>Other Current Assets</td>
                         {% for balance_sheet in balance_sheets %}
                         <td>
@@ -467,97 +326,84 @@
                         </td>
                         {% endfor %}
                     </tr>
-                    <tr id="MS01bb" class="hidden indent-level-1">
-                        <td>
-                            <button type="button" id="btnEDENSb" aria-expanded="false"
-                                onclick="toggle(this.id,'#EDENS01b,#EDENS01gg,#EDENS01IAD,#EDENS01ONCA');"
-                                aria-controls="EDENS01b EDENS01gg EDENS01IAD EDENS01ONCA" aria-label="1 more from"
-                                aria-labelledby="btnEDENSb lblEDENSb">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" focusable="false">
-                                    <path d="M70.3 13.8L40 66.3 9.7 13.8z"></path>
-                                </svg>
-                            </button> Total non-current assets
-                        </td>
+                    
+
+                    <tr>
+                        <td>Total Non-Current Assets</td>
                         {% for balance_sheet in balance_sheets %}
                         <td>
                             {{balance_sheet.total_non_current_assets}}
                         </td>
                         {% endfor %}
                     </tr>
-                    <tr id="EDENS01b" class="hidden indent-level-2">
-                        <td>
-                            <button type="button" id="btnOPb" aria-expanded="false"
-                                onclick="toggle(this.id,'#SE01,#SE02');" aria-controls="SE01 SE02"
-                                aria-label="2 more from" aria-labelledby="btnOPb lblOPb">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" focusable="false">
-                                    <path d="M70.3 13.8L40 66.3 9.7 13.8z"></path>
-                                </svg>
-                            </button> Net PPE
-                        </td>
+
+                    <tr>
+                        <td>Net PPE</td>
                         {% for balance_sheet in balance_sheets %}
                         <td>
                             {{balance_sheet.net_ppe}}
                         </td>
                         {% endfor %}
                     </tr>
-                    <tr id="SE01" class="hidden indent-level-3">
-                        <td>
-                            <button type="button" id="btnGEb" aria-expanded="false"
-                                onclick="toggle(this.id,'#GE01,#GE02,#GE03,#GE04,#GE05');"
-                                aria-controls="GE01 GE02 GE03 GE04 GE05" aria-label="2 more from"
-                                aria-labelledby="btnGEb lblGEb">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" focusable="false">
-                                    <path d="M70.3 13.8L40 66.3 9.7 13.8z"></path>
-                                </svg>
-                            </button> Gross PPE
-                        </td>
+
+                    <tr>
+                        <td>Gross PPE</td>
                         {% for balance_sheet in balance_sheets %}
                         <td>
                             {{balance_sheet.gross_ppe}}
                         </td>
                         {% endfor %}
                     </tr>
-                    <tr id="GE01" class="hidden indent-level-4">
-                        <td>Land And Improvements</td>
+                    
+
+                    <tr>
+                        <td>Land and Improvements</td>
                         {% for balance_sheet in balance_sheets %}
                         <td>
                             {{balance_sheet.land_and_improvements}}
                         </td>
                         {% endfor %}
                     </tr>
-                    <tr id="GE02" class="hidden indent-level-4">
-                        <td> Buildings And Improvements</td>
+
+                    <tr>
+                        <td>Buildings and Improvements</td>
                         {% for balance_sheet in balance_sheets %}
                         <td>
                             {{balance_sheet.buildings_and_improvements}}
                         </td>
                         {% endfor %}
                     </tr>
-                    <tr id="GE03" class="hidden indent-level-4">
-                        <td> Machinery Furniture Equipment</td>
+
+                    <tr>
+                        <td>Machinery Furniture Equipment</td>
                         {% for balance_sheet in balance_sheets %}
                         <td>
                             {{balance_sheet.machinery_furniture_equipment}}
                         </td>
                         {% endfor %}
                     </tr>
-                    <tr id="GE04" class="hidden indent-level-4">
-                        <td> Other Properties</td>
+
+                    <tr>
+                        <td>Other Properties</td>
                         {% for balance_sheet in balance_sheets %}
                         <td>
                             {{balance_sheet.other_properties}}
                         </td>
                         {% endfor %}
                     </tr>
-                    <tr id="GE05" class="hidden indent-level-4">
-                        <td> Leases</td>
+                    
+
+                    <tr>
+                        <td>Leases</td>
                         {% for balance_sheet in balance_sheets %}
                         <td>
                             {{balance_sheet.leases}}
                         </td>
                         {% endfor %}
                     </tr>
-                    <tr id="SE02" class="hidden indent-level-3">
+
+
+                    <tr>
                         <td>Accumulated Depreciation</td>
                         {% for balance_sheet in balance_sheets %}
                         <td>
@@ -565,24 +411,18 @@
                         </td>
                         {% endfor %}
                     </tr>
-                    <tr id="EDENS01gg" class="hidden indent-level-2">
-                        <td>
-                            <button type="button" id="btnGG" aria-expanded="false"
-                                onclick="toggle(this.id,'#SE02gw,#SE02ota');" aria-controls="SE02gw SE02ota"
-                                aria-label="Toggle Goodwill and Other Intangible Assets">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" focusable="false">
-                                    <path d="M70.3 13.8L40 66.3 9.7 13.8z"></path>
-                                </svg>
-                            </button> Goodwill And Other Intangible Assets
-                        </td>
 
+                    <tr>
+                        <td>Goodwill and Other Intangible Assets</td>
                         {% for balance_sheet in balance_sheets %}
                         <td>
                             {{balance_sheet.goodwill_and_other_intangible_assets}}
                         </td>
                         {% endfor %}
                     </tr>
-                    <tr id="SE02gw" class="hidden indent-level-3">
+
+
+                    <tr>
                         <td>Goodwill</td>
                         {% for balance_sheet in balance_sheets %}
                         <td>
@@ -590,7 +430,8 @@
                         </td>
                         {% endfor %}
                     </tr>
-                    <tr id="SE02ota" class="hidden indent-level-3">
+
+                    <tr>
                         <td>Other Intangible Assets</td>
                         {% for balance_sheet in balance_sheets %}
                         <td>
@@ -598,24 +439,17 @@
                         </td>
                         {% endfor %}
                     </tr>
-                    <tr id="EDENS01IAD" class="hidden indent-level-2">
-                        <td>
-                            <button type="button" id="btnIA" aria-expanded="false"
-                                onclick="toggle(this.id,'#SE02ltei');" aria-controls="SE02ltei"
-                                aria-label="Toggle Investments and Advances">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" focusable="false">
-                                    <path d="M70.3 13.8L40 66.3 9.7 13.8z"></path>
-                                </svg>
-                            </button> Investments And Advances
-                        </td>
 
+                    <tr>
+                        <td>Investments and Advances</td>
                         {% for balance_sheet in balance_sheets %}
                         <td>
                             {{balance_sheet.investments_and_advances}}
                         </td>
                         {% endfor %}
                     </tr>
-                    <tr id="SE02ltei" class="hidden indent-level-3">
+
+                    <tr>
                         <td>Long Term Equity Investment</td>
                         {% for balance_sheet in balance_sheets %}
                         <td>
@@ -623,98 +457,72 @@
                         </td>
                         {% endfor %}
                     </tr>
-                    <tr id="EDENS01ONCA" class="hidden indent-level-2">
-                        <td> Other Non Current Assets</td>
+
+                    <tr>
+                        <td>Other Non-Current Assets</td>
                         {% for balance_sheet in balance_sheets %}
                         <td>
                             {{balance_sheet.other_non_current_assets}}
                         </td>
                         {% endfor %}
                     </tr>
-                    <tr>
-                        <td>
-                            <button type="button" id="btnOIb" aria-expanded="false"
-                                onclick="toggle(this.id,'#NE01,#NE02');" aria-controls="NE01 NE02"
-                                aria-label="2 more from" aria-labelledby="btnOIb lblOIb">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" focusable="false">
-                                    <path d="M70.3 13.8L40 66.3 9.7 13.8z"></path>
-                                </svg>
-                            </button> Total Liabilities Net Minority Interest
-                        </td>
 
+                    <tr>
+                        <td>Total Liabilities Net Minority Interest</td>
                         {% for balance_sheet in balance_sheets %}
                         <td>
                             {{balance_sheet.total_liabilities_net_minority_interest}}
                         </td>
                         {% endfor %}
                     </tr>
-                    <tr id="NE01" class="hidden indent-level-1">
-                        <td>
-                            <button type="button" id="btnNNEIb" aria-expanded="false"
-                                onclick="toggle(this.id,'#SE01PAAE,#SE01POPRBPC,#SE01CDACLO,#SE01CDL,#SE01OCLL');"
-                                aria-controls="SE01PAAE SE01POPRBPC SE01CDACLO SE01CDL SE01OCLL"
-                                aria-label="2 more from" aria-labelledby="btnNNEIb lblNNEIb">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" focusable="false">
-                                    <path d="M70.3 13.8L40 66.3 9.7 13.8z"></path>
-                                </svg>
-                            </button> Current Liabilities
-                        </td>
+
+                    <tr>
+                        <td>Current Liabilities</td>
                         {% for balance_sheet in balance_sheets %}
                         <td>
                             {{balance_sheet.current_liabilities}}
                         </td>
                         {% endfor %}
                     </tr>
-                    <tr id="SE01PAAE" class="hidden indent-level-2">
-                        <td>
-                            <button type="button" id="btnGE" aria-expanded="false"
-                                onclick="toggle(this.id,'#GE05AP,#GE05ITP');" aria-controls="GE05AP GE05ITP"
-                                aria-label="Payables And Accrued Expenses">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" focusable="false">
-                                    <path d="M70.3 13.8L40 66.3 9.7 13.8z"></path>
-                                </svg>
-                            </button> Payables And Accrued Expenses
-                        </td>
+
+                    <tr>
+                        <td>Payables and Accrued Expenses</td>
                         {% for balance_sheet in balance_sheets %}
                         <td>
                             {{balance_sheet.payables_and_accrued_expenses}}
                         </td>
                         {% endfor %}
                     </tr>
-                    <tr id="GE05AP" class="hidden indent-level-3">
-                        <td> Accounts Payable</td>
+
+                    <tr>
+                        <td>Accounts Payable</td>
                         {% for balance_sheet in balance_sheets %}
                         <td>
                             {{balance_sheet.accounts_payable}}
                         </td>
                         {% endfor %}
                     </tr>
-                    <tr id="GE05ITP" class="hidden indent-level-3">
-                        <td> Income Tax Payable</td>
+
+                    <tr>
+                        <td>Income Tax Payable</td>
                         {% for balance_sheet in balance_sheets %}
                         <td>
                             {{balance_sheet.income_tax_payable}}
                         </td>
                         {% endfor %}
                     </tr>
-                    <tr id="SE01POPRBPC" class="hidden indent-level-2">
-                        <td>Pension & Other Post Retirement Benefit Plans Current</td>
+
+                    <tr>
+                        <td>Pension_and_other_post_retirement_benefit_plans_current</td>
                         {% for balance_sheet in balance_sheets %}
                         <td>
                             {{balance_sheet.pension_and_other_post_retirement_benefit_plans_current}}
                         </td>
                         {% endfor %}
                     </tr>
-                    <tr id="SE01CDACLO" class="hidden indent-level-2">
-                        <td>
-                            <button type="button" id="btnGH" aria-expanded="false"
-                                onclick="toggle(this.id,'#GE05CD,#GE05CLO');" aria-controls="GE05CD GE05CLO"
-                                aria-label="Current Debt And Capital Lease Obligation">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" focusable="false">
-                                    <path d="M70.3 13.8L40 66.3 9.7 13.8z"></path>
-                                </svg>
-                            </button> Current Debt And Capital Lease Obligation
-                        </td>
+
+                    <tr>
+                        <td>Current Debt and Capital Lease Obligation</td>
                         {% for balance_sheet in balance_sheets %}
                         <td>
                             {{balance_sheet.current_debt_and_capital_lease_obligation}}
@@ -722,8 +530,8 @@
                         {% endfor %}
                     </tr>
 
-                    <tr id="GE05CD" class="hidden indent-level-3">
-                        <td> Current Debt</td>
+                    <tr>
+                        <td>Current Debt</td>
                         {% for balance_sheet in balance_sheets %}
                         <td>
                             {{balance_sheet.current_debt}}
@@ -731,8 +539,8 @@
                         {% endfor %}
                     </tr>
 
-                    <tr id="GE05CLO" class="hidden indent-level-3">
-                        <td> Capital Lease Obligation</td>
+                    <tr>
+                        <td>Capital Lease Obligation</td>
                         {% for balance_sheet in balance_sheets %}
                         <td>
                             {{balance_sheet.capital_lease_obligation}}
@@ -740,35 +548,27 @@
                         {% endfor %}
                     </tr>
 
-                    <tr id="SE01CDL" class="hidden indent-level-2">
-                        <td>
-                            <button type="button" id="btnGI" aria-expanded="false" onclick="toggle(this.id,'#GE05CDR');"
-                                aria-controls="GE05CDR" aria-label="Current Deferred Liabilities">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" focusable="false">
-                                    <path d="M70.3 13.8L40 66.3 9.7 13.8z"></path>
-                                </svg>
-                            </button> Current Deferred Liabilities
-                        </td>
-
+                    <tr>
+                        <td>Current Deferred Liabilities</td>
                         {% for balance_sheet in balance_sheets %}
                         <td>
                             {{balance_sheet.current_deferred_liabilities}}
                         </td>
-
                         {% endfor %}
                     </tr>
-                    <tr id="GE05CDR" class="hidden indent-level-3">
-                        <td> Current Deferred Revenue</td>
+
+                    
+
+                    <tr>
+                        <td>Current Deferred Revenue</td>
                         {% for balance_sheet in balance_sheets %}
                         <td>
                             {{balance_sheet.current_deferred_revenue}}
                         </td>
                         {% endfor %}
-
                     </tr>
 
-
-                    <tr id="SE01OCLL" class="hidden indent-level-2">
+                    <tr>
                         <td>Other Current Liabilities</td>
                         {% for balance_sheet in balance_sheets %}
                         <td>
@@ -777,19 +577,8 @@
                         {% endfor %}
                     </tr>
 
-
-                    <tr id="NE02" class="hidden indent-level-1">
-                        <td>
-                            <button type="button" id="btnOIbOther" aria-expanded="false"
-                                onclick="toggle(this.id,'#SE01LTDACLO,#SE01NCDL,#WO02,#ON02');"
-                                aria-controls="SE01LTDACLO SE01NCDL WO02 ON02" aria-label="4 more from"
-                                aria-labelledby="btnOIbOther lblOIbOther">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" focusable="false">
-                                    <path d="M70.3 13.8L40 66.3 9.7 13.8z"></path>
-                                </svg>
-                            </button> Total Non Current Liabilities Net Minority Interest
-                        </td>
-
+                    <tr>
+                        <td>Total Non-Current Liabilities Net Minority Interest</td>
                         {% for balance_sheet in balance_sheets %}
                         <td>
                             {{balance_sheet.total_non_current_liabilities_net_minority_interest}}
@@ -797,17 +586,8 @@
                         {% endfor %}
                     </tr>
 
-                    <tr id="SE01LTDACLO" class="hidden indent-level-2">
-                        <td>
-                            <button type="button" id="btnGJ" aria-expanded="false"
-                                onclick="toggle(this.id,'#GE05LTDD,#GE05LTCLO');" aria-controls="GE05LTDD GE05LTCLO"
-                                aria-label="Long Term Debt And Capital Lease Obligation">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" focusable="false">
-                                    <path d="M70.3 13.8L40 66.3 9.7 13.8z"></path>
-                                </svg>
-                            </button> Long Term Debt And Capital Lease Obligation
-                        </td>
-
+                    <tr>
+                        <td>Long Term Debt and Capital Lease Obligation</td>
                         {% for balance_sheet in balance_sheets %}
                         <td>
                             {{balance_sheet.long_term_debt_and_capital_lease_obligation}}
@@ -815,9 +595,8 @@
                         {% endfor %}
                     </tr>
 
-
-                    <tr id="GE05LTDD" class="hidden indent-level-3">
-                        <td> Long Term Debt</td>
+                    <tr>
+                        <td>Long Term Debt</td>
                         {% for balance_sheet in balance_sheets %}
                         <td>
                             {{balance_sheet.long_term_debt}}
@@ -825,8 +604,8 @@
                         {% endfor %}
                     </tr>
 
-                    <tr id="GE05LTCLO" class="hidden indent-level-3">
-                        <td> Long Term Capital Lease Obligation</td>
+                    <tr>
+                        <td>long_term_capital_lease_obligation</td>
                         {% for balance_sheet in balance_sheets %}
                         <td>
                             {{balance_sheet.long_term_capital_lease_obligation}}
@@ -834,16 +613,8 @@
                         {% endfor %}
                     </tr>
 
-                    <tr id="SE01NCDL" class="hidden indent-level-2">
-                        <td>
-                            <button type="button" id="btnGK" aria-expanded="false"
-                                onclick="toggle(this.id,'#GE05NCDTLL,#GE05NCDRR');" aria-controls="GE05NCDTLL GE05NCDRR"
-                                aria-label="Non Current Deferred Liabilities" aria-labelledby="btnGK lblGEb">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" focusable="false">
-                                    <path d="M70.3 13.8L40 66.3 9.7 13.8z"></path>
-                                </svg>
-                            </button> Non Current Deferred Liabilities
-                        </td>
+                    <tr>
+                        <td>Non Current Deferred Liabilities</td>
                         {% for balance_sheet in balance_sheets %}
                         <td>
                             {{balance_sheet.non_current_deferred_liabilities}}
@@ -851,8 +622,8 @@
                         {% endfor %}
                     </tr>
 
-                    <tr id="GE05NCDTLL" class="hidden indent-level-3">
-                        <td> Non Current Deferred Taxes Liabilities</td>
+                    <tr>
+                        <td>Non Current Deferred Taxes Liabilities</td>
                         {% for balance_sheet in balance_sheets %}
                         <td>
                             {{balance_sheet.non_current_deferred_taxes_liabilities}}
@@ -860,8 +631,8 @@
                         {% endfor %}
                     </tr>
 
-                    <tr id="GE05NCDRR" class="hidden indent-level-3">
-                        <td> Non Current Deferred Revenue</td>
+                    <tr>
+                        <td>Non Current Deferred Revenue</td>
                         {% for balance_sheet in balance_sheets %}
                         <td>
                             {{balance_sheet.non_current_deferred_revenue}}
@@ -869,7 +640,7 @@
                         {% endfor %}
                     </tr>
 
-                    <tr id="WO02" class="hidden indent-level-2">
+                    <tr>
                         <td>Trade and Other Payables Non Current</td>
                         {% for balance_sheet in balance_sheets %}
                         <td>
@@ -877,8 +648,7 @@
                         </td>
                         {% endfor %}
                     </tr>
-
-                    <tr id="ON02" class="hidden indent-level-2">
+                    <tr>
                         <td>Other Non Current Liabilities</td>
                         {% for balance_sheet in balance_sheets %}
                         <td>
@@ -886,57 +656,24 @@
                         </td>
                         {% endfor %}
                     </tr>
-
                     <tr>
-                        <td>
-                            <button type="button" id="btnMA" aria-expanded="false" onclick="toggle(this.id,'#MS01ase');"
-                                aria-controls="MS01ase" aria-label="Total Equity Gross Minority Interest"
-                                aria-labelledby="btnMA lblMSa">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" focusable="false">
-                                    <path d="M70.3 13.8L40 66.3 9.7 13.8z"></path>
-                                </svg>
-                            </button> Total Equity Gross Minority Interest
-                        </td>
-
+                        <td>Total Equity Gross Minority Interest</td>
                         {% for balance_sheet in balance_sheets %}
                         <td>
                             {{balance_sheet.total_equity_gross_minority_interest}}
                         </td>
                         {% endfor %}
                     </tr>
-
-                    <tr id="MS01ase" class="hidden indent-level-1">
-                        <td>
-                            <button type="button" id="btnMB" aria-expanded="false"
-                                onclick="toggle(this.id,'#MS01acs,#MS01are,#MS01aglnare,#MS01aoea');"
-                                aria-controls="MS01acs MS01are MS01aglnare MS01aoea" aria-label="Stockholders' Equity"
-                                aria-labelledby="btnMB lblMSb">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" focusable="false">
-                                    <path d="M70.3 13.8L40 66.3 9.7 13.8z"></path>
-                                </svg>
-                            </button> Stockholders' Equity
-                        </td>
-
+                    <tr>
+                        <td>Stockholders Equity</td>
                         {% for balance_sheet in balance_sheets %}
                         <td>
                             {{balance_sheet.stockholders_equity}}
                         </td>
                         {% endfor %}
-
-
                     </tr>
-
-                    <tr id="MS01acs" class="hidden indent-level-2">
-                        <td>
-                            <button type="button" id="btnMC" aria-expanded="false"
-                                onclick="toggle(this.id,'#MS01acss');" aria-controls="MS01acss"
-                                aria-label="Capital Stock" aria-labelledby="btnMC lblMSb">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" focusable="false">
-                                    <path d="M70.3 13.8L40 66.3 9.7 13.8z"></path>
-                                </svg>
-                            </button> Capital Stock
-                        </td>
-
+                    <tr>
+                        <td>Capital Stock</td>
                         {% for balance_sheet in balance_sheets %}
                         <td>
                             {{balance_sheet.capital_stock}}
@@ -944,9 +681,8 @@
                         {% endfor %}
                     </tr>
 
-                    <tr id="MS01acss" class="hidden indent-level-3">
-                        <td> Common Stock </td>
-
+                    <tr>
+                        <td>Common Stock</td>
                         {% for balance_sheet in balance_sheets %}
                         <td>
                             {{balance_sheet.common_stock}}
@@ -954,9 +690,8 @@
                         {% endfor %}
                     </tr>
 
-                    <tr id="MS01are" class="hidden indent-level-2">
-                        <td> Retained Earnings </td>
-
+                    <tr>
+                        <td>Retained Earnings</td>
                         {% for balance_sheet in balance_sheets %}
                         <td>
                             {{balance_sheet.retained_earnings}}
@@ -964,9 +699,8 @@
                         {% endfor %}
                     </tr>
 
-                    <tr id="MS01aglnare" class="hidden indent-level-2">
-                        <td> Gains/ (Losses) Not Affecting Retained Earnings</td>
-
+                    <tr>
+                        <td>Gains or Losses not Affecting Retained Earnings</td>
                         {% for balance_sheet in balance_sheets %}
                         <td>
                             {{balance_sheet.gains_or_losses_not_affecting_retained_earnings}}
@@ -974,45 +708,38 @@
                         {% endfor %}
                     </tr>
 
-                    <tr id="MS01aoea" class="hidden indent-level-2">
-                        <td> Other Equity Adjustments</td>
+                    <tr>
+                        <td>Other Equity Adjustments</td>
                         {% for balance_sheet in balance_sheets %}
                         <td>
                             {{balance_sheet.other_equity_adjustments}}
                         </td>
                         {% endfor %}
                     </tr>
+
+
+
+                    
+
+
+
+
                 </tbody>
             </table>
         </div>
-    </div>
+
+
+        <!-- Button to Add More Advisors -->
+        <!-- <div class="row mt-5">
+            <div class="col-md-12 text-center">
+                <button type="button" class="btn btn-primary" id="submit_balance_sheet">Submit</button>
+            </div>
+        </div> -->
+
+    </form>
 </div>
 
 
-<script>
-    function toggle(btnID, eIDs) {
-        var theRows = document.querySelectorAll(eIDs);
-        var theButton = document.getElementById(btnID);
-        if (theButton.getAttribute("aria-expanded") == "false") {
-            for (var i = 0; i < theRows.length; i++) {
-                theRows[i].classList.add("shown");
-                theRows[i].classList.remove("hidden");
-            }
-            theButton.setAttribute("aria-expanded", "true");
-        } else {
-            for (var i = 0; i < theRows.length; i++) {
-                theRows[i].classList.add("hidden");
-                theRows[i].classList.remove("shown");
-            }
-            theButton.setAttribute("aria-expanded", "false");
-        }
-    }
-
-    function expandAll() {
-        const buttons = document.querySelectorAll('.row button[aria-expanded="false"]');
-        buttons.forEach(button => button.click());
-    }
-</script>
 
 
 

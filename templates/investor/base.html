@@ -98,7 +98,7 @@
             <h2>{{ company.name }}</h2>
             <a href="{% if company.company_id %}{% url 'basic_information' company.company_id %}{% else %}#{% endif %}" class="dropdown-btn">Profile</a>
             <a href="#" class="dropdown-btn">Products & Services</a>
-            <a href="#" class="dropdown-btn">Founders & Team</a>
+            <a href="{%  url 'founders_and_team' company.company_id %}" class="dropdown-btn">Founders & Team</a>
             <a href="#" class="dropdown-btn">Pitch Video</a>
             <a href="#" class="dropdown-btn">Pitch Presentation</a>
             <a href="#" class="dropdown-btn">Portfolio</a>

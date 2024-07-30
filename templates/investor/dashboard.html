@@ -1,4 +1,4 @@
-{% extends './company_profile.html' %}
+{% extends '../admin/company_profile.html' %}
 {% load static %}
 {% block content %}
 
@@ -82,7 +82,7 @@
 
                         div.addEventListener('click', function () {
                             console.log('Clicked companyId:', companyId); // Debug log
-                            const url = `/investor_details/${encodeURIComponent(companyId)}/`;
+                            const url = `/investor_base/${encodeURIComponent(companyId)}/`;
                             console.log('Redirecting to URL:', url); // Debug log
                             window.location.href = url;
                         });
