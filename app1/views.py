@@ -243,6 +243,8 @@ def logout(request):
     request.session.flush()
     return redirect('login')
 
+
+
 # Sign Up
 def signup(request):
     if request.method == 'POST':
@@ -270,7 +272,7 @@ def signup(request):
         founder_linkedin_url = request.POST.get('founder_linkedin_url')
         founder_phone_number = request.POST.get('founder_phone_number')
         founder_short_profile = request.POST.get('founder_short_profile')
-        founder_photo = request.FILES.get('founder_email')
+        founder_photo = request.FILES.get('founder_photo')
 
         # Validate passwords
         if password != confirm_password:
@@ -1575,8 +1577,7 @@ from datetime import datetime
 
 
 
-
-def incomeStatementTable(request, id):
+def incomeStatementTable1(request, id):
     company = Company.objects.get(company_id=id)
     if request.method == 'POST':
         select_type_of_data = request.POST.get('select_type_of_data')
@@ -1653,9 +1654,280 @@ def incomeStatementTable(request, id):
             'years_json': years_json
         }
         return render(request, 'admin/income_statement_table.html', context)
+    
+#New
+def incomeStatementTable2(request, id):
+    company = Company.objects.get(company_id=id)
+    if request.method == 'POST':
+        select_type_of_data = request.POST.get('select_type_of_data')
+
+        if select_type_of_data == 'monthly':
+            year = int(request.POST.get('year'))
+            month_name = request.POST.get('month')
+            #print(year, month_name, 'monthly')
+
+            # Convert month name to month number
+            month = datetime.strptime(month_name, '%B').month
+            date = datetime(year, month, 1)
 
 
-def incomeStatement(request, id):
+            request.session['monthly_date'] = date
+            request.session['monthly_month_name'] = month_name
+            
+            # income_statement = IncomeStatement(
+            #     company_id=company,
+            #     date=date,
+            #     monthly_or_quarterly_or_yearly = month_name 
+            # )
+            # income_statement.save()
+            return redirect('income_statement', id)
+
+        elif select_type_of_data == 'quarterly':
+            year = int(request.POST.get('year'))
+            quarter = request.POST.get('quarter').split()[0]
+            quarter_value = request.POST.get('quarter')
+            #print(year, quarter, 'quarterly')
+
+            # Map quarters to starting months
+            quarter_start_months = {
+                'Q1': 1,
+                'Q2': 4,
+                'Q3': 7,
+                'Q4': 10
+            }
+            month = quarter_start_months[quarter]
+            date = datetime(year, month, 1)
+
+            request.session['quarterly_date'] = date
+            request.session['quarterly_quarter_value'] = quarter_value
+            
+            # income_statement = IncomeStatement(
+            #     company_id=company,
+            #     date=date,
+            #     #monthly_or_quarterly_or_yearly = quarter_value +" "+ str(year)
+            #     monthly_or_quarterly_or_yearly = quarter_value 
+
+            # )
+            # income_statement.save()
+            return redirect('income_statement', id)
+
+        elif select_type_of_data == 'yearly':
+            year = int(request.POST.get('year'))
+            #print(year, 'yearly')
+            date = datetime(year, 1, 1)
+
+            request.session['yearly_date'] = date
+            request.session['yearly_year'] = quarter_value
+            
+            
+            # income_statement = IncomeStatement(
+            #     company_id=company,
+            #     date=date,
+            #     monthly_or_quarterly_or_yearly = year
+            # )
+            # income_statement.save()
+            return redirect('income_statement', id)
+    
+    else:
+        company = Company.objects.get(company_id=id)
+        income_statements = IncomeStatement.objects.filter(company_id=id)
+        months, quarters, years = get_months_quarters_years()
+        
+        context = {
+            'company': company,
+            'income_statements': income_statements,
+            'months': months,
+            'quarters': quarters,
+            'years': years,
+            'months_json': months_json,
+            'quarters_json': quarters_json,
+            'years_json': years_json
+        }
+        return render(request, 'admin/income_statement_table.html', context)
+    
+
+def incomeStatementTable3(request, id):
+    company = Company.objects.get(company_id=id)
+    if request.method == 'POST':
+        select_type_of_data = request.POST.get('select_type_of_data')
+
+        if select_type_of_data == 'monthly':
+            year = int(request.POST.get('year'))
+            month_name = request.POST.get('month')
+            #print(year, month_name, 'monthly')
+
+            # Convert month name to month number
+            month = datetime.strptime(month_name, '%B').month
+            date = datetime(year, month, 1)
+
+
+            request.session['monthly_date'] = date
+            request.session['monthly_month_name'] = month_name
+            
+           
+            return redirect('income_statement', id)
+
+        elif select_type_of_data == 'quarterly':
+            year = int(request.POST.get('year'))
+            quarter = request.POST.get('quarter').split()[0]
+            quarter_value = request.POST.get('quarter')
+            #print(year, quarter, 'quarterly')
+
+            # Map quarters to starting months
+            quarter_start_months = {
+                'Q1': 1,
+                'Q2': 4,
+                'Q3': 7,
+                'Q4': 10
+            }
+            month = quarter_start_months[quarter]
+            date = datetime(year, month, 1)
+
+            request.session['quarterly_date'] = date
+            request.session['quarterly_quarter_value'] = quarter_value
+            
+            
+            return redirect('income_statement', id)
+
+        elif select_type_of_data == 'yearly':
+            year = int(request.POST.get('year'))
+            #print(year, 'yearly')
+            date = datetime(year, 1, 1)
+
+            request.session['yearly_date'] = date
+            request.session['yearly_year'] = quarter_value
+            
+            
+            
+            return redirect('income_statement', id)
+    
+    else:
+        company = Company.objects.get(company_id=id)
+        income_statements = IncomeStatement.objects.filter(company_id=id)
+        months, quarters, years = get_months_quarters_years()
+        
+        context = {
+            'company': company,
+            'income_statements': income_statements,
+            'months': months,
+            'quarters': quarters,
+            'years': years,
+            'months_json': months_json,
+            'quarters_json': quarters_json,
+            'years_json': years_json
+        }
+        return render(request, 'admin/income_statement_table.html', context)
+    
+
+from datetime import datetime
+
+def incomeStatementTable(request, id):
+    company = Company.objects.get(company_id=id)
+    if request.method == 'POST':
+        select_type_of_data = request.POST.get('select_type_of_data')
+
+        if select_type_of_data == 'monthly':
+            year = int(request.POST.get('year'))
+            month_name = request.POST.get('month')
+
+            # Convert month name to month number
+            month = datetime.strptime(month_name, '%B').month
+            date = datetime(year, month, 1)
+
+            request.session['monthly_date'] = date.strftime('%Y-%m-%d')
+            request.session['monthly_month_name'] = month_name
+
+            selected_monthly_income_statement= IncomeStatement.objects.filter(company_id=id,date=date,monthly_or_quarterly_or_yearly=month_name)
+
+            if selected_monthly_income_statement:
+                messages.error(request,f'Income Statment for {str(year)} {month_name} already exists pls enter next month Statement')
+                return redirect('planning_budgeting_income_statement_table',id)
+
+            else:
+              return redirect('income_statement', id)
+
+        elif select_type_of_data == 'quarterly':
+            year = int(request.POST.get('year'))
+            quarter = request.POST.get('quarter').split()[0]
+            quarter_value = request.POST.get('quarter')
+
+            # Map quarters to starting months
+            quarter_start_months = {
+                'Q1': 1,
+                'Q2': 4,
+                'Q3': 7,
+                'Q4': 10
+            }
+            month = quarter_start_months[quarter]
+            date = datetime(year, month, 1)
+
+            request.session['quarterly_date'] = date.strftime('%Y-%m-%d')
+            request.session['quarterly_quarter_value'] = quarter_value
+            quarterly_quarter_value = request.session.get('quarterly_quarter_value')
+
+
+            print(quarter_value,'quarter_value')
+            print(quarterly_quarter_value,'quarterly_quarter_value')
+            
+
+            selected_quarterly_income_statement= IncomeStatement.objects.filter(company_id=id,date=date,monthly_or_quarterly_or_yearly=quarter_value)
+
+            if selected_quarterly_income_statement:
+                messages.error(request,f'Income Statment for {str(year)} {quarter_value} already exists pls enter next month Statement')
+                return redirect('planning_budgeting_income_statement_table',id)
+
+            else:
+              return redirect('income_statement', id)
+            
+            
+
+        elif select_type_of_data == 'yearly':
+            year = int(request.POST.get('year'))
+            date = datetime(year, 1, 1)
+
+            request.session['yearly_date'] = date.strftime('%Y-%m-%d')
+            request.session['yearly_year'] = year
+
+            selected_yearly_income_statement= IncomeStatement.objects.filter(company_id=id,date=date,monthly_or_quarterly_or_yearly = year)
+
+            if selected_yearly_income_statement:
+                messages.error(request,f'Income Statment for {str(year)}  already exists pls enter next month Statement')
+                return redirect('planning_budgeting_income_statement_table',id)
+
+            else:
+              return redirect('income_statement', id)
+            
+            
+            
+    
+    else:
+        company = Company.objects.get(company_id=id)
+        income_statements = IncomeStatement.objects.filter(company_id=id)
+        months, quarters, years = get_months_quarters_years()
+        
+        # context = {
+        #     'company': company,
+        #     'income_statements': income_statements,
+        #     'months': months,
+        #     'quarters': quarters,
+        #     'years': years,
+        # }
+
+        context = {
+            'company': company,
+            'income_statements': income_statements,
+            'months': months,
+            'quarters': quarters,
+            'years': years,
+            'months_json': months_json,
+            'quarters_json': quarters_json,
+            'years_json': years_json
+        }
+        return render(request, 'admin/income_statement_table.html', context)
+
+
+
+def incomeStatement1(request, id):
     company = Company.objects.get(company_id=id)
     income_statement = IncomeStatement.objects.filter(company_id=id).last()
 
@@ -1744,10 +2016,162 @@ def incomeStatement(request, id):
         context = {'company': company, 'income_statement': income_statement}
         return render(request, 'admin/income_statement.html', context)
 
+#New
+def incomeStatement(request, id):
+    company = Company.objects.get(company_id=id)
+    #income_statement = IncomeStatement.objects.filter(company_id=id).last()
+
+    if request.method == 'POST':
+        # Retrieve and validate POST data
+        operating_revenue = request.POST.get('operating_revenue')
+        cost_of_revenue = request.POST.get('cost_of_revenue')
+        research_and_development_expense = request.POST.get('research_and_development_expense')
+        general_and_administrative_expenses = request.POST.get('general_and_administrative_expenses')
+        selling_and_marketing_expense = request.POST.get('selling_and_marketing_expense')
+        interest_income_non_operating = request.POST.get('interest_income_non_operating')
+        interest_expense_non_operating = request.POST.get('interest_expense_non_operating')
+        gain_or_loss_on_sale_of_security = request.POST.get('gain_or_loss_on_sale_of_security')
+        special_income_or_charges = request.POST.get('special_income_or_charges')
+        write_off = request.POST.get('write_off')
+        other_non_operating_income_or_expenses = request.POST.get('other_non_operating_income_or_expenses')
+        tax_provision = request.POST.get('tax_provision')
+        preference_share_dividends = request.POST.get('preference_share_dividends')
+        equity_share_dividends = request.POST.get('equity_share_dividends')
+        diluted_eps = request.POST.get('diluted_eps')
+        depreciation_and_amortization = request.POST.get('depreciation_and_amortization')
+        no_of_equity_shares = request.POST.get('no_of_equity_shares')
+
+        # Convert to integers if not None, otherwise set to 0
+        operating_revenue = int(operating_revenue) if operating_revenue else 0
+        cost_of_revenue = int(cost_of_revenue) if cost_of_revenue else 0
+        research_and_development_expense = int(research_and_development_expense) if research_and_development_expense else 0
+        general_and_administrative_expenses = int(general_and_administrative_expenses) if general_and_administrative_expenses else 0
+        selling_and_marketing_expense = int(selling_and_marketing_expense) if selling_and_marketing_expense else 0
+        interest_income_non_operating = int(interest_income_non_operating) if interest_income_non_operating else 0
+        interest_expense_non_operating = int(interest_expense_non_operating) if interest_expense_non_operating else 0
+        gain_or_loss_on_sale_of_security = int(gain_or_loss_on_sale_of_security) if gain_or_loss_on_sale_of_security else 0
+        special_income_or_charges = int(special_income_or_charges) if special_income_or_charges else 0
+        write_off = int(write_off) if write_off else 0
+        other_non_operating_income_or_expenses = int(other_non_operating_income_or_expenses) if other_non_operating_income_or_expenses else 0
+        tax_provision = int(tax_provision) if tax_provision else 0
+        preference_share_dividends = int(preference_share_dividends) if preference_share_dividends else 0
+        equity_share_dividends = int(equity_share_dividends) if equity_share_dividends else 0
+        diluted_eps = int(diluted_eps) if diluted_eps else 0
+        depreciation_and_amortization = int(depreciation_and_amortization) if depreciation_and_amortization else 0
+        no_of_equity_shares = int(no_of_equity_shares) if no_of_equity_shares else 0
+
+        # Ensure income_statement is not None
+        # if income_statement is None:
+        #     income_statement = IncomeStatement(company_id=id)
+
+        
+        monthly_date  = request.session.get('monthly_date') 
+        monthly_month_name = request.session.get('monthly_month_name')
+        quarterly_date  = request.session.get('quarterly_date') 
+        quarterly_quarter_value = request.session.get('quarterly_quarter_value')
+        yearly_date  = request.session.get('yearly_date') 
+        yearly_year  = request.session.get('yearly_year') 
+
+        if monthly_date and monthly_month_name:
+            date = monthly_date
+            monthly_or_quarterly_or_yearly = monthly_month_name
+        if quarterly_date and quarterly_quarter_value:
+            date = quarterly_date
+            monthly_or_quarterly_or_yearly = quarterly_quarter_value
+        if yearly_date and yearly_year:
+            date = yearly_date
+            monthly_or_quarterly_or_yearly = yearly_year
+
+        print(date,'date')
+        print(monthly_or_quarterly_or_yearly,'monthly_or_quarterly_or_yearly')
+
+
+        # Update income statement fields
+        operating_revenue = operating_revenue
+        cost_of_revenue = cost_of_revenue
+        general_and_administrative_expenses = general_and_administrative_expenses
+        selling_and_marketing_expense = selling_and_marketing_expense
+        research_and_development_expense = research_and_development_expense
+        interest_income_non_operating = interest_income_non_operating
+        interest_expense_non_operating = interest_expense_non_operating
+        gain_or_loss_on_sale_of_security = gain_or_loss_on_sale_of_security
+        special_income_or_charges = special_income_or_charges
+        write_off = write_off
+        other_non_operating_income_or_expenses = other_non_operating_income_or_expenses
+        tax_provision = tax_provision
+        preference_share_dividends = preference_share_dividends
+        equity_share_dividends = equity_share_dividends
+        diluted_eps = diluted_eps
+        depreciation_and_amortization = depreciation_and_amortization
+        no_of_equity_shares = no_of_equity_shares
+
+        # Calculate derived fields
+        total_revenue = operating_revenue
+        gross_profit = total_revenue - cost_of_revenue
+        selling_general_and_administrative_expense = general_and_administrative_expenses + selling_and_marketing_expense
+        operating_expense = selling_general_and_administrative_expense + research_and_development_expense
+        operating_income = gross_profit - operating_expense
+        net_non_operating_interest_income_expense = interest_income_non_operating - interest_expense_non_operating
+        other_income_or_expense = gain_or_loss_on_sale_of_security + special_income_or_charges + write_off + other_non_operating_income_or_expenses
+        pretax_income = operating_income + net_non_operating_interest_income_expense + other_income_or_expense
+        net_income = pretax_income - tax_provision
+        net_income_to_common_stockholders = net_income - preference_share_dividends
+        retained_earnings = net_income_to_common_stockholders - equity_share_dividends
+        basic_eps = net_income_to_common_stockholders / no_of_equity_shares
+        ebitda = operating_income + depreciation_and_amortization
+
+        income_statement = IncomeStatement (
+            company_id = company,
+            date = date,
+            operating_revenue = operating_revenue,
+            cost_of_revenue = cost_of_revenue,
+            general_and_administrative_expenses = general_and_administrative_expenses,
+            selling_and_marketing_expense = selling_and_marketing_expense,
+            research_and_development_expense = research_and_development_expense,
+            interest_income_non_operating = interest_income_non_operating,
+            interest_expense_non_operating = interest_expense_non_operating,
+            gain_or_loss_on_sale_of_security = gain_or_loss_on_sale_of_security,
+            special_income_or_charges = special_income_or_charges,
+            write_off = write_off,
+            other_non_operating_income_or_expenses = other_non_operating_income_or_expenses,
+            tax_provision = tax_provision,
+            preference_share_dividends = preference_share_dividends,
+            equity_share_dividends = equity_share_dividends,
+            diluted_eps = diluted_eps,
+            depreciation_and_amortization = depreciation_and_amortization,
+            no_of_equity_shares = no_of_equity_shares,
+            total_revenue = total_revenue,
+            gross_profit = gross_profit,
+            selling_general_and_administrative_expense = selling_general_and_administrative_expense,
+            operating_expense = operating_expense,
+            operating_income = operating_income,
+            net_non_operating_interest_income_expense = net_non_operating_interest_income_expense,
+            other_income_or_expense = other_income_or_expense,
+            pretax_income = pretax_income,
+            net_income = net_income,
+            net_income_to_common_stockholders = net_income_to_common_stockholders,
+            retained_earnings = retained_earnings,
+            basic_eps = basic_eps,
+            ebitda = ebitda,
+            monthly_or_quarterly_or_yearly = monthly_or_quarterly_or_yearly
+
+        )
+
+        # Save income statement
+        income_statement.save()
+
+        return redirect('planning_budgeting_income_statement_table', id)
+    else:
+        # context = {'company': company, 'income_statement': income_statement}
+        context = {'company': company}
+        return render(request, 'admin/income_statement.html', context)
 
 
 
-def balanceSheetTable(request, id):
+
+
+
+def balanceSheetTable1(request, id):
     company = Company.objects.get(company_id=id)
     if request.method == 'POST':
         select_type_of_data = request.POST.get('select_type_of_data')
@@ -1826,8 +2250,116 @@ def balanceSheetTable(request, id):
         return render(request, 'admin/balance_sheet_table.html', context)
 
 
+#New
+def balanceSheetTable(request, id):
+    company = Company.objects.get(company_id=id)
+    if request.method == 'POST':
+        select_type_of_data = request.POST.get('select_type_of_data')
 
-def balanceSheet(request, id):
+        if select_type_of_data == 'monthly':
+            year = int(request.POST.get('year'))
+            month_name = request.POST.get('month')
+            #print(year, month_name, 'monthly')
+
+            # Convert month name to month number
+            month = datetime.strptime(month_name, '%B').month
+            date = datetime(year, month, 1)
+            
+            # balance_sheet = BalanceSheet(
+            #     company_id=company,
+            #     date=date,
+            #     monthly_or_quarterly_or_yearly = month_name 
+            # )
+            # balance_sheet.save()
+
+            request.session['balance_sheet_monthly_date'] = date.strftime('%Y-%m-%d')
+            request.session['balance_sheet_monthly_month_name'] = month_name
+
+            selected_monthly_balance_sheet= BalanceSheet.objects.filter(company_id=id,date=date,monthly_or_quarterly_or_yearly=month_name)
+
+            if selected_monthly_balance_sheet:
+                messages.error(request,f'Balance Sheet for {str(year)} {month_name} already exists pls enter next month Statement')
+                return redirect('planning_budgeting_balance_sheet_table',id)
+            else:
+              return redirect('balance_sheet', id)
+
+        elif select_type_of_data == 'quarterly':
+            year = int(request.POST.get('year'))
+            quarter = request.POST.get('quarter').split()[0]
+            quarter_value = request.POST.get('quarter')
+            #print(year, quarter, 'quarterly')
+
+            # Map quarters to starting months
+            quarter_start_months = {
+                'Q1': 1,
+                'Q2': 4,
+                'Q3': 7,
+                'Q4': 10
+            }
+            month = quarter_start_months[quarter]
+            date = datetime(year, month, 1)
+            
+            # balance_sheet = BalanceSheet(
+            #     company_id=company,
+            #     date=date,
+            #     #monthly_or_quarterly_or_yearly = quarter_value +" "+ str(year)
+            #     monthly_or_quarterly_or_yearly = quarter_value 
+
+            # )
+            # balance_sheet.save()
+            request.session['balance_sheet_quarterly_date'] = date.strftime('%Y-%m-%d')
+            request.session['balance_sheet_quarterly_quarter_value'] = quarter_value
+
+            selected_quarterly_balance_sheet= BalanceSheet.objects.filter(company_id=id,date=date,monthly_or_quarterly_or_yearly=quarter_value)
+
+            if selected_quarterly_balance_sheet:
+                messages.error(request,f'Balance Sheet for {str(year)} {quarter_value} already exists pls enter next month Statement')
+                return redirect('planning_budgeting_balance_sheet_table',id)
+            else:
+              return redirect('balance_sheet', id)
+            
+
+        elif select_type_of_data == 'yearly':
+            year = int(request.POST.get('year'))
+            #print(year, 'yearly')
+            date = datetime(year, 1, 1)
+            
+            # balance_sheet = BalanceSheet(
+            #     company_id=company,
+            #     date=date,
+            #     monthly_or_quarterly_or_yearly = year
+            # )
+            # balance_sheet.save()
+            request.session['balance_sheet_yearly_date'] = date.strftime('%Y-%m-%d')
+            request.session['balance_sheet_yearly_year'] = year
+            selected_yearly_balance_sheet= BalanceSheet.objects.filter(company_id=id,date=date,monthly_or_quarterly_or_yearly=year)
+
+            if selected_yearly_balance_sheet:
+                messages.error(request,f'Balance Sheet for {str(year)} already exists pls enter next month Statement')
+                return redirect('planning_budgeting_balance_sheet_table',id)
+            else:
+              return redirect('balance_sheet', id)
+            
+    
+    else:
+        company = Company.objects.get(company_id=id)
+        balance_sheets = BalanceSheet.objects.filter(company_id=id)
+        months, quarters, years = get_months_quarters_years()
+        
+        context = {
+            'company': company,
+            'balance_sheets': balance_sheets,
+            'months': months,
+            'quarters': quarters,
+            'years': years,
+            'months_json': months_json,
+            'quarters_json': quarters_json,
+            'years_json': years_json
+        }
+        return render(request, 'admin/balance_sheet_table.html', context)
+
+
+def balanceSheet1(request, id):
     company = Company.objects.get(company_id=id)
     balance_sheet = BalanceSheet.objects.filter(company_id=id).last()
 
@@ -1993,18 +2525,265 @@ def balanceSheet(request, id):
     else:
         context = {'company': company, 'balance_sheet': balance_sheet}
         return render(request, 'admin/balance_sheet.html', context)
-    
+
+#New   
+def balanceSheet(request, id):
+    company = Company.objects.get(company_id=id)
+    #balance_sheet = BalanceSheet.objects.filter(company_id=id).last()
+
+    if request.method == 'POST':
+        # Retrieve and validate POST data
+        cash = request.POST.get('cash')
+        cash_equivalents = request.POST.get('cash_equivalents')
+        other_short_term_investments = request.POST.get('other_short_term_investments')
+        gross_accounts_receivable = request.POST.get('gross_accounts_receivable')
+        allowance_for_doubtful_accounts_receivable = request.POST.get('allowance_for_doubtful_accounts_receivable')
+        other_receivables = request.POST.get('other_receivables')
+        raw_materials = request.POST.get('raw_materials')
+        work_in_process = request.POST.get('work_in_process')
+        finished_goods = request.POST.get('finished_goods')
+        hedging_current_assets = request.POST.get('hedging_current_assets')
+        other_current_assets = request.POST.get('other_current_assets')
+        land_and_improvements = request.POST.get('land_and_improvements')
+        buildings_and_improvements = request.POST.get('buildings_and_improvements')
+        machinery_furniture_equipment = request.POST.get('machinery_furniture_equipment')
+        other_properties = request.POST.get('other_properties')
+        leases = request.POST.get('leases')
+        accumulated_depreciation = request.POST.get('accumulated_depreciation')
+        goodwill = request.POST.get('goodwill')
+        other_intangible_assets = request.POST.get('other_intangible_assets')
+        long_term_equity_investment = request.POST.get('long_term_equity_investment')
+        other_non_current_assets = request.POST.get('other_non_current_assets')
+        accounts_payable = request.POST.get('accounts_payable')
+        income_tax_payable = request.POST.get('income_tax_payable')
+        pension_and_other_post_retirement_benefit_plans_current = request.POST.get('pension_and_other_post_retirement_benefit_plans_current')
+        current_debt = request.POST.get('current_debt')
+        capital_lease_obligation = request.POST.get('capital_lease_obligation')
+        current_deferred_revenue = request.POST.get('current_deferred_revenue')
+        other_current_liabilities = request.POST.get('other_current_liabilities')
+        long_term_debt = request.POST.get('long_term_debt')
+        long_term_capital_lease_obligation = request.POST.get('long_term_capital_lease_obligation')
+        non_current_deferred_taxes_liabilities = request.POST.get('non_current_deferred_taxes_liabilities')
+        non_current_deferred_revenue = request.POST.get('non_current_deferred_revenue')
+        trade_and_other_payables_non_current = request.POST.get('trade_and_other_payables_non_current')
+        other_non_current_liabilities = request.POST.get('other_non_current_liabilities')
+        common_stock = request.POST.get('common_stock')
+        retained_earnings = request.POST.get('retained_earnings')
+        gains_or_losses_not_affecting_retained_earnings = request.POST.get('gains_or_losses_not_affecting_retained_earnings')
+        other_equity_adjustments = request.POST.get('other_equity_adjustments')
+
+
+        
+
+        # Convert to integers if not None, otherwise set to 0
+        cash = int(cash) if cash else 0
+        cash_equivalents = int(cash_equivalents) if cash_equivalents else 0
+        other_short_term_investments = int(other_short_term_investments) if other_short_term_investments else 0
+        gross_accounts_receivable = int(gross_accounts_receivable) if gross_accounts_receivable else 0
+        allowance_for_doubtful_accounts_receivable = int(allowance_for_doubtful_accounts_receivable) if allowance_for_doubtful_accounts_receivable else 0
+        other_receivables = int(other_receivables) if other_receivables else 0
+        raw_materials = int(raw_materials) if raw_materials else 0
+        work_in_process = int(work_in_process) if work_in_process else 0
+        finished_goods = int(finished_goods) if finished_goods else 0
+        hedging_current_assets = int(hedging_current_assets) if hedging_current_assets else 0
+        other_current_assets = int(other_current_assets) if other_current_assets else 0
+        land_and_improvements = int(land_and_improvements) if land_and_improvements else 0
+        buildings_and_improvements = int(buildings_and_improvements) if buildings_and_improvements else 0
+        machinery_furniture_equipment = int(machinery_furniture_equipment) if machinery_furniture_equipment else 0
+        other_properties = int(other_properties) if other_properties else 0
+        leases = int(leases) if leases else 0
+        accumulated_depreciation = int(accumulated_depreciation) if accumulated_depreciation else 0
+        goodwill = int(goodwill) if goodwill else 0
+        other_intangible_assets = int(other_intangible_assets) if other_intangible_assets else 0
+        long_term_equity_investment = int(long_term_equity_investment) if long_term_equity_investment else 0
+        other_non_current_assets = int(other_non_current_assets) if other_non_current_assets else 0
+        accounts_payable = int(accounts_payable) if accounts_payable else 0
+        income_tax_payable = int(income_tax_payable) if income_tax_payable else 0
+        pension_and_other_post_retirement_benefit_plans_current = int(pension_and_other_post_retirement_benefit_plans_current) if pension_and_other_post_retirement_benefit_plans_current else 0
+        current_debt = int(current_debt) if current_debt else 0
+        capital_lease_obligation = int(capital_lease_obligation) if capital_lease_obligation else 0
+        current_deferred_revenue = int(current_deferred_revenue) if current_deferred_revenue else 0
+        other_current_liabilities = int(other_current_liabilities) if other_current_liabilities else 0
+        long_term_debt = int(long_term_debt) if long_term_debt else 0
+        long_term_capital_lease_obligation = int(long_term_capital_lease_obligation) if long_term_capital_lease_obligation else 0
+        non_current_deferred_taxes_liabilities = int(non_current_deferred_taxes_liabilities) if non_current_deferred_taxes_liabilities else 0
+        non_current_deferred_revenue = int(non_current_deferred_revenue) if non_current_deferred_revenue else 0
+        trade_and_other_payables_non_current = int(trade_and_other_payables_non_current) if trade_and_other_payables_non_current else 0
+        other_non_current_liabilities = int(other_non_current_liabilities) if other_non_current_liabilities else 0
+        common_stock = int(common_stock) if common_stock else 0
+        retained_earnings = int(retained_earnings) if retained_earnings else 0
+        gains_or_losses_not_affecting_retained_earnings = int(gains_or_losses_not_affecting_retained_earnings) if gains_or_losses_not_affecting_retained_earnings else 0
+        other_equity_adjustments = int(other_equity_adjustments) if other_equity_adjustments else 0
+
+        
+
+        # Ensure income_statement is not None
+        # if income_statement is None:
+        #     income_statement = IncomeStatement(company_id=id)
+
+        balance_sheet_monthly_date  = request.session.get('balance_sheet_monthly_date') 
+        balance_sheet_monthly_month_name = request.session.get('balance_sheet_monthly_month_name')
+        balance_sheet_quarterly_date  = request.session.get('balance_sheet_quarterly_date') 
+        balance_sheet_quarterly_quarter_value = request.session.get('balance_sheet_quarterly_quarter_value')
+        balance_sheet_yearly_date  = request.session.get('balance_sheet_yearly_date') 
+        balance_sheet_yearly_year  = request.session.get('balance_sheet_yearly_year')
+
+        if balance_sheet_monthly_date and balance_sheet_monthly_month_name:
+            date = balance_sheet_monthly_date
+            monthly_or_quarterly_or_yearly = balance_sheet_monthly_month_name
+        if balance_sheet_quarterly_date and balance_sheet_quarterly_quarter_value:
+            date = balance_sheet_quarterly_date
+            monthly_or_quarterly_or_yearly = balance_sheet_quarterly_quarter_value
+        if balance_sheet_yearly_date and balance_sheet_yearly_year:
+            date = balance_sheet_yearly_date
+            monthly_or_quarterly_or_yearly = balance_sheet_yearly_year
+
+        # Update income statement fields
+        cash = cash
+        cash_equivalents = cash_equivalents
+        other_short_term_investments = other_short_term_investments
+        gross_accounts_receivable = gross_accounts_receivable
+        allowance_for_doubtful_accounts_receivable = allowance_for_doubtful_accounts_receivable 
+        other_receivables = other_receivables
+        raw_materials = raw_materials
+        work_in_process = work_in_process
+        finished_goods = finished_goods
+        hedging_current_assets = hedging_current_assets
+        other_current_assets = other_current_assets
+        land_and_improvements = land_and_improvements
+        buildings_and_improvements = buildings_and_improvements
+        machinery_furniture_equipment = machinery_furniture_equipment
+        other_properties = other_properties
+        leases = leases
+        accumulated_depreciation = accumulated_depreciation
+        goodwill = goodwill
+        other_intangible_assets = other_intangible_assets
+        long_term_equity_investment = long_term_equity_investment
+        other_non_current_assets = other_non_current_assets
+        accounts_payable = accounts_payable
+        income_tax_payable = income_tax_payable
+        pension_and_other_post_retirement_benefit_plans_current = pension_and_other_post_retirement_benefit_plans_current
+        current_debt = current_debt
+        capital_lease_obligation = capital_lease_obligation
+        current_deferred_revenue = current_deferred_revenue
+        other_current_liabilities = other_current_liabilities
+        long_term_debt = long_term_debt
+        long_term_capital_lease_obligation = long_term_capital_lease_obligation
+        non_current_deferred_taxes_liabilities = non_current_deferred_taxes_liabilities
+        non_current_deferred_revenue = non_current_deferred_revenue
+        trade_and_other_payables_non_current = trade_and_other_payables_non_current
+        other_non_current_liabilities = other_non_current_liabilities
+        common_stock = common_stock
+        retained_earnings = retained_earnings 
+        gains_or_losses_not_affecting_retained_earnings = gains_or_losses_not_affecting_retained_earnings
+        other_equity_adjustments = other_equity_adjustments
+        
+        
+        # Calculate derived fields
+        cash_and_cash_equivalents = cash + cash_equivalents
+        inventory = raw_materials + work_in_process + finished_goods
+        capital_stock = common_stock
+        cash_cash_equivalents_and_short_term_investments = cash_and_cash_equivalents + other_short_term_investments
+        accounts_receivable = gross_accounts_receivable + allowance_for_doubtful_accounts_receivable
+        receivables = accounts_receivable + other_receivables
+        current_assets = cash_cash_equivalents_and_short_term_investments + receivables + inventory + hedging_current_assets + other_current_assets
+        gross_ppe = land_and_improvements + buildings_and_improvements + machinery_furniture_equipment + other_properties + leases
+        net_ppe = gross_ppe + accumulated_depreciation
+        goodwill_and_other_intangible_assets = goodwill + other_intangible_assets
+        investments_and_advances = long_term_equity_investment
+        total_non_current_assets = net_ppe + goodwill_and_other_intangible_assets + investments_and_advances + other_non_current_assets
+        total_assets = current_assets + total_non_current_assets
+        payables_and_accrued_expenses = accounts_payable + income_tax_payable
+        current_debt_and_capital_lease_obligation = current_debt + capital_lease_obligation
+        current_deferred_liabilities = current_deferred_revenue
+        current_liabilities = payables_and_accrued_expenses + pension_and_other_post_retirement_benefit_plans_current + current_debt_and_capital_lease_obligation + current_deferred_liabilities + other_current_liabilities
+        long_term_debt_and_capital_lease_obligation = long_term_debt + capital_lease_obligation
+        non_current_deferred_liabilities = non_current_deferred_taxes_liabilities + non_current_deferred_revenue 
+        total_non_current_liabilities_net_minority_interest = long_term_debt_and_capital_lease_obligation + non_current_deferred_liabilities + trade_and_other_payables_non_current + other_non_current_liabilities
+        total_liabilities_net_minority_interest = current_liabilities + total_non_current_liabilities_net_minority_interest
+        stockholders_equity = capital_stock + retained_earnings + gains_or_losses_not_affecting_retained_earnings + other_equity_adjustments
+        total_equity_gross_minority_interest = stockholders_equity
+
+        balance_sheet = BalanceSheet(
+            company_id = company,
+            date = date,
+            cash = cash,
+            cash_equivalents = cash_equivalents,
+            other_short_term_investments = other_short_term_investments,
+            gross_accounts_receivable = gross_accounts_receivable,
+            allowance_for_doubtful_accounts_receivable = allowance_for_doubtful_accounts_receivable,
+            other_receivables = other_receivables,
+            raw_materials = raw_materials,
+            work_in_process = work_in_process,
+            finished_goods = finished_goods,
+            hedging_current_assets = hedging_current_assets,
+            other_current_assets = other_current_assets,
+            land_and_improvements = land_and_improvements,
+            buildings_and_improvements = buildings_and_improvements,
+            machinery_furniture_equipment = machinery_furniture_equipment,
+            other_properties = other_properties,
+            leases = leases,
+            accumulated_depreciation = accumulated_depreciation,
+            goodwill = goodwill,
+            other_intangible_assets = other_intangible_assets,
+            long_term_equity_investment = long_term_equity_investment,
+            other_non_current_assets = other_non_current_assets,
+            accounts_payable = accounts_payable,
+            income_tax_payable = income_tax_payable,
+            pension_and_other_post_retirement_benefit_plans_current = pension_and_other_post_retirement_benefit_plans_current,
+            current_debt = current_debt,
+            capital_lease_obligation = capital_lease_obligation,
+            current_deferred_revenue = current_deferred_revenue,
+            other_current_liabilities = other_current_liabilities,
+            long_term_debt = long_term_debt,
+            long_term_capital_lease_obligation = long_term_capital_lease_obligation,
+            non_current_deferred_taxes_liabilities = non_current_deferred_taxes_liabilities,
+            non_current_deferred_revenue = non_current_deferred_revenue,
+            trade_and_other_payables_non_current = trade_and_other_payables_non_current,
+            other_non_current_liabilities = other_non_current_liabilities,
+            common_stock = common_stock,
+            retained_earnings = retained_earnings,
+            gains_or_losses_not_affecting_retained_earnings = gains_or_losses_not_affecting_retained_earnings,
+            other_equity_adjustments = other_equity_adjustments,
+            cash_and_cash_equivalents = cash_and_cash_equivalents,
+            inventory = inventory,
+            capital_stock = capital_stock,
+            cash_cash_equivalents_and_short_term_investments = cash_cash_equivalents_and_short_term_investments,
+            accounts_receivable = accounts_receivable,
+            receivables = receivables,
+            current_assets = current_assets,
+            gross_ppe = gross_ppe,
+            net_ppe = net_ppe,
+            goodwill_and_other_intangible_assets = goodwill_and_other_intangible_assets,
+            investments_and_advances = investments_and_advances,
+            total_non_current_assets = total_non_current_assets,
+            total_assets = total_assets,
+            payables_and_accrued_expenses = payables_and_accrued_expenses,
+            current_debt_and_capital_lease_obligation = current_debt_and_capital_lease_obligation,
+            current_deferred_liabilities = current_deferred_liabilities,
+            current_liabilities = current_liabilities,
+            long_term_debt_and_capital_lease_obligation = long_term_debt_and_capital_lease_obligation,
+            non_current_deferred_liabilities = non_current_deferred_liabilities,
+            total_non_current_liabilities_net_minority_interest = total_non_current_liabilities_net_minority_interest,
+            total_liabilities_net_minority_interest = total_liabilities_net_minority_interest,
+            stockholders_equity = stockholders_equity,
+            total_equity_gross_minority_interest = total_equity_gross_minority_interest,
+            monthly_or_quarterly_or_yearly = monthly_or_quarterly_or_yearly
+  
+
+        )
 
 
 
+        # Save balance sheet
+        balance_sheet.save()
 
+        return redirect('planning_budgeting_balance_sheet_table', id)
+    else:
+        #context = {'company': company, 'balance_sheet': balance_sheet}
+        context = {'company': company}
 
-
-
-
-
-
-
+        return render(request, 'admin/balance_sheet.html', context)
 
 
 from django.shortcuts import redirect, render
@@ -2851,7 +3630,7 @@ def cashFlowTable(request, id):
         current_balance_sheet, current_income_statement = get_balance_sheet_and_income_statement(date, company)
 
         if not current_balance_sheet or not current_income_statement:
-            messages.error(request, 'Please fill Income Statement and Balance Sheet for the current period.')
+            messages.error(request, f'Please fill Income Statement and Balance Sheet for the current period.')
         elif not period_exists:
             messages.error(request, f'No previous entry exists in BalanceSheet or IncomeStatement for the previous {period_type}.')
         else:
@@ -2863,7 +3642,7 @@ def cashFlowTable(request, id):
                 monthly_or_quarterly_or_yearly=month_name if select_type_of_data == 'monthly' else (quarter_value if select_type_of_data == 'quarterly' else year)
             )
             cash_flow.save()
-            return redirect('cash_flow', id)
+            return redirect('planning_budgeting_cash_flow_table', id)
     
     cash_flows = CashFlow.objects.filter(company_id=id)
     months, quarters, years = get_months_quarters_years()
@@ -2897,9 +3676,178 @@ def cashFlow(request,id):
 
 
     
+#Forecasting
+
+def forecastedIncomeStatementTable1(request, id):
+        company = Company.objects.get(company_id=id)
+        latest_income_statement = IncomeStatement.objects.filter(company_id=id).order_by('-date').first()
+        months, quarters, years = get_months_quarters_years()
+        if request.method == 'POST':
+            select_type_of_data = request.POST.get('select_type_of_data')
+            growth_rate = request.POST.get('growth_rate')
+            print(select_type_of_data,'select_type_of_data')
+            print(growth_rate,'growth_rate')
+            return redirect('forecasting_income_statement_table',id)
+
+            
+           
+        else:
+            context = {
+                'company': company,
+                'income_statement': latest_income_statement,
+                'months': months,
+                'quarters': quarters,
+                'years': years,
+                'months_json': months_json,
+                'quarters_json': quarters_json,
+                'years_json': years_json
+            }
+            return render(request, 'admin/forecasted_income_statement.html', context)
+
+def forecastedIncomeStatementTable2(request, id):
+    company = Company.objects.get(company_id=id)
+    latest_income_statement = IncomeStatement.objects.filter(company_id=id).order_by('-date').first()
+    months, quarters, years = get_months_quarters_years()
+    
+    if request.method == 'POST':
+        select_type_of_data = request.POST.get('select_type_of_data')
+        growth_rate = float(request.POST.get('growth_rate')) / 100
+        forecasted_data = {}
+
+        if select_type_of_data == 'monthly':
+            # Initialize forecasted data with latest income statement values
+            forecasted_data['January'] = {
+                'total_revenue': latest_income_statement.total_revenue,
+                'operating_revenue': latest_income_statement.operating_revenue,
+                'cost_of_revenue': latest_income_statement.cost_of_revenue,
+                'gross_profit': latest_income_statement.gross_profit,
+                'operating_expense': latest_income_statement.operating_expense,
+                'selling_general_and_administrative_expense': latest_income_statement.selling_general_and_administrative_expense,
+                'general_and_administrative_expenses': latest_income_statement.general_and_administrative_expenses,
+                'selling_and_marketing_expense': latest_income_statement.selling_and_marketing_expense,
+                'research_and_development_expense': latest_income_statement.research_and_development_expense,
+                'operating_income': latest_income_statement.operating_income,
+                'net_non_operating_interest_income_expense': latest_income_statement.net_non_operating_interest_income_expense,
+                'interest_income_non_operating': latest_income_statement.interest_income_non_operating,
+                'interest_expense_non_operating': latest_income_statement.interest_expense_non_operating,
+                'other_income_or_expense': latest_income_statement.other_income_or_expense,
+                'gain_or_loss_on_sale_of_security': latest_income_statement.gain_or_loss_on_sale_of_security,
+                'special_income_or_charges': latest_income_statement.special_income_or_charges,
+                'write_off': latest_income_statement.write_off,
+                'other_non_operating_income_or_expenses': latest_income_statement.other_non_operating_income_or_expenses,
+                'pretax_income': latest_income_statement.pretax_income,
+                'tax_provision': latest_income_statement.tax_provision,
+                'net_income': latest_income_statement.net_income,
+                'preference_share_dividends': latest_income_statement.preference_share_dividends,
+                'net_income_to_common_stockholders': latest_income_statement.net_income_to_common_stockholders,
+                'equity_share_dividends': latest_income_statement.equity_share_dividends,
+                'retained_earnings': latest_income_statement.retained_earnings,
+                'basic_eps': latest_income_statement.basic_eps,
+                'diluted_eps': latest_income_statement.diluted_eps,
+                'depreciation_and_amortization': latest_income_statement.depreciation_and_amortization,
+                'ebitda': latest_income_statement.ebitda,
+                'no_of_equity_shares': latest_income_statement.no_of_equity_shares,
+            }
+            
+            # Calculate forecast for the next 11 months
+            for i in range(1, 12):
+                month_name = months[i]
+                previous_month_data = forecasted_data[months[i-1]]
+                forecasted_data[month_name] = {key: value + value * growth_rate for key, value in previous_month_data.items()}
+            
+            context = {
+                'company': company,
+                'income_statement': latest_income_statement,
+                'months': months,
+                'quarters': quarters,
+                'years': years,
+                'forecasted_data': forecasted_data,
+            }
+            return render(request, 'admin/forecasted_income_statement.html', context)
+
+    else:
+        context = {
+            'company': company,
+            'income_statement': latest_income_statement,
+            'months': months,
+            'quarters': quarters,
+            'years': years,
+        }
+        return render(request, 'admin/forecasted_income_statement.html', context)
 
 
+from decimal import Decimal
 
+def forecastedIncomeStatementTable(request, id):
+    company = Company.objects.get(company_id=id)
+    latest_income_statement = IncomeStatement.objects.filter(company_id=id).order_by('-date').first()
+    months, quarters, years = get_months_quarters_years()
+    
+    if request.method == 'POST':
+        select_type_of_data = request.POST.get('select_type_of_data')
+        growth_rate = Decimal(request.POST.get('growth_rate')) / Decimal(100)
+        forecasted_data = {}
+
+        if select_type_of_data == 'monthly':
+            # Initialize forecasted data with latest income statement values
+            forecasted_data['January'] = {
+                'total_revenue': latest_income_statement.total_revenue,
+                'operating_revenue': latest_income_statement.operating_revenue,
+                'cost_of_revenue': latest_income_statement.cost_of_revenue,
+                'gross_profit': latest_income_statement.gross_profit,
+                'operating_expense': latest_income_statement.operating_expense,
+                'selling_general_and_administrative_expense': latest_income_statement.selling_general_and_administrative_expense,
+                'general_and_administrative_expenses': latest_income_statement.general_and_administrative_expenses,
+                'selling_and_marketing_expense': latest_income_statement.selling_and_marketing_expense,
+                'research_and_development_expense': latest_income_statement.research_and_development_expense,
+                'operating_income': latest_income_statement.operating_income,
+                'net_non_operating_interest_income_expense': latest_income_statement.net_non_operating_interest_income_expense,
+                'interest_income_non_operating': latest_income_statement.interest_income_non_operating,
+                'interest_expense_non_operating': latest_income_statement.interest_expense_non_operating,
+                'other_income_or_expense': latest_income_statement.other_income_or_expense,
+                'gain_or_loss_on_sale_of_security': latest_income_statement.gain_or_loss_on_sale_of_security,
+                'special_income_or_charges': latest_income_statement.special_income_or_charges,
+                'write_off': latest_income_statement.write_off,
+                'other_non_operating_income_or_expenses': latest_income_statement.other_non_operating_income_or_expenses,
+                'pretax_income': latest_income_statement.pretax_income,
+                'tax_provision': latest_income_statement.tax_provision,
+                'net_income': latest_income_statement.net_income,
+                'preference_share_dividends': latest_income_statement.preference_share_dividends,
+                'net_income_to_common_stockholders': latest_income_statement.net_income_to_common_stockholders,
+                'equity_share_dividends': latest_income_statement.equity_share_dividends,
+                'retained_earnings': latest_income_statement.retained_earnings,
+                'basic_eps': latest_income_statement.basic_eps,
+                'diluted_eps': latest_income_statement.diluted_eps,
+                'depreciation_and_amortization': latest_income_statement.depreciation_and_amortization,
+                'ebitda': latest_income_statement.ebitda,
+                'no_of_equity_shares': latest_income_statement.no_of_equity_shares,
+            }
+            
+            # Calculate forecast for the next 11 months
+            for i in range(1, 12):
+                month_name = months[i]
+                previous_month_data = forecasted_data[months[i-1]]
+                forecasted_data[month_name] = {key: value + (value * growth_rate) if value is not None else None for key, value in previous_month_data.items()}
+            
+            context = {
+                'company': company,
+                'income_statement': latest_income_statement,
+                'months': months,
+                'quarters': quarters,
+                'years': years,
+                'forecasted_data': forecasted_data,
+            }
+            return render(request, 'admin/forecasted_income_statement.html', context)
+
+    else:
+        context = {
+            'company': company,
+            'income_statement': latest_income_statement,
+            'months': months,
+            'quarters': quarters,
+            'years': years,
+        }
+        return render(request, 'admin/forecasted_income_statement.html', context)
 
 #Investor
 
@@ -2915,10 +3863,10 @@ def investorDashboard(request):
     return render(request, 'investor/dashboard.html', {'companies': companies, 'industries':sector})
 
 def investorBase(request,id):
-    comp=Company.objects.get(company_id=id)
-    user=User.objects.get(user_id=comp.user_id)
+    company=Company.objects.get(company_id=id)
+    user=User.objects.get(user_id=company.user_id)
     context={
-        'company':comp,
+        'company':company,
         'user':user
     }
     return render(request, 'investor/base.html', context)
@@ -2926,12 +3874,16 @@ def investorBase(request,id):
 
 def basicInformation(request,id):
     company = Company.objects.get(company_id = id)
+    user=User.objects.get(user_id=company.user_id)
+
     company_profile = CompanyProfile.objects.get(company_id = id)
     founders = Founder.objects.filter(company_id = id)
     clients = Client.objects.filter(company_id = id)
 
     context = {
         'company':company,
+        'user':user,
+
         'company_profile': company_profile,
         'founders':founders,
         'clients':clients
@@ -2941,8 +3893,12 @@ def basicInformation(request,id):
 
 
 def founderAndTeam(request,id):
+    company = Company.objects.get(company_id = id)
+    user=User.objects.get(user_id=company.user_id)
+
     founders = Founder.objects.filter(company_id = id)
-    context = { 'founders':founders}
+    context = { 'company':company,
+        'user':user,'founders':founders}
     return render(request,'investor/founders_and_team.html',context)
 #New one
 def revenueVerticals(request, company_id):

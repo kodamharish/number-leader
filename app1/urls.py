@@ -56,6 +56,7 @@ urlpatterns = [
     path('balance_sheet/<str:id>/',balanceSheet,name='balance_sheet'), 
     path('cash_flow/<str:id>/',cashFlow,name='cash_flow'), 
 
+    
     #investor 
     path('investor_dashboard',investorDashboard,name='investor_dashboard'),
     path('investor_base/<str:id>/',investorBase,name='investor_base'),
@@ -64,9 +65,14 @@ urlpatterns = [
     
 
 
+   #Planning & Budgeting
     path('planning_budgeting_income_statement_table/<str:id>/',incomeStatementTable,name='planning_budgeting_income_statement_table'), 
     path('planning_budgeting_balance_sheet_table/<str:id>/',balanceSheetTable,name='planning_budgeting_balance_sheet_table'), 
     path('planning_budgeting_cash_flow_table/<str:id>/',cashFlowTable,name='planning_budgeting_cash_flow_table'),
+
+    #Forecasting
+    path('forecasting_income_statement_table/<str:id>/',forecastedIncomeStatementTable,name='forecasting_income_statement_table'),
+
     
 
     

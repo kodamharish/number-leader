@@ -178,6 +178,9 @@
 
 {% block content %}
 <div class="container mt-5">
+    {% for msg in messages %}
+    <p class="text-danger text-center mt-2 fw-bold" style="font-size: 1rem;">{{ msg }}</p>
+    {% endfor %}
     <div class="row">
         <div class="col-md-4">
             <h6 class="mb-4">
@@ -187,7 +190,7 @@
                 {% elif request.resolver_match.url_name == 'forecasting_balance_sheet_table' %}
                 Forecasting
                 {% endif %}
-                - <b>Income Statement</b>
+                - <b>Balance Sheet</b>
             </h6>
         </div>
         <div class="col-md-4">
@@ -451,7 +454,7 @@
 
                     </tr>
                     <tr id="MS01H" class="hidden indent-level-2">
-                        <td>Hedging  Current Assets</td>
+                        <td>Hedging Current Assets</td>
                         {% for balance_sheet in balance_sheets %}
                         <td>
                             {{balance_sheet.hedging_current_assets}}
