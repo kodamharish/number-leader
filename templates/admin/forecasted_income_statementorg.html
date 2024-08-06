@@ -169,9 +169,6 @@
     .btn-primary {
         font-family: 'Agency FB', Times, serif;
     }
-    table td,th{
-        text-wrap: nowrap !important;
-    }
 </style>
 {% endblock styles %}
 
@@ -258,7 +255,7 @@
         <div class="table-wrapper">
             <table class="cell">
                 <thead>
-                    <!-- <tr>
+                    <tr>
                         <th class="rowview">Breakdown</th>
                         <th class="rowview">Pre Selected Data</th>
                         <th class="rowview">Pre Selected Growth Rate (%)</th>
@@ -276,19 +273,7 @@
                         <th class="rowview">Period+6 Growth Rate (%)</th>
                         <th class="rowview">Period+7</th>
                         <th class="rowview">Period+7 Growth Rate (%)</th>
-                    </tr> -->
-
-                    <thead>
-                        <tr>
-                            <th class="rowview">Breakdown</th>
-                            <th class="rowview">{{ headers.0 }}</th>
-                            <th class="rowview">{{ headers.0 }} Growth Rate (%)</th>
-                            {% for header in headers|slice:"1:" %}
-                            <th class="rowview">{{ header }}</th>
-                            <th class="rowview">{{ header }} Growth Rate (%)</th>
-                            {% endfor %}
-                        </tr>
-                    </thead>
+                    </tr>
                 </thead>
                 <tbody>
                     <tr>

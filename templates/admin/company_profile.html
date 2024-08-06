@@ -1,22 +1,20 @@
-
 {% extends '../base.html' %}
 
 {% block content %}
 <style>
-    /* Basic styles for sidebar and dropdown menus */
     .sidebar {
         position: absolute;
         top: 80px;
         left: 0;
         height: 100%;
-        width: 270px; /* Slightly wider for better content spacing */
-        background: linear-gradient(145deg, #00b0f0, #005792);
-        overflow-y: auto; /* Enable vertical scroll if content exceeds height */
+        width: 270px; 
+        background: linear-gradient(180deg, #2c3e50, #00b4f6);
+        overflow-y: auto; 
         padding-top: 20px;
-        z-index: 1000; /* Ensure sidebar stays above other content */
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); /* Soft shadow for depth */
-        border-radius: 8px; /* Rounded corners for modern look */
-        font-family: 'Agency FB', sans-serif; /* Apply font to sidebar */
+        z-index: 1000;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        border-radius: 8px;
+        font-family: 'Agency FB', sans-serif;
     }
 
     .sidebar h2 {
@@ -27,33 +25,38 @@
     }
 
     .sidebar a {
-        padding: 12px 20px;
+        padding: 8px 20px;
         text-decoration: none;
         font-size: 18px;
         color: #fff;
         display: block;
         transition: background-color 0.3s, color 0.3s;
-        border-radius: 4px; /* Rounded corners for links */
-        margin: 5px 10px; /* Spacing between links */
+        border-radius: 4px; 
+        margin: 2px 10px;
     }
 
-    .sidebar a:hover, .sidebar a.active {
+    .sidebar a:hover {
         background-color: rgba(255, 255, 255, 0.2);
+        color: #fff;
+    }
+
+    .sidebar a.active {
+        background-color: #008CBA; /* New highlight color for active link */
         color: #fff;
     }
 
     .dropdown-container {
         display: none;
-        background-color: rgba(255, 255, 255, 0.1); /* Transparent background for submenus */
-        padding-left: 15px;
-        border-radius: 4px; /* Rounded corners for submenus */
-        margin: 5px 0; /* Spacing between dropdown containers */
+        background-color: rgba(255, 255, 255, 0.1);
+        padding-left: 3ch;
+        border-radius: 4px; 
+        margin: 2px 0;
     }
 
     .dropdown-container a {
         font-size: 16px;
-        margin: 3px 0; /* Spacing between submenu items */
-        padding-left: 12px; /* Indent sub-links with 3 character spaces */
+        margin: 2px 0;
+        padding-left: 3ch;
     }
 
     .dropdown-btn {
@@ -61,17 +64,15 @@
         outline: none;
     }
 
-    /* Adjust main content position to avoid overlap */
     .main-content {
-        margin-left: 290px; /* Adjust according to sidebar width */
-        padding: 40px; /* Reduce padding for a cleaner look */
-        transition: margin-left 0.3s; /* Smooth transition for sidebar width changes */
-        font-family: 'Agency FB', sans-serif; /* Apply font to main content */
+        margin-left: 290px;
+        padding: 40px;
+        transition: margin-left 0.3s;
+        font-family: 'Agency FB', sans-serif; 
     }
 
-    /* General styling for a modern look */
     body {
-        font-family: 'Agency FB', sans-serif; /* Apply font to body */
+        font-family: 'Agency FB', sans-serif; 
         background-color: #f0f2f5;
         color: #333;
     }
@@ -81,15 +82,14 @@
     }
 
     .edit-icon {
-        display: none; /* Initially hide edit icon */
+        display: none; 
         position: absolute;
         top: 50%;
         right: 10px;
         transform: translateY(-50%);
-        color: #fff; /* Adjust icon color to match sidebar theme */
+        color: #fff; 
     }
 
-    /* Adjust sidebar anchor tag position to make space for the edit icon */
     .sidebar a {
         position: relative;
     }
@@ -110,84 +110,86 @@
             <a class="dropdown-btn" href="#">Profile</a>
 
             <div class="dropdown-container">
-                <a href="{% url 'basic_information' company.company_id %}" data-info="Basic Info">Basic Information</a>
-                <a href="{% url 'business_plan' company.company_id%}" data-info="Business Plan">Business Plan</a>
-                <a href="{% url 'pitch_and_product' company.company_id%}" data-info="Pitch & Product">Pitch & Product</a>
-                <a href="#" data-info="Organization">Organization</a>
-                <a href="{% url 'cap_table' company.company_id %}" data-info="Cap Table">Cap Table</a>
+                <a href="{% url 'basic_information' company.company_id %}" class="{% if request.resolver_match.url_name == 'basic_information' %}active{% endif %}">Basic Information</a>
+                <a href="{% url 'business_plan' company.company_id %}" class="{% if request.resolver_match.url_name == 'business_plan' %}active{% endif %}">Business Plan</a>
+                <a href="{% url 'pitch_and_product' company.company_id %}" class="{% if request.resolver_match.url_name == 'pitch_and_product' %}active{% endif %}">Pitch & Product</a>
+                <a href="#" class="{% if request.resolver_match.url_name == 'organization' %}active{% endif %}">Organization</a>
+                <a href="{% url 'cap_table' company.company_id %}" class="{% if request.resolver_match.url_name == 'cap_table' %}active{% endif %}">Cap Table</a>
             </div>
-
-            <!-- <div class="dropdown-container">
-                <a href="#" data-info="Basic Info">Basic Information</a>
-                <a href="#" data-info="Business Plan">Business Plan</a>
-                <a href="{% url 'pitch_and_product' company.company_id%}" data-info="Pitch & Product">Pitch & Product</a>
-                <a href="#" data-info="Organization">Organization</a>
-                <a href="{% url 'cap_table' company.company_id %}" data-info="Cap Table">Cap Table</a>
-            </div> -->
 
             <a class="dropdown-btn">Corporate Finance</a>
             <div class="dropdown-container">
-                <a class="dropdown-btn" href="#">Planning and Budgeting</a>
+                <a class="dropdown-btn">Planning and Budgeting</a>
                 <div class="dropdown-container">
-                    <a href="{% url 'planning_budgeting_income_statement_table' company.company_id  %}" data-info="Income Statement details...">Income Statement</a>
-                    <a href="{% url 'planning_budgeting_balance_sheet_table' company.company_id  %}" data-info="Balance Sheet details...">Balance Sheet</a>
-                    <a href="{% url 'planning_budgeting_cash_flow_table' company.company_id  %}" data-info="Cash Flow details...">Cash Flow</a>
+                    <a href="{% url 'planning_budgeting_income_statement_table' company.company_id %}" class="{% if request.resolver_match.url_name == 'planning_budgeting_income_statement_table' %}active{% endif %}">Income Statement</a>
+                    <a href="{% url 'planning_budgeting_balance_sheet_table' company.company_id %}" class="{% if request.resolver_match.url_name == 'planning_budgeting_balance_sheet_table' %}active{% endif %}">Balance Sheet</a>
+                    <a href="{% url 'planning_budgeting_cash_flow_table' company.company_id %}" class="{% if request.resolver_match.url_name == 'planning_budgeting_cash_flow_table' %}active{% endif %}">Cash Flow</a>
                 </div>
-                <a href="#" data-info="Forecasting details...">Industry Benchmarking</a>
-                <a class="dropdown-btn" href="#">Forecasting</a>
+                <a href="#" class="{% if request.resolver_match.url_name == 'industry_benchmarking' %}active{% endif %}">Industry Benchmarking</a>
+                <a class="dropdown-btn">Forecasting</a>
                 <div class="dropdown-container">
-                    <a href="{% url 'forecasting_income_statement_table' company.company_id %}" data-info="Income Statement details...">Income Statement</a>
-                    <a href="#" data-info="Balance Sheet details...">Balance Sheet</a>
-                    <a href="#" data-info="Cash Flow details...">Cash Flow</a>
+                    <a href="{% url 'forecasting_income_statement_table' company.company_id %}" class="{% if request.resolver_match.url_name == 'forecasting_income_statement_table' %}active{% endif %}">Income Statement</a>
+                    <a href="#" class="{% if request.resolver_match.url_name == 'forecasting_balance_sheet' %}active{% endif %}">Balance Sheet</a>
+                    <a href="#" class="{% if request.resolver_match.url_name == 'forecasting_cash_flow' %}active{% endif %}">Cash Flow</a>
                 </div>
-                <a href="#" data-info="Performance Management details...">Business Modeling and Valuation</a>
+                <a href="#" class="{% if request.resolver_match.url_name == 'business_modeling' %}active{% endif %}">Business Modeling and Valuation</a>
             </div>
 
             <a class="dropdown-btn">Due Diligence</a>
             <div class="dropdown-container">
-                <a href="#" data-info="Compliance Monitoring details...">Document Management</a>
-                <a href="#" data-info="Real Time Monitoring details...">Clearance Monitoring System</a>
-                <a href="#" data-info="Document Management details...">Compliance Monitoring</a>
+                <a href="#" class="{% if request.resolver_match.url_name == 'document_management' %}active{% endif %}">Document Management</a>
+                <a href="#" class="{% if request.resolver_match.url_name == 'clearance_monitoring' %}active{% endif %}">Clearance Monitoring System</a>
+                <a href="#" class="{% if request.resolver_match.url_name == 'compliance_monitoring' %}active{% endif %}">Compliance Monitoring</a>
             </div>
 
             <a class="dropdown-btn">Fund Raising</a>
             <div class="dropdown-container">
-                <a href="#" data-info="Investor Matching details...">Investor Matching</a>
-                <a href="#" data-info="M&A Matching details...">M&A Matching</a>
-                <a href="#" data-info="Investor Relation details...">Investor Relation</a>
+                <a href="#" class="{% if request.resolver_match.url_name == 'investor_matching' %}active{% endif %}">Investor Matching</a>
+                <a href="#" class="{% if request.resolver_match.url_name == 'ma_matching' %}active{% endif %}">M&A Matching</a>
+                <a href="#" class="{% if request.resolver_match.url_name == 'investor_relation' %}active{% endif %}">Investor Relation</a>
             </div>
 
             <a class="dropdown-btn">Investor Tool</a>
             <div class="dropdown-container">
-                <a href="#" data-info="Performance Benchmarking details...">Performance Benchmarking</a>
-                <a href="#" data-info="Startup Ranking details...">Startup Ranking</a>
-                <a href="#" data-info="Startup Listing details...">Startup Listing</a>
-                <a href="#" data-info="Syndication & Strategic Partnership details...">Syndication & Strategic Partnership</a>
+                <a href="#" class="{% if request.resolver_match.url_name == 'performance_benchmarking' %}active{% endif %}">Performance Benchmarking</a>
+                <a href="#" class="{% if request.resolver_match.url_name == 'startup_ranking' %}active{% endif %}">Startup Ranking</a>
+                <a href="#" class="{% if request.resolver_match.url_name == 'startup_listing' %}active{% endif %}">Startup Listing</a>
+                <a href="#" class="{% if request.resolver.match.url_name == 'syndication_partnership' %}active{% endif %}">Syndication & Strategic Partnership</a>
             </div>
         </div>
     {% endif %}
 </div>
 
 <script>
-    /* JavaScript for toggling the dropdown menus */
     document.addEventListener("DOMContentLoaded", function() {
         var dropdowns = document.getElementsByClassName("dropdown-btn");
-        for (var i = 0; i < dropdowns.length; i++) {
-            dropdowns[i].addEventListener("click", function() {
-                var dropdownContent = this.nextElementSibling;
-                if (dropdownContent.style.display === "block") {
-                    dropdownContent.style.display = "none";
-                    // Hide edit icon when menu is closed
-                    this.querySelector('.edit-icon').style.display = 'none';
-                } else {
-                    dropdownContent.style.display = "block";
-                    // Show edit icon when menu is opened
-                    this.querySelector('.edit-icon').style.display = 'inline'; // or 'inline-block'
-                }
-            });
+
+        // Function to toggle dropdowns
+        function toggleDropdown(dropdown) {
+            var dropdownContent = dropdown.nextElementSibling;
+            if (dropdownContent.style.display === "block") {
+                dropdownContent.style.display = "none";
+                localStorage.setItem(dropdown.textContent.trim(), 'closed');
+            } else {
+                dropdownContent.style.display = "block";
+                localStorage.setItem(dropdown.textContent.trim(), 'open');
+            }
         }
 
-        // Highlight the current page link
+        // Initialize dropdowns and their states
+        for (var i = 0; i < dropdowns.length; i++) {
+            dropdowns[i].addEventListener("click", function() {
+                toggleDropdown(this);
+            });
+
+            // Check if this dropdown should be open
+            var state = localStorage.getItem(dropdowns[i].textContent.trim());
+            if (state === 'open') {
+                dropdowns[i].nextElementSibling.style.display = 'block';
+            }
+        }
+
+        // Highlight the current page link and expand its parent dropdowns
         var currentUrl = window.location.href;
         var menuItems = document.querySelectorAll('.sidebar a');
         menuItems.forEach(function(item) {
@@ -199,14 +201,32 @@
                     parentContainer.style.display = 'block';
                     var parentButton = parentContainer.previousElementSibling;
                     if (parentButton) {
-                        parentButton.querySelector('.edit-icon').style.display = 'inline'; // or 'inline-block'
+                        localStorage.setItem(parentButton.textContent.trim(), 'open');
                     }
                 }
             }
         });
+
+        // Close previously opened dropdowns when navigating to a different link
+        menuItems.forEach(function(item) {
+            item.addEventListener('click', function() {
+                var activeItems = document.querySelectorAll('.sidebar a.active');
+                activeItems.forEach(function(activeItem) {
+                    activeItem.classList.remove('active');
+                    var parentContainer = activeItem.closest('.dropdown-container');
+                    if (parentContainer) {
+                        parentContainer.style.display = 'none';
+                        var parentButton = parentContainer.previousElementSibling;
+                        if (parentButton) {
+                            localStorage.setItem(parentButton.textContent.trim(), 'closed');
+                        }
+                    }
+                });
+            });
+        });
     });
 
     var selectedCompanyName = localStorage.getItem('selectedCompanyName');
-    document.getElementById('myCompanyName').innerHTML = selectedCompanyName.toUpperCase();
+    document.getElementById('myCompanyName').innerHTML = selectedCompanyName ? selectedCompanyName.toUpperCase() : 'COMPANY NAME';
 </script>
 {% endblock content %}
