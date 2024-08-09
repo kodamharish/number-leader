@@ -180,10 +180,6 @@ class CapTable(models.Model):
 
 
 
-
-
-
-
 class Team(models.Model):
     subuser_id = models.CharField(max_length=10, primary_key=True)
     #creator_id = models.ForeignKey(User,on_delete=models.CASCADE)
@@ -210,81 +206,6 @@ class Team(models.Model):
         super(Team, self).save(*args, **kwargs)
     def __str__(self):
         return self.subuser_id
-
-
-
-
-class HomogenousProduct(models.Model):
-    company_id = models.ForeignKey(Company, on_delete=models.CASCADE)
-    product_name = models.CharField(max_length=100)
-    selling_price_per_unit = models.DecimalField(max_digits=10, decimal_places=2)
-    units_sold = models.IntegerField()
-    expected_growth_rate = models.IntegerField()
-    revenue_from_product = models.DecimalField(max_digits=10, decimal_places=2, null=True)
-
-    def calculate_revenue_from_product(self):
-        if isinstance(self.selling_price_per_unit, str):
-            self.selling_price_per_unit = float(self.selling_price_per_unit)
-        if isinstance(self.units_sold, str):
-            self.units_sold = int(self.units_sold)
-        return self.selling_price_per_unit * self.units_sold
-
-    def save(self, *args, **kwargs):
-        # Calculate revenue_from_product before saving
-        self.revenue_from_product = self.calculate_revenue_from_product()
-        super().save(*args, **kwargs)
-
-    def __str__(self):
-        return self.product_name
-
-
- 
-class HeterogenousProduct(models.Model):
-    company_id=models.ForeignKey(Company,on_delete=models.CASCADE)
-    product_name = models.CharField(max_length=100)
-    expected_revenue = models.DecimalField(max_digits=10, decimal_places=2)
-    expected_growth_rate = models.IntegerField()
-    def __str__(self):
-        return self.product_name
-    
-class CompanyRevenue(models.Model):
-    company_id = models.ForeignKey(Company, on_delete=models.CASCADE)
-    total_revenue = models.DecimalField(max_digits=20, decimal_places=2, null=True, blank=True)
-
-    def calculate_total_revenue(self):
-        homogenous_revenue = HomogenousProduct.objects.filter(company_id=self.company_id).aggregate(total=models.Sum('revenue_from_product'))['total'] or 0
-        heterogenous_revenue = HeterogenousProduct.objects.filter(company_id=self.company_id).aggregate(total=models.Sum('expected_revenue'))['total'] or 0
-        return homogenous_revenue + heterogenous_revenue
-    
-    def save(self, *args, **kwargs):
-        # Calculate total_revenue before saving
-        self.total_revenue = self.calculate_total_revenue()
-        super().save(*args, **kwargs)
-        
-
-    def __str__(self):
-        return f"Total Revenue for {self.company_id}"
-
-
-
-
-
-
-
-
-# class IncomeStatementOld(models.Model):
-#     company_id = models.ForeignKey(Company,on_delete=models.CASCADE)
-#     begin_date = models.DateTimeField()
-#     end_date = models.DateTimeField()
-
-
-
-    
-
-#     class Meta:
-#         db_table = 'nl_income_statement'
-
-
 
 
 

@@ -172,13 +172,32 @@
     table td,th{
         text-wrap: nowrap !important;
     }
+
+     /* Set a fixed width for the input fields */
+.form-control {
+    width: 100px; /* Adjust the width as needed */
+    height:30px;
+    margin: 0; /* Remove any default margins */
+}
+
+/* Center the input fields within the <td> elements */
+td {
+    position: relative; /* Required for absolute positioning */
+}
+
+td input {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
 </style>
 {% endblock styles %}
 
 {% block content %}
 <div class="container mt-5">
     <div class="row">
-        <div class="col-md-4">
+        <div class="col-md-3">
             <h6 class="mb-4">
                 Corporate Finance -
                 {% if request.resolver_match.url_name == 'planning_budgeting_income_statement_table' %}
@@ -190,9 +209,9 @@
             </h6>
         </div>
 
-        <div class="col-md-4">
+        <div class="col-md-3">
             <form method="get" action="">
-                <div class="mb-3 mt-3 inline">
+                <div class="m-0 inline">
                     <label for="pre_selected_income_statement">Past Statements </label>
                     <select class="form-select " id="pre_selected_income_statement" name="pre_selected_income_statement" required onchange="this.form.submit()">
                         {% if pre_selected_income_statement_data %}
@@ -209,12 +228,33 @@
                 </div>
             </form>
         </div>
-        <div class="col-md-4">
-            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#forecastModal">
-                Forecast
-            </button>
 
-            <div class="modal fade" id="forecastModal" tabindex="-1" role="dialog" aria-labelledby="forecastModalLabel" aria-hidden="true">
+
+        <!-- <div class="col-md-3">
+            <form method="get" action="">
+                <div class="m-0 inline">
+                    <label for="pre_selected_income_statement">Past Statements </label>
+                    <select class="form-select " id="pre_selected_income_statement" name="pre_selected_income_statement" required onchange="this.form.submit()">
+                        {% if pre_selected_income_statement_data %}
+                        <option value="{{pre_selected_income_statement_data.monthly_or_quarterly_or_yearly}}">
+                            {{pre_selected_income_statement_data.monthly_or_quarterly_or_yearly}}</option>
+                        {% else %}
+                        <option value="">Select</option>
+                        {% endif %}
+
+                        {% for type in income_statements %}
+                        <option value="{{type.monthly_or_quarterly_or_yearly}}">{{type.monthly_or_quarterly_or_yearly}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </form>
+        </div> -->
+        <div class="col-md-3">
+            <!-- <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#forecastModal">
+                Forecast
+            </button> -->
+
+            <!-- <div class="modal fade" id="forecastModal" tabindex="-1" role="dialog" aria-labelledby="forecastModalLabel" aria-hidden="true">
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -249,7 +289,12 @@
                         </form>
                     </div>
                 </div>
-            </div>
+            </div> -->
+
+            <button type="button" class="btn btn-primary">Save</button>
+
+
+
         </div>
     </div>
 
@@ -319,7 +364,7 @@
                     <tr id="MS01b" class="hidden indent-level-1">
                         <td>Operating Revenue</td>
                         <td class="pre-selected-data">{{pre_selected_income_statement_data.operating_revenue}}</td>
-                        <td><input id="pre-selected-growth-rate-operating-revenue" type="number" class="form-control pre-selected-growth-rate-input "></td>
+                        <td><input  type="number" class="form-control pre-selected-growth-rate-input "></td>
                         <td class="period-plus-1-value period-plus-value"></td>
                         <td><input type="number" class="form-control period-1-growth-rate-input period-growth-rate-input"></td>
                         <td class="period-plus-2-value period-plus-value"></td>

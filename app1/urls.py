@@ -61,10 +61,6 @@ urlpatterns = [
     path('investor_dashboard',investorDashboard,name='investor_dashboard'),
     path('investor_base/<str:id>/',investorBase,name='investor_base'),
     path('founders_and_team/<str:id>/',founderAndTeam,name='founders_and_team'),
-
-    
-
-
    #Planning & Budgeting
     path('planning_budgeting_income_statement_table/<str:id>/',incomeStatementTable,name='planning_budgeting_income_statement_table'), 
     path('planning_budgeting_balance_sheet_table/<str:id>/',balanceSheetTable,name='planning_budgeting_balance_sheet_table'), 
@@ -72,26 +68,16 @@ urlpatterns = [
 
     #Forecasting
     path('forecasting_income_statement_table/<str:id>/',forecastedIncomeStatementTable,name='forecasting_income_statement_table'),
-
-    
-
-    
+    path('forecasting_balance_sheet_table/<str:id>/',forecastedBalanceSheetTable,name='forecasting_balance_sheet_table'),
+    path('forecasting_cash_flow_table/<str:id>/',forecastedCashFlowTable,name='forecasting_cash_flow_table'),    
 
     path('forecasting_income_statement_table/<str:id>/',incomeStatementTable,name='forecasting_income_statement_table'),
     #path('forecasting_balance_sheet_table/<str:id>/',balanceSheetTable,name='forecasting_balance_sheet_table'), 
     #path('forecasting_cash_flow_table/<str:id>/',cashFlowTable,name='forecasting_cash_flow_table'), 
 
-
-
-
-
-
-
-
-    path('financial_statement/<str:id>/',financialStatement,name='financial_statement'),
-    path('revenue_verticals/<str:company_id>/',revenueVerticals,name='revenue_verticals'),
-    path('expenses/<str:company_id>/',expenses,name='expenses'),
-
+    # path('financial_statement/<str:id>/',financialStatement,name='financial_statement'),
+    # path('revenue_verticals/<str:company_id>/',revenueVerticals,name='revenue_verticals'),
+    # path('expenses/<str:company_id>/',expenses,name='expenses'),
 
     #children
     path('my_team',myTeam,name='my_team'),

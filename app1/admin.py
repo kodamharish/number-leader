@@ -54,9 +54,6 @@ admin.site.register(IncomeStatement)
 
 
 
-admin.site.register(HomogenousProduct)
-admin.site.register(HeterogenousProduct)
-admin.site.register(CompanyRevenue)
 
 #later use
 #admin.site.register(NewsOfIndustry)

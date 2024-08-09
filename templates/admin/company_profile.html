@@ -129,8 +129,8 @@
                 <a class="dropdown-btn">Forecasting</a>
                 <div class="dropdown-container">
                     <a href="{% url 'forecasting_income_statement_table' company.company_id %}" class="{% if request.resolver_match.url_name == 'forecasting_income_statement_table' %}active{% endif %}">Income Statement</a>
-                    <a href="#" class="{% if request.resolver_match.url_name == 'forecasting_balance_sheet' %}active{% endif %}">Balance Sheet</a>
-                    <a href="#" class="{% if request.resolver_match.url_name == 'forecasting_cash_flow' %}active{% endif %}">Cash Flow</a>
+                    <a href="{% url 'forecasting_balance_sheet_table' company.company_id %}" class="{% if request.resolver_match.url_name == 'forecasting_balance_sheet' %}active{% endif %}">Balance Sheet</a>
+                    <a href="{% url 'forecasting_cash_flow_table' company.company_id %}" class="{% if request.resolver_match.url_name == 'forecasting_cash_flow' %}active{% endif %}">Cash Flow</a>
                 </div>
                 <a href="#" class="{% if request.resolver_match.url_name == 'business_modeling' %}active{% endif %}">Business Modeling and Valuation</a>
             </div>

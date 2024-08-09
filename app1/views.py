@@ -866,9 +866,6 @@ def addCompany(request):
 
 
 
-
-
-
 def updateCompany(request, company_id):
     company = get_object_or_404(Company, company_id=company_id)
     company_profile = get_object_or_404(CompanyProfile, company_id=company)
@@ -1029,10 +1026,6 @@ def updateCompany(request, company_id):
             'social_media_urls':social_media_urls
         }
         return render(request, 'admin/update_company.html', context)
-
-
-
-
 
 
 
@@ -1397,100 +1390,6 @@ def capTableForm(request, id):
 
 
 
-def financialStatement(request,id):
-    company_profile = CompanyProfile.objects.get(company_id = id)
-    homogenous_products = HomogenousProduct.objects.filter(company_id = id)
-    heterogenous_products = HeterogenousProduct.objects.filter(company_id = id)
-    context ={'company_profile': company_profile,'homogenous_products':homogenous_products,'heterogenous_products':heterogenous_products}
-
-    return render(request,'admin/financial_statement.html',context)
-
-
-def incomeStatement12(request,id):
-    company = Company.objects.get(company_id=id)
-
-    if request.method == 'POST':
-        company_id = request.POST.get('company_id')
-        begin_date = request.POST.get('begin_date')
-        end_date = request.POST.get('end_date')
-        #product details
-        product_name = request.POST.get('product_name')
-        total_revenue = request.POST.get('total_revenue')
-        total_taxes = request.POST.get('total_taxes')
-        total_dividends = request.POST.get('total_dividends')
-        #cost of goods sold details
-        total_cogs = request.POST.get('total_cogs')
-        cogs_direct_labor = request.POST.get('cogs_direct_labor')
-        cogs_material = request.POST.get('cogs_material')
-        cogs_parts = request.POST.get('cogs_parts')
-        cogs_distribution = request.POST.get('cogs_distribution')
-        cogs_other = request.POST.get('cogs_other')
-        #operating expense details
-        total_operating_expenses = request.POST.get('total_operating_expenses')
-        opexpense_rent = request.POST.get('opexpense_rent')
-        opexpense_utilities = request.POST.get('opexpense_utilities')
-        opexpense_overhead = request.POST.get('opexpense_overhead')
-        opexpense_legal = request.POST.get('opexpense_legal')
-        opexpense_depreciation = request.POST.get('opexpense_depreciation')
-        opexpense_marketing_ads = request.POST.get('opexpense_marketing_ads')
-        opexpense_insurance = request.POST.get('opexpense_insurance')
-        opexpense_interest = request.POST.get('opexpense_interest')
-        opexpense_travel = request.POST.get('opexpense_travel')
-        opexpense_wages = request.POST.get('opexpense_wages')
-        opexpense_other = request.POST.get('opexpense_other')
-
-        user_context = custom_user(request)
-        current_user = user_context.get('current_user') 
-                
-       
-
-        income_statement = IncomeStatement(
-            company_id = company,
-            begin_date = begin_date,
-            end_date = end_date,
-
-            product_name = product_name,
-            total_revenue = total_revenue,
-            total_taxes = total_taxes,
-            total_dividends = total_dividends,
-
-            total_cogs= total_cogs,
-            cogs_direct_labor = cogs_direct_labor,
-            cogs_material = cogs_material,
-            cogs_parts = cogs_parts,
-            cogs_distribution = cogs_distribution,
-            cogs_other = cogs_other,
-
-            total_operating_expenses = total_operating_expenses,
-            opexpense_rent = opexpense_rent,
-            opexpense_utilities = opexpense_utilities,
-            opexpense_overhead = opexpense_overhead,
-            opexpense_legal = opexpense_legal,
-            opexpense_depreciation = opexpense_depreciation,
-            opexpense_marketing_ads = opexpense_marketing_ads,
-            opexpense_insurance = opexpense_insurance,
-            opexpense_interest = opexpense_interest,
-            opexpense_travel = opexpense_travel,
-            opexpense_wages = opexpense_wages,
-            opexpense_other = opexpense_other,
-
-            creator_id = current_user.user_id,
-            #modifier_id = modifier_id
-
-        )
-        income_statement.save()
-        return redirect('planning_budgeting_income_statement_table',company.company_id)
-
-
-    else:
-        context = {'company':company}
-        return render(request,'admin/income_statement.html',context)
-
-
-
-
-
-
 def get_period_label(begin_date, end_date):
     # Define financial quarters
     quarters = {
@@ -1520,6 +1419,7 @@ def get_period_label(begin_date, end_date):
     
     # Custom or irregular period
     return f'{begin_date.strftime("%b %d, %Y")} - {end_date.strftime("%b %d, %Y")}', 'Irregular Data'
+
 
 
 
@@ -2481,8 +2381,97 @@ def forecastedIncomeStatementTable(request, id):
         return render(request, 'admin/forecasted_income_statement.html', context)
 
 
+def forecastedBalanceSheetTable(request, id):
+    company = Company.objects.get(company_id=id)
+    months, quarters, years = get_months_quarters_years()
+    balance_sheets = BalanceSheet.objects.filter(company_id=id)
+
+    if request.method == 'POST':
+        # Handle POST request here
+        pass
+
+    else:
+        pre_selected_balance_sheet = request.GET.get('pre_selected_balance_sheet')
+        period_type = 'monthly'  # Default to monthly
+        headers = []
+
+        if pre_selected_balance_sheet:
+            if any(pre_selected_balance_sheet.startswith(month) for month in months):
+                period_type = 'monthly'
+                headers = get_next_period_headers(pre_selected_balance_sheet, period_type)
+            elif pre_selected_balance_sheet.startswith('Q'):
+                period_type = 'quarterly'
+                headers = get_next_period_headers(pre_selected_balance_sheet, period_type)
+            elif pre_selected_balance_sheet.isdigit():
+                period_type = 'yearly'
+                headers = get_next_period_headers(pre_selected_balance_sheet, period_type)
+
+        pre_selected_balance_sheet_data = BalanceSheet.objects.filter(
+            company_id=id,
+            monthly_or_quarterly_or_yearly=pre_selected_balance_sheet
+        ).first()
+
+        context = {
+            'company': company,
+            'months': months,
+            'quarters': quarters,
+            'years': years,
+            'balance_sheets': balance_sheets,
+            'pre_selected_balance_sheet_data': pre_selected_balance_sheet_data,
+            'headers': headers,
+            'period_type': period_type,
+        }
+
+        return render(request, 'admin/forecasted_balance_sheet.html', context)
 
 
+
+def forecastedCashFlowTable(request, id):
+    company = Company.objects.get(company_id=id)
+    months, quarters, years = get_months_quarters_years()
+    cash_flows = CashFlow.objects.filter(company_id=id)
+
+
+    if request.method == 'POST':
+        # Handle POST request here
+        # period_plus_1_value = request.POST.get('period_plus_1_value')
+        # print(period_plus_1_value,'period_plus_1_value')
+        # return redirect('forecasting_cash_flow_table',id)
+        pass
+
+    else:
+        pre_selected_cash_flow = request.GET.get('pre_selected_cash_flow')
+        period_type = 'monthly'  # Default to monthly
+        headers = []
+
+        if pre_selected_cash_flow:
+            if any(pre_selected_cash_flow.startswith(month) for month in months):
+                period_type = 'monthly'
+                headers = get_next_period_headers(pre_selected_cash_flow, period_type)
+            elif pre_selected_cash_flow.startswith('Q'):
+                period_type = 'quarterly'
+                headers = get_next_period_headers(pre_selected_cash_flow, period_type)
+            elif pre_selected_cash_flow.isdigit():
+                period_type = 'yearly'
+                headers = get_next_period_headers(pre_selected_cash_flow, period_type)
+
+        pre_selected_cash_flow_data = CashFlow.objects.filter(
+            company_id=id,
+            monthly_or_quarterly_or_yearly=pre_selected_cash_flow
+        ).first()
+
+        context = {
+            'company': company,
+            'months': months,
+            'quarters': quarters,
+            'years': years,
+            'cash_flows': cash_flows,
+            'pre_selected_cash_flow_data': pre_selected_cash_flow_data,
+            'headers': headers,
+            'period_type': period_type,
+        }
+
+        return render(request, 'admin/forecasted_cash_flow.html', context)
 
 #Investor
 
@@ -2536,55 +2525,10 @@ def founderAndTeam(request,id):
         'user':user,'founders':founders}
     return render(request,'investor/founders_and_team.html',context)
 #New one
-def revenueVerticals(request, company_id):
-    company_id = Company.objects.get(company_id = company_id)
-    if request.method == 'POST':
-        # Process homogenous products if any
-        homogenous_product_names = request.POST.getlist('homogenous_product_name[]')
-        homogenous_selling_prices = request.POST.getlist('homogenous_selling_price_per_unit[]')
-        homogenous_units_sold = request.POST.getlist('homogenous_units_sold[]')
-        homogenous_growth_rates = request.POST.getlist('homogenous_expected_growth_rate[]')
-
-        for name, price, units, growth in zip(homogenous_product_names, homogenous_selling_prices, homogenous_units_sold, homogenous_growth_rates):
-            if name and price and units and growth:
-                HomogenousProduct.objects.create(
-                   company_id = company_id,
-                product_name = name,
-                selling_price_per_unit = price,
-                units_sold = units,
-                expected_growth_rate = growth
-                )
-
-        # Process heterogenous products if any
-        heterogenous_product_names = request.POST.getlist('heterogenous_product_name[]')
-        heterogenous_expected_revenues = request.POST.getlist('heterogenous_expected_revenue[]')
-        heterogenous_growth_rates = request.POST.getlist('heterogenous_expected_growth_rate[]')
-
-        for name, revenue, growth in zip(heterogenous_product_names, heterogenous_expected_revenues, heterogenous_growth_rates):
-            if name and revenue and growth:
-                HeterogenousProduct.objects.create(
-                    company_id=company_id,
-                    product_name = name,
-                expected_revenue = revenue,
-                expected_growth_rate = growth
-                )
-        
-        return redirect('revenue_verticals',company_id)  # Change to your desired redirect URL
-    else:
-        # Handle GET request or any other logic here
-        company_profile = CompanyProfile.objects.get(company_id = company_id)
-        context ={'company_profile': company_profile}
-        return render(request, 'admin/revenue_verticals.html', context)
 
 
-def expenses(request,company_id):
-    if request.method == 'POST':
-        pass
-    else:
-        # Handle GET request or any other logic here
-        company_profile = CompanyProfile.objects.get(company_id = company_id)
-        context ={'company_profile': company_profile}
-        return render(request,'admin/expenses.html',context)
+
+
     
 
 #Editor
