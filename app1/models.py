@@ -378,7 +378,50 @@ class CashFlow(models.Model):
     modified_date = models.DateTimeField(auto_now_add=True)
 
 
+
+
+from django.db import models
+
+class ForecastingCashFlow(models.Model):
+    company_id = models.ForeignKey(Company,on_delete=models.CASCADE)
+    operating_cash_flow = models.JSONField(default=dict)
+    net_income = models.JSONField(default=dict)
+    depreciation_amortization = models.JSONField(default=dict)
+    change_in_working_capital = models.JSONField(default=dict)
+    changes_in_receivables = models.JSONField(default=dict)
+    change_in_inventory = models.JSONField(default=dict)
+    change_in_hedging_assets_current = models.JSONField(default=dict)
+    change_in_other_current_assets = models.JSONField(default=dict)
+    change_in_payables_and_accrued_expense = models.JSONField(default=dict)
+    change_in_pension_and_other_post_retirement_benefit_plans_current = models.JSONField(default=dict)
+    change_in_current_debt_and_capital_lease_obligation = models.JSONField(default=dict)
+    change_in_current_deferred_liabilities = models.JSONField(default=dict)
+    change_in_other_current_liabilities = models.JSONField(default=dict)
+    investing_cash_flow = models.JSONField(default=dict)
+    cash_flow_from_continuing_investing_activities = models.JSONField(default=dict)
+    net_ppe_purchase_and_sale = models.JSONField(default=dict)
+    goodwill_and_other_intangible_assets = models.JSONField(default=dict)
+    investments_and_advances = models.JSONField(default=dict)
+    other_non_current_assets = models.JSONField(default=dict)
+    financing_cash_flow = models.JSONField(default=dict)
+    cash_flow_from_continuing_financing_activities = models.JSONField(default=dict)
+    long_term_debt_and_capital_lease_obligation = models.JSONField(default=dict)
+    non_current_deferred_liabilities = models.JSONField(default=dict)
+    trade_and_other_payables_non_current = models.JSONField(default=dict)
+    other_non_current_liabilities = models.JSONField(default=dict)
+    common_stock_issuance_payments = models.JSONField(default=dict)
+    common_stock_dividend_paid = models.JSONField(default=dict)
+    end_cash_position = models.JSONField(default=dict)
+    changes_in_cash = models.JSONField(default=dict)
+    beginning_cash_position = models.JSONField(default=dict)
+    capital_expenditure = models.JSONField(default=dict)
+    issuance_repurchase_of_capital_stock = models.JSONField(default=dict)
+    repayment_of_debt = models.JSONField(default=dict)
+    free_cash_flow = models.JSONField(default=dict)
+
     
+
+
 
 
 

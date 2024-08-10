@@ -47,6 +47,13 @@ urlpatterns = [
     path('basic_information/<str:id>/',basicInformation,name='basic_information'),
     path('business_plan/<str:id>/',businessPlan,name='business_plan'),
     path('pitch_and_product/<str:id>/',pitchAndProduct,name='pitch_and_product'),
+    path('founders/<str:id>/',founders,name='founders'),
+    
+    path('basic_info/<str:id>/',basicInfo,name='basic_info'),
+    path('product_and_services/<str:id>/',productsAndServices,name='product_and_services'),
+    path('company_ask/<str:id>/',companyAsk,name='company_ask'),
+    path('pitch_presentation_and_video/<str:id>/',pitchPresentationAndVideo,name='pitch_presentation_and_video'),
+
 
     path('cap_table/<str:id>/',capTable,name='cap_table'),
     path('cap_table_form/<str:id>/',capTableForm,name='cap_table_form'),

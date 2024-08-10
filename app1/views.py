@@ -1289,6 +1289,69 @@ def comprehensiveProfile(request,id):
 
 
 
+def basicInfo(request, id):
+    company = Company.objects.get(company_id = id)
+    company_profile = CompanyProfile.objects.get(company_id = id)
+    if request.method == 'POST':
+        pass
+
+    else:
+        
+        context = {
+            'company':company,
+            'company_profile': company_profile,
+        }
+
+        return render(request, 'admin/basic_info.html', context)
+    
+
+def productsAndServices(request, id):
+    company = Company.objects.get(company_id = id)
+    company_profile = CompanyProfile.objects.get(company_id = id)
+    if request.method == 'POST':
+        pass
+
+    else:
+        
+        context = {
+            'company':company,
+            'company_profile': company_profile,
+        }
+
+        return render(request, 'admin/products.html', context)
+    
+
+def pitchPresentationAndVideo(request, id):
+    company = Company.objects.get(company_id = id)
+    company_profile = CompanyProfile.objects.get(company_id = id)
+    if request.method == 'POST':
+        pass
+
+    else:
+        
+        context = {
+            'company':company,
+            'company_profile': company_profile,
+        }
+
+        return render(request, 'admin/pitch_presentation_and_video.html', context)
+
+
+
+def companyAsk(request, id):
+    company = Company.objects.get(company_id = id)
+    company_profile = CompanyProfile.objects.get(company_id = id)
+    if request.method == 'POST':
+        pass
+
+    else:
+        
+        context = {
+            'company':company,
+            'company_profile': company_profile,
+        }
+
+        return render(request, 'admin/company_ask.html', context)
 
 
 def businessPlan(request, id):
@@ -1341,6 +1404,25 @@ def pitchAndProduct(request, id):
         }
 
         return render(request, 'admin/pitch_and_product.html', context)
+    
+def founders(request, id):
+    company = Company.objects.get(company_id = id)
+    company_profile = CompanyProfile.objects.get(company_id = id)
+    if request.method == 'POST':
+        pass
+
+    else:
+        
+        context = {
+            'company':company,
+            'company_profile': company_profile,
+        }
+
+        return render(request, 'admin/founders.html', context)
+    
+
+
+
 
 def capTable(request, id):
     company = Company.objects.get(company_id = id)
@@ -2430,13 +2512,97 @@ def forecastedCashFlowTable(request, id):
     company = Company.objects.get(company_id=id)
     months, quarters, years = get_months_quarters_years()
     cash_flows = CashFlow.objects.filter(company_id=id)
+    forecasted_cash_flows = ForecastingCashFlow.objects.filter(company_id=id)
+    
 
 
+    # if request.method == 'POST':
+    #     cash_flow_data = json.loads(request.POST.get('cash_flow_data', ''))
+
+    #     cash_flow = ForecastingCashFlow(company_id=company)  # Create a new instance of CashFlowData
+
+    #     for row in cash_flow_data:
+    #         breakdown = row['breakdown'].strip().lower().replace(' ', '_')
+    #         print(breakdown)
+    #         data = row['data']
+
+    #         # Split data into values and growth rates
+    #         values = data[::2]  # Take even-indexed elements as values
+    #         growth_rates = data[1::2]  # Take odd-indexed elements as growth rates
+
+    #         # Store as a dictionary in the corresponding field
+    #         if hasattr(cash_flow, breakdown):
+    #             setattr(cash_flow, breakdown, {
+    #                 "values": values,
+    #                 "growth_rates": growth_rates
+    #             })
+
+    #     cash_flow.save()  # Save the entire object once
     if request.method == 'POST':
-        # Handle POST request here
-        # period_plus_1_value = request.POST.get('period_plus_1_value')
-        # print(period_plus_1_value,'period_plus_1_value')
-        # return redirect('forecasting_cash_flow_table',id)
+        # Retrieve the data from POST request
+        cash_flow_data = json.loads(request.POST.get('cash_flow_data', ''))
+
+        # Find or create the CashFlowData object for the specific company
+        #company_id = request.POST.get('company_id')  # Make sure the company_id is sent in the POST request
+        #cash_flow_instance, created = ForecastingCashFlow.objects.get_or_create(company_id=company)
+        cash_flow_instance = ForecastingCashFlow(company_id=company)
+
+        # Map the breakdowns to the corresponding model fields
+        field_mapping = {
+            'Operating Cash Flow': 'operating_cash_flow',
+            'Net Income from Continuing Operations': 'net_income',
+            'Depreciation & amortization': 'depreciation_amortization',
+            'Change in working capital': 'change_in_working_capital',
+            'Changes in Receivables': 'changes_in_receivables',
+            'Change in Inventory': 'change_in_inventory',
+            'Change in Hedging Assets Current': 'change_in_hedging_assets_current',
+            'Change in Other Current Assets': 'change_in_other_current_assets',
+            'Change in Payables And Accrued Expense': 'change_in_payables_and_accrued_expense',
+            'Change in Pension & Other Post Retirement Benefit Plans Current': 'change_in_pension_and_other_post_retirement_benefit_plans_current',
+            'Change in Current Debt And Capital Lease Obligation': 'change_in_current_debt_and_capital_lease_obligation',
+            'Change in Current Deferred Liabilities': 'change_in_current_deferred_liabilities',
+            'Change in Other Current Liabilities': 'change_in_other_current_liabilities',
+            'Investing Cash Flow': 'investing_cash_flow',
+            'Cash Flow from Continuing Investing Activities': 'cash_flow_from_continuing_investing_activities',
+            'Net PPE Purchase And Sale': 'net_ppe_purchase_and_sale',
+            'Goodwill And Other Intangible Assets': 'goodwill_and_other_intangible_assets',
+            'Investments And Advances': 'investments_and_advances',
+            'Other Non Current Assets': 'other_non_current_assets',
+            'Financing Cash Flow': 'financing_cash_flow',
+            'Cash Flow from Continuing Financing Activities': 'cash_flow_from_continuing_financing_activities',
+            'Long Term Debt And Capital Lease Obligation': 'long_term_debt_and_capital_lease_obligation',
+            'Non Current Deferred Liabilities': 'non_current_deferred_liabilities',
+            'Trade and Other Payables Non Current': 'trade_and_other_payables_non_current',
+            'Other Non Current Liabilities': 'other_non_current_liabilities',
+            'Common Stock Issuance/ (Payments)': 'common_stock_issuance_payments',
+            'Common Stock Dividend Paid': 'common_stock_dividend_paid',
+            'End Cash Position': 'end_cash_position',
+            'Changes in Cash': 'changes_in_cash',
+            'Beginning Cash Position': 'beginning_cash_position',
+            'Capital Expenditure': 'capital_expenditure',
+            'Issuance/ (Repurchase) of Capital Stock': 'issuance_repurchase_of_capital_stock',
+            'Repayment of Debt': 'repayment_of_debt',
+            'Free Cash Flow': 'free_cash_flow',
+        }
+
+        # Save each breakdown and its corresponding data to the appropriate field
+        for item in cash_flow_data:
+            breakdown = item['breakdown'].strip()
+            data = {
+                'values': item['data'][::2],  # Get all values (assuming every other value is the actual data)
+                'growth_rates': item['data'][1::2]  # Get all growth rates (assuming every other value is the growth rate)
+            }
+
+            field_name = field_mapping.get(breakdown)
+            if field_name:
+                setattr(cash_flow_instance, field_name, data)
+
+        # Save the instance
+        cash_flow_instance.save()
+
+        
+
+        return redirect('forecasting_cash_flow_table',id)
         pass
 
     else:
@@ -2466,12 +2632,30 @@ def forecastedCashFlowTable(request, id):
             'quarters': quarters,
             'years': years,
             'cash_flows': cash_flows,
+            'forecasted_cash_flows':forecasted_cash_flows,
             'pre_selected_cash_flow_data': pre_selected_cash_flow_data,
             'headers': headers,
             'period_type': period_type,
         }
 
         return render(request, 'admin/forecasted_cash_flow.html', context)
+    
+# # # Assuming you have an instance of CashFlowData
+# cash_flow_data_instance = ForecastingCashFlow.objects.get(company_id='C001')  # replace `1` with the actual ID or filter criteria
+
+# # # Accessing the entire growth_rates list of Operating Cash Flow
+# operating_cash_flow_growth_rates = cash_flow_data_instance.operating_cash_flow.get('growth_rates', [])
+
+# # # Printing all growth rates of Operating Cash Flow
+# print("Operating Cash Flow Growth Rates:", operating_cash_flow_growth_rates)
+
+# # # Accessing and printing the first growth rate of Operating Cash Flow
+# if operating_cash_flow_growth_rates:
+#     first_growth_rate = operating_cash_flow_growth_rates[0]
+#     print("First Growth Rate of Operating Cash Flow:", first_growth_rate)
+# else:
+#     print("No growth rates found for Operating Cash Flow.")
+
 
 #Investor
 

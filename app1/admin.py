@@ -50,6 +50,8 @@ admin.site.register(SolvedProblem)
 admin.site.register(BalanceSheet)
 admin.site.register(CashFlow)
 admin.site.register(IncomeStatement)
+admin.site.register(ForecastingCashFlow)
+
 
 
 

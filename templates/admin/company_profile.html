@@ -110,11 +110,23 @@
             <a class="dropdown-btn" href="#">Profile</a>
 
             <div class="dropdown-container">
-                <a href="{% url 'basic_information' company.company_id %}" class="{% if request.resolver_match.url_name == 'basic_information' %}active{% endif %}">Basic Information</a>
-                <a href="{% url 'business_plan' company.company_id %}" class="{% if request.resolver_match.url_name == 'business_plan' %}active{% endif %}">Business Plan</a>
-                <a href="{% url 'pitch_and_product' company.company_id %}" class="{% if request.resolver_match.url_name == 'pitch_and_product' %}active{% endif %}">Pitch & Product</a>
-                <a href="#" class="{% if request.resolver_match.url_name == 'organization' %}active{% endif %}">Organization</a>
+                <!-- <a href="{% url 'basic_information' company.company_id %}" class="{% if request.resolver_match.url_name == 'basic_information' %}active{% endif %}">Basic Information</a> -->
+                <a href="{% url 'basic_info' company.company_id %}" class="{% if request.resolver_match.url_name == 'basic_info' %}active{% endif %}">Basic Information </a>
+                <a href="{% url 'product_and_services' company.company_id %}" class="{% if request.resolver_match.url_name == 'product_and_services' %}active{% endif %}">Product & Services</a>
+                <a href="{% url 'pitch_presentation_and_video' company.company_id %}" class="{% if request.resolver_match.url_name == 'pitch_presentation_and_video' %}active{% endif %}">Pitch Presentation & Video</a>
+                <a href="#" >Business Plan & Financials</a>
+                <a href="#" >Valuation & Bench Marking</a>
+                <!-- <a href="{% url 'business_plan' company.company_id %}" class="{% if request.resolver_match.url_name == 'business_plan' %}active{% endif %}">Founders & Organization</a> -->
+                <a href="{% url 'founders' company.company_id %}" class="{% if request.resolver_match.url_name == 'founders' %}active{% endif %}">Founders & Organization </a>
                 <a href="{% url 'cap_table' company.company_id %}" class="{% if request.resolver_match.url_name == 'cap_table' %}active{% endif %}">Cap Table</a>
+                <a href="#" >News & Events</a>
+                <a href="{% url 'company_ask' company.company_id %}" class="{% if request.resolver_match.url_name == 'company_ask' %}active{% endif %}">Company Ask</a>
+
+
+                <!-- <a href="{% url 'business_plan' company.company_id %}" class="{% if request.resolver_match.url_name == 'business_plan' %}active{% endif %}">Business Plan</a>
+                <a href="{% url 'pitch_and_product' company.company_id %}" class="{% if request.resolver_match.url_name == 'pitch_and_product' %}active{% endif %}">Pitch & Product</a>
+                <a href="#" class="{% if request.resolver_match.url_name == 'organization' %}active{% endif %}">Organization</a> -->
+
             </div>
 
             <a class="dropdown-btn">Corporate Finance</a>

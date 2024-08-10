@@ -431,11 +431,7 @@ td input {
                                 </svg>
                             </button> Cash And Cash Equivalents
                         </td>
-                        {% for balance_sheet in balance_sheets %}
-                        <td>
-                            {{balance_sheet.cash_and_cash_equivalents}}
-                        </td>
-                        {% endfor %}
+                        
 
                         <td class="pre-selected-data">{{pre_selected_balance_sheet_data.cash_and_cash_equivalents}}</td>
                         <td><input  type="number" class="form-control pre-selected-growth-rate-input "></td>

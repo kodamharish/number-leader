@@ -60,23 +60,35 @@
             cursor: pointer;
             font-size: 1.25rem;
         }
+        .main-content {
+            margin-left: 230px;
+            /* Adjust according to sidebar width */
+            padding: 40px;
+            /* Reduce padding for a cleaner look */
+            transition: margin-left 0.3s;
+            /* Smooth transition for sidebar width changes */
+        
+            /* Reduce padding for a cleaner look */
+            height: calc(100vh);
+            /* Full height minus header/footer or any other elements */
+            overflow-y: auto;
+            /* Enable vertical scrolling if content exceeds height */
+        
+        }
     </style>
 </head>
 <body>
 
-<div class="container">
+<div class="container main-content">
     <div id="bigPlusButton" class="big-plus-button" onclick="showTable()">+ Add Table</div>
 
     <div id="tableContainer" class="table-container">
         <table id="capTable" class="table table-striped">
             <thead>
                 <tr>
-                    <th>Shareholder</th>
-                    <th>Name</th>
+                    <th>Ask</th>
+                    <th>Value</th>
                     <th>Equity Share</th>
-                    <th>Invested Since</th>
-                    <th>Investment Amount</th>
-                    <th>Valuation</th>
                     <th>Details</th>
                     <th class="actions">Actions</th>
                 </tr>
@@ -106,12 +118,9 @@
         const entryRow = document.createElement('tr');
 
         entryRow.innerHTML = `
-            <td><input type="text" class="form-control" id="shareholderInput"></td>
-            <td><input type="text" class="form-control" id="nameInput"></td>
+            <td><input type="text" class="form-control" id="askInput"></td>
+            <td><input type="text" class="form-control" id="valueInput"></td>
             <td><input type="text" class="form-control" id="equityShareInput"></td>
-            <td><input type="text" class="form-control" id="investedSinceInput"></td>
-            <td><input type="text" class="form-control" id="investmentAmountInput"></td>
-            <td><input type="text" class="form-control" id="valuationInput"></td>
             <td><input type="text" class="form-control" id="detailsInput"></td>
             <td><button class="btn btn-primary btn-sm" onclick="saveRow()">Add</button></td>
         `;
@@ -120,21 +129,15 @@
     }
 
     function saveRow() {
-        const shareholder = document.getElementById('shareholderInput').value;
-        const name = document.getElementById('nameInput').value;
+        const ask = document.getElementById('askInput').value;
+        const value = document.getElementById('valueInput').value;
         const equityShare = document.getElementById('equityShareInput').value;
-        const investedSince = document.getElementById('investedSinceInput').value;
-        const investmentAmount = document.getElementById('investmentAmountInput').value;
-        const valuation = document.getElementById('valuationInput').value;
         const details = document.getElementById('detailsInput').value;
 
         const row = {
-            shareholder,
-            name,
+            ask,
+            value,
             equityShare,
-            investedSince,
-            investmentAmount,
-            valuation,
             details
         };
 
@@ -156,12 +159,9 @@
             const newRow = document.createElement('tr');
             newRow.id = `row-${index}`; // Set a unique ID for each row
             newRow.innerHTML = `
-                <td>${row.shareholder}</td>
-                <td>${row.name}</td>
+                <td>${row.ask}</td>
+                <td>${row.value}</td>
                 <td>${row.equityShare}</td>
-                <td>${row.investedSince}</td>
-                <td>${row.investmentAmount}</td>
-                <td>${row.valuation}</td>
                 <td>${row.details}</td>
                 <td class="actions">
                     <span class="edit-button" onclick="editRow(${index})">&#9998;</span>
@@ -186,12 +186,9 @@
         
         // Replace the row's content with input fields containing the current values
         tableRow.innerHTML = `
-            <td><input type="text" class="form-control" value="${row.shareholder}"></td>
-            <td><input type="text" class="form-control" value="${row.name}"></td>
+            <td><input type="text" class="form-control" value="${row.ask}"></td>
+            <td><input type="text" class="form-control" value="${row.value}"></td>
             <td><input type="text" class="form-control" value="${row.equityShare}"></td>
-            <td><input type="text" class="form-control" value="${row.investedSince}"></td>
-            <td><input type="text" class="form-control" value="${row.investmentAmount}"></td>
-            <td><input type="text" class="form-control" value="${row.valuation}"></td>
             <td><input type="text" class="form-control" value="${row.details}"></td>
             <td>
                 <button class="btn btn-primary btn-sm" onclick="saveEditedRow(${index})">Save Changes</button>
@@ -205,13 +202,10 @@
         
         // Retrieve the updated values from the input fields
         const updatedRow = {
-            shareholder: tableRow.cells[0].querySelector('input').value,
-            name: tableRow.cells[1].querySelector('input').value,
+            ask: tableRow.cells[0].querySelector('input').value,
+            value: tableRow.cells[1].querySelector('input').value,
             equityShare: tableRow.cells[2].querySelector('input').value,
-            investedSince: tableRow.cells[3].querySelector('input').value,
-            investmentAmount: tableRow.cells[4].querySelector('input').value,
-            valuation: tableRow.cells[5].querySelector('input').value,
-            details: tableRow.cells[6].querySelector('input').value
+            details: tableRow.cells[3].querySelector('input').value
         };
 
         // Update the row in the `rows` array

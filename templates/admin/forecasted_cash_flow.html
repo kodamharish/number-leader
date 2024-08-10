@@ -210,7 +210,7 @@
 
 
         <div class="row">
-            <div class="col-md-3">
+            <div class="col-md-4">
                 <h6 class="mb-4">
                     Corporate Finance -
                     {% if request.resolver_match.url_name == 'planning_budgeting_cash_flow_table' %}
@@ -222,7 +222,7 @@
                 </h6>
             </div>
 
-            <div class="col-md-3">
+            <div class="col-md-4">
                 <form method="get" action="">
                     <div class="m-0 inline">
                         <label for="pre_selected_cash_flow">Past Statements </label>
@@ -245,1149 +245,1119 @@
             </div>
 
 
-            <!-- <div class="col-md-3">
+            <div class="col-md-4">
                 <form method="get" action="">
                     <div class="m-0 inline">
-                        <label for="pre_selected_cash_flow">Past Statements </label>
-                        <select class="form-select " id="pre_selected_cash_flow" name="pre_selected_cash_flow" required
+                        <label for="forecasted_cash_flow">Past Forecasted  Statements </label>
+                        <select class="form-select " id="forecasted_cash_flow" name="forecasted_cash_flow" required
                             onchange="this.form.submit()">
-                            {% if pre_selected_cash_flow_data %}
+                            <!-- {% if pre_selected_cash_flow_data %}
                             <option value="{{pre_selected_cash_flow_data.monthly_or_quarterly_or_yearly}}">
                                 {{pre_selected_cash_flow_data.monthly_or_quarterly_or_yearly}}</option>
-                            {% else %}
+                            {% else %} -->
                             <option value="">Select</option>
-                            {% endif %}
+                            <!-- {% endif %} -->
 
-                            {% for type in cash_flows %}
-                            <option value="{{type.monthly_or_quarterly_or_yearly}}">
-                                {{type.monthly_or_quarterly_or_yearly}}</option>
+                            {% for type in forecasted_cash_flows %}
+                            <option value="{{type.company_id}}">
+                                {{type.company_id}}</option>
                             {% endfor %}
                         </select>
                     </div>
                 </form>
-            </div> -->
-
-
-            <div class="col-md-3">
-                <!-- <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#forecastModal">
-                Forecast
-            </button> -->
-
-                <!-- <div class="modal fade" id="forecastModal" tabindex="-1" role="dialog" aria-labelledby="forecastModalLabel" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="forecastModalLabel">Forecast</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                            <form method="POST" action="#" enctype="multipart/form-data">
-                                {% csrf_token %}
-                                <div class="form-group">
-                                    <label for="data-type">Forecast Type:</label>
-                                    <div id="data-type" class="d-flex">
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="radio" name="select_type_of_data" id="monthly" value="monthly">
-                                            <label class="form-check-label" for="monthly">Monthly</label>
-                                        </div>
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="radio" name="select_type_of_data" id="quarterly" value="quarterly">
-                                            <label class="form-check-label" for="quarterly">Quarterly</label>
-                                        </div>
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="radio" name="select_type_of_data" id="yearly" value="yearly">
-                                            <label class="form-check-label" for="yearly">Yearly</label>
-                                        </div>
-                                    </div>
-                                </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-primary" id="submitButton">Submit</button>
-                        </div>
-                        </form>
-                    </div>
-                </div>
-            </div> -->
-
-
-                <button type="submit" class="btn btn-primary">Save</button>
-
             </div>
+
+            
         </div>
 
         {% if pre_selected_cash_flow_data %}
 
 
-        <div class="table-container mt-1">
-            <div class="table-wrapper">
-                <table class="cell">
-                    <thead>
-                        <!-- <tr>
-                        <th class="rowview">Breakdown</th>
-                        {% for cash_flow in cash_flows %}
-                        <th class="rowview1">{{cash_flow.date|date:'d-m-Y'}}
-                            ({{cash_flow.monthly_or_quarterly_or_yearly}})</th>
-                        {% endfor %}
-                        
-                    </tr> -->
-
-                        <tr>
-                            <th class="rowview">Breakdown</th>
-                            <th class="rowview">{{ headers.0 }}</th>
-                            <th class="rowview">{{ headers.0 }} Growth Rate (%)</th>
-                            {% for header in headers|slice:"1:" %}
-                            <th class="rowview">{{ header }}</th>
-                            <th class="rowview">{{ header }} Growth Rate (%)</th>
-                            {% endfor %}
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>
-                                <button type="button" id="btnMA" aria-expanded="false"
-                                    onclick="toggle(this.id,'#MS01ase,#MS01NIFCO');" aria-controls="MS01ase MS01NIFCO"
-                                    aria-label="Total Equity Gross Minority Interest" aria-labelledby="btnMA lblMSa">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" focusable="false">
-                                        <path d="M70.3 13.8L40 66.3 9.7 13.8z"></path>
-                                    </svg>
-                                </button> Operating Cash Flow
-                            </td>
-
-                            <td class="pre-selected-data">{{ pre_selected_cash_flow_data.operating_cash_flow }}</td>
-                            <td><input type="number" class="form-control pre-selected-growth-rate-input"
-                                    name="pre_selected_growth_rate" id="total-revenue-growth-rate"></td>
-                            <td class="period-plus-1-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-1-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-2-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-2-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-3-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-3-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-4-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-4-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-5-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-5-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-6-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-6-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-7-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-7-growth-rate-input period-growth-rate-input "></td>
-
-                        </tr>
-                        <tr id="MS01NIFCO" class="hidden indent-level-1">
-                            <td> Net Income from Continuing Operations</td>
-
-
-                            <td class="pre-selected-data">{{ pre_selected_cash_flow_data.net_income_from_continuing_operations }}</td>
-                            <td><input type="number" class="form-control pre-selected-growth-rate-input"
-                                    name="pre_selected_growth_rate" id="total-revenue-growth-rate"></td>
-                            <td class="period-plus-1-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-1-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-2-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-2-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-3-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-3-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-4-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-4-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-5-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-5-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-6-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-6-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-7-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-7-growth-rate-input period-growth-rate-input "></td>
-                        </tr>
-                        <tr id="MS01NIFCO" class="hidden indent-level-1">
-                            <td> Depreciation & amortization </td>
-
-                            <td class="pre-selected-data">{{ pre_selected_cash_flow_data.depreciation_and_amortization }}</td>
-                            <td><input type="number" class="form-control pre-selected-growth-rate-input"
-                                    name="pre_selected_growth_rate" id="total-revenue-growth-rate"></td>
-                            <td class="period-plus-1-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-1-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-2-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-2-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-3-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-3-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-4-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-4-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-5-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-5-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-6-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-6-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-7-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-7-growth-rate-input period-growth-rate-input "></td>
-                        </tr>
-                        <tr id="MS01ase" class="hidden indent-level-1">
-                            <td>
-                                <button type="button" id="btnMB" aria-expanded="false"
-                                    onclick="toggle(this.id,'#MS01acs,#MS01acss,#MS01are,#MS01aglnare,#MS01aoea');"
-                                    aria-controls="MS01acs MS01are MS01aglnare MS01aoea"
-                                    aria-label="Stockholders' Equity" aria-labelledby="btnMB lblMSb">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" focusable="false">
-                                        <path d="M70.3 13.8L40 66.3 9.7 13.8z"></path>
-                                    </svg>
-                                </button> Change in working capital
-                            </td>
-
-
-
-                            <td class="pre-selected-data">{{ pre_selected_cash_flow_data.change_in_working_capital }}
-                            </td>
-                            <td><input type="number" class="form-control pre-selected-growth-rate-input"
-                                    name="pre_selected_growth_rate" id="total-revenue-growth-rate"></td>
-                            <td class="period-plus-1-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-1-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-2-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-2-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-3-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-3-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-4-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-4-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-5-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-5-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-6-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-6-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-7-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-7-growth-rate-input period-growth-rate-input "></td>
-                        </tr>
-                        <tr id="MS01acs" class="hidden indent-level-2">
-                            <td> Changes in Receivables </td>
-
-
-                            <td class="pre-selected-data">{{ pre_selected_cash_flow_data.changes_in_receivables }}</td>
-                            <td><input type="number" class="form-control pre-selected-growth-rate-input"
-                                    name="pre_selected_growth_rate" id="total-revenue-growth-rate"></td>
-                            <td class="period-plus-1-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-1-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-2-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-2-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-3-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-3-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-4-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-4-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-5-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-5-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-6-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-6-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-7-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-7-growth-rate-input period-growth-rate-input "></td>
-                        </tr>
-                        <tr id="MS01acss" class="hidden indent-level-2">
-                            <td> Change in Inventory </td>
-
-
-                            <td class="pre-selected-data">{{ pre_selected_cash_flow_data.change_in_inventory }}</td>
-                            <td><input type="number" class="form-control pre-selected-growth-rate-input"
-                                    name="pre_selected_growth_rate" id="total-revenue-growth-rate"></td>
-                            <td class="period-plus-1-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-1-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-2-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-2-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-3-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-3-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-4-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-4-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-5-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-5-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-6-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-6-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-7-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-7-growth-rate-input period-growth-rate-input "></td>
-                        </tr>
-                        <tr id="MS01are" class="hidden indent-level-2">
-                            <td> Change in Hedging Assets Current </td>
-
-
-                            <td class="pre-selected-data">{{ pre_selected_cash_flow_data.change_in_hedging_assets_current }}</td>
-                            <td><input type="number" class="form-control pre-selected-growth-rate-input"
-                                    name="pre_selected_growth_rate" id="total-revenue-growth-rate"></td>
-                            <td class="period-plus-1-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-1-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-2-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-2-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-3-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-3-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-4-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-4-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-5-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-5-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-6-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-6-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-7-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-7-growth-rate-input period-growth-rate-input "></td>
-                        </tr>
-                        <tr id="MS01aglnare" class="hidden indent-level-2">
-                            <td> Change in Other Current Assets </td>
-
-
-                            <td class="pre-selected-data">{{ pre_selected_cash_flow_data.change_in_other_current_assets }}</td>
-                            <td><input type="number" class="form-control pre-selected-growth-rate-input"
-                                    name="pre_selected_growth_rate" id="total-revenue-growth-rate"></td>
-                            <td class="period-plus-1-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-1-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-2-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-2-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-3-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-3-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-4-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-4-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-5-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-5-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-6-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-6-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-7-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-7-growth-rate-input period-growth-rate-input "></td>
-                        </tr>
-                        <tr id="MS01aoea" class="hidden indent-level-2">
-                            <td> Change in Payables And Accrued Expense </td>
-
-
-                            <td class="pre-selected-data">{{ pre_selected_cash_flow_data.change_in_payables_and_accrued_expense }}</td>
-                            <td><input type="number" class="form-control pre-selected-growth-rate-input"
-                                    name="pre_selected_growth_rate" id="total-revenue-growth-rate"></td>
-                            <td class="period-plus-1-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-1-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-2-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-2-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-3-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-3-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-4-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-4-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-5-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-5-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-6-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-6-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-7-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-7-growth-rate-input period-growth-rate-input "></td>
-                        </tr>
-                        <tr id="MS01aoea" class="hidden indent-level-2">
-                            <td> Change in Pension & Other Post Retirement Benefit Plans Current</td>
-
-
-                            <td class="pre-selected-data">{{ pre_selected_cash_flow_data.change_in_pension_and_other_post_retirement_benefit_plans_current }}</td>
-                            <td><input type="number" class="form-control pre-selected-growth-rate-input"
-                                    name="pre_selected_growth_rate" id="total-revenue-growth-rate"></td>
-                            <td class="period-plus-1-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-1-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-2-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-2-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-3-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-3-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-4-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-4-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-5-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-5-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-6-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-6-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-7-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-7-growth-rate-input period-growth-rate-input "></td>
-                        </tr>
-                        <tr id="MS01aoea" class="hidden indent-level-2">
-                            <td> Change in Current Debt And Capital Lease Obligation </td>
-
-
-                            <td class="pre-selected-data">{{ pre_selected_cash_flow_data.change_in_current_debt_and_capital_lease_obligation }}</td>
-                            <td><input type="number" class="form-control pre-selected-growth-rate-input"
-                                    name="pre_selected_growth_rate" id="total-revenue-growth-rate"></td>
-                            <td class="period-plus-1-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-1-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-2-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-2-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-3-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-3-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-4-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-4-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-5-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-5-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-6-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-6-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-7-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-7-growth-rate-input period-growth-rate-input "></td>
-                        </tr>
-                        <tr id="MS01aoea" class="hidden indent-level-2">
-                            <td> Change in Current Deferred Liabilities </td>
-
-
-                            <td class="pre-selected-data">{{ pre_selected_cash_flow_data.change_in_current_deferred_liabilities }}</td>
-                            <td><input type="number" class="form-control pre-selected-growth-rate-input"
-                                    name="pre_selected_growth_rate" id="total-revenue-growth-rate"></td>
-                            <td class="period-plus-1-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-1-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-2-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-2-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-3-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-3-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-4-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-4-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-5-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-5-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-6-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-6-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-7-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-7-growth-rate-input period-growth-rate-input "></td>
-                        </tr>
-                        <tr id="MS01aoea" class="hidden indent-level-2">
-                            <td> Change in Other Current Liabilities </td>
-
-
-                            <td class="pre-selected-data">{{ pre_selected_cash_flow_data.change_in_other_current_liabilities }}</td>
-                            <td><input type="number" class="form-control pre-selected-growth-rate-input"
-                                    name="pre_selected_growth_rate" id="total-revenue-growth-rate"></td>
-                            <td class="period-plus-1-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-1-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-2-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-2-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-3-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-3-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-4-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-4-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-5-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-5-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-6-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-6-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-7-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-7-growth-rate-input period-growth-rate-input "></td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <button type="button" id="btnMZ" aria-expanded="false"
-                                    onclick="toggle(this.id,'#MS01CFfcia');" aria-controls="MS01CFfcia"
-                                    aria-label="Investing Cash Flow" aria-labelledby="btnMZ lblMSa">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" focusable="false">
-                                        <path d="M70.3 13.8L40 66.3 9.7 13.8z"></path>
-                                    </svg>
-                                </button> Investing Cash Flow
-                            </td>
-
-
-                            <td class="pre-selected-data">{{ pre_selected_cash_flow_data.investing_cash_flow }}</td>
-                            <td><input type="number" class="form-control pre-selected-growth-rate-input"
-                                    name="pre_selected_growth_rate" id="total-revenue-growth-rate"></td>
-                            <td class="period-plus-1-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-1-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-2-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-2-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-3-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-3-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-4-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-4-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-5-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-5-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-6-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-6-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-7-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-7-growth-rate-input period-growth-rate-input "></td>
-                        </tr>
-                        <tr id="MS01CFfcia" class="hidden indent-level-1">
-                            <td>
-                                <button type="button" id="btnMY" aria-expanded="false"
-                                    onclick="toggle(this.id,'#MS01nppas,#MS01gaoia,#MS01iaad,#MS01oncas');"
-                                    aria-controls="MS01nppas MS01gaoia MS01iaad MS01oncas"
-                                    aria-label="Cash Flow from Continuing Investing Activities"
-                                    aria-labelledby="btnMY lblMSb">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" focusable="false">
-                                        <path d="M70.3 13.8L40 66.3 9.7 13.8z"></path>
-                                    </svg>
-                                </button> Cash Flow from Continuing Investing Activities
-                            </td>
-
-
-                            <td class="pre-selected-data">{{ pre_selected_cash_flow_data.cash_flow_from_continuing_investing_activities }}</td>
-                            <td><input type="number" class="form-control pre-selected-growth-rate-input"
-                                    name="pre_selected_growth_rate" id="total-revenue-growth-rate"></td>
-                            <td class="period-plus-1-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-1-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-2-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-2-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-3-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-3-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-4-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-4-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-5-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-5-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-6-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-6-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-7-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-7-growth-rate-input period-growth-rate-input "></td>
-                        </tr>
-                        <tr id="MS01nppas" class="hidden indent-level-2">
-                            <td> Net PPE Purchase And Sale </td>
-
-
-                            <td class="pre-selected-data">{{ pre_selected_cash_flow_data.net_ppe_purchase_and_sale }}
-                            </td>
-                            <td><input type="number" class="form-control pre-selected-growth-rate-input"
-                                    name="pre_selected_growth_rate" id="total-revenue-growth-rate"></td>
-                            <td class="period-plus-1-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-1-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-2-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-2-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-3-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-3-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-4-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-4-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-5-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-5-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-6-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-6-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-7-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-7-growth-rate-input period-growth-rate-input "></td>
-                        </tr>
-                        <tr id="MS01gaoia" class="hidden indent-level-2">
-                            <td> Goodwill And Other Intangible Assets </td>
-
-
-                            <td class="pre-selected-data">{{ pre_selected_cash_flow_data.goodwill_and_other_intangible_assets }}</td>
-                            <td><input type="number" class="form-control pre-selected-growth-rate-input"
-                                    name="pre_selected_growth_rate" id="total-revenue-growth-rate"></td>
-                            <td class="period-plus-1-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-1-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-2-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-2-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-3-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-3-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-4-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-4-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-5-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-5-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-6-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-6-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-7-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-7-growth-rate-input period-growth-rate-input "></td>
-                        </tr>
-                        <tr id="MS01iaad" class="hidden indent-level-2">
-                            <td> Investments And Advances </td>
-
-
-                            <td class="pre-selected-data">{{ pre_selected_cash_flow_data.investments_and_advances }}
-                            </td>
-                            <td><input type="number" class="form-control pre-selected-growth-rate-input"
-                                    name="pre_selected_growth_rate" id="total-revenue-growth-rate"></td>
-                            <td class="period-plus-1-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-1-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-2-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-2-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-3-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-3-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-4-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-4-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-5-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-5-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-6-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-6-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-7-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-7-growth-rate-input period-growth-rate-input "></td>
-                        </tr>
-                        <tr id="MS01oncas" class="hidden indent-level-2">
-                            <td> Other Non Current Assets </td>
-
-
-                            <td class="pre-selected-data">{{ pre_selected_cash_flow_data.other_non_current_assets }}
-                            </td>
-                            <td><input type="number" class="form-control pre-selected-growth-rate-input"
-                                    name="pre_selected_growth_rate" id="total-revenue-growth-rate"></td>
-                            <td class="period-plus-1-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-1-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-2-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-2-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-3-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-3-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-4-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-4-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-5-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-5-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-6-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-6-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-7-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-7-growth-rate-input period-growth-rate-input "></td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <button type="button" id="btnMX" aria-expanded="false"
-                                    onclick="toggle(this.id,'#MS01CFfcias');" aria-controls="MS01CFfcia"
-                                    aria-label="Financing Cash Flow" aria-labelledby="btnMX lblMSa">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" focusable="false">
-                                        <path d="M70.3 13.8L40 66.3 9.7 13.8z"></path>
-                                    </svg>
-                                </button> Financing Cash Flow
-                            </td>
-
-                            <td class="pre-selected-data">{{ pre_selected_cash_flow_data.financing_cash_flow }}</td>
-                            <td><input type="number" class="form-control pre-selected-growth-rate-input"
-                                    name="pre_selected_growth_rate" id="total-revenue-growth-rate"></td>
-                            <td class="period-plus-1-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-1-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-2-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-2-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-3-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-3-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-4-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-4-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-5-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-5-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-6-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-6-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-7-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-7-growth-rate-input period-growth-rate-input "></td>
-                        </tr>
-                        <tr id="MS01CFfcias" class="hidden indent-level-1">
-                            <td>
-                                <button type="button" id="btnMW" aria-expanded="false"
-                                    onclick="toggle(this.id,'#MS01ltdaclo,#MS01ncdls,#MS01taopnc,#MS01oncls,#MS01csip,#MS01csdpd');"
-                                    aria-controls="MS01ltdaclo MS01ncdls MS01taopnc MS01oncls MS01csip MS01csdpd"
-                                    aria-label="Cash Flow from Continuing Financing Activities"
-                                    aria-labelledby="btnMW lblMSb">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" focusable="false">
-                                        <path d="M70.3 13.8L40 66.3 9.7 13.8z"></path>
-                                    </svg>
-                                </button> Cash Flow from Continuing Financing Activities
-                            </td>
-
-
-                            <td class="pre-selected-data">{{ pre_selected_cash_flow_data.cash_flow_from_continuing_financing_activities }}</td>
-                            <td><input type="number" class="form-control pre-selected-growth-rate-input"
-                                    name="pre_selected_growth_rate" id="total-revenue-growth-rate"></td>
-                            <td class="period-plus-1-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-1-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-2-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-2-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-3-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-3-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-4-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-4-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-5-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-5-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-6-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-6-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-7-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-7-growth-rate-input period-growth-rate-input "></td>
-                        </tr>
-                        <tr id="MS01ltdaclo" class="hidden indent-level-2">
-                            <td> Long Term Debt And Capital Lease Obligation</td>
-
-
-                            <td class="pre-selected-data">{{ pre_selected_cash_flow_data.long_term_debt_and_capital_lease_obligation }}</td>
-                            <td><input type="number" class="form-control pre-selected-growth-rate-input"
-                                    name="pre_selected_growth_rate" id="total-revenue-growth-rate"></td>
-                            <td class="period-plus-1-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-1-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-2-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-2-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-3-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-3-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-4-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-4-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-5-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-5-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-6-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-6-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-7-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-7-growth-rate-input period-growth-rate-input "></td>
-                        </tr>
-                        <tr id="MS01ncdls" class="hidden indent-level-2">
-                            <td> Non Current Deferred Liabilities </td>
-
-                            <td class="pre-selected-data">{{ pre_selected_cash_flow_data.non_current_deferred_liabilities }}</td>
-                            <td><input type="number" class="form-control pre-selected-growth-rate-input"
-                                    name="pre_selected_growth_rate" id="total-revenue-growth-rate"></td>
-                            <td class="period-plus-1-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-1-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-2-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-2-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-3-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-3-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-4-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-4-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-5-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-5-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-6-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-6-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-7-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-7-growth-rate-input period-growth-rate-input "></td>
-                        </tr>
-                        <tr id="MS01taopnc" class="hidden indent-level-2">
-                            <td> Trade and Other Payables Non Current </td>
-
-
-                            <td class="pre-selected-data">{{ pre_selected_cash_flow_data.trade_and_other_payables_non_current }}</td>
-                            <td><input type="number" class="form-control pre-selected-growth-rate-input"
-                                    name="pre_selected_growth_rate" id="total-revenue-growth-rate"></td>
-                            <td class="period-plus-1-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-1-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-2-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-2-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-3-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-3-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-4-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-4-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-5-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-5-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-6-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-6-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-7-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-7-growth-rate-input period-growth-rate-input "></td>
-                        </tr>
-                        <tr id="MS01oncls" class="hidden indent-level-2">
-                            <td> Other Non Current Liabilities </td>
-
-
-                            <td class="pre-selected-data">{{ pre_selected_cash_flow_data.other_non_current_liabilities }}</td>
-                            <td><input type="number" class="form-control pre-selected-growth-rate-input"
-                                    name="pre_selected_growth_rate" id="total-revenue-growth-rate"></td>
-                            <td class="period-plus-1-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-1-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-2-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-2-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-3-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-3-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-4-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-4-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-5-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-5-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-6-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-6-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-7-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-7-growth-rate-input period-growth-rate-input "></td>
-                        </tr>
-                        <tr id="MS01csip" class="hidden indent-level-2">
-                            <td> Common Stock Issuance/ (Payments) </td>
-
-
-                            <td class="pre-selected-data">{{ pre_selected_cash_flow_data.common_stock_issuance_payments }}</td>
-                            <td><input type="number" class="form-control pre-selected-growth-rate-input"
-                                    name="pre_selected_growth_rate" id="total-revenue-growth-rate"></td>
-                            <td class="period-plus-1-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-1-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-2-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-2-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-3-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-3-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-4-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-4-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-5-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-5-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-6-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-6-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-7-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-7-growth-rate-input period-growth-rate-input "></td>
-                        </tr>
-                        <tr id="MS01csdpd" class="hidden indent-level-2">
-                            <td> Common Stock Dividend Paid </td>
-
-
-                            <td class="pre-selected-data">{{ pre_selected_cash_flow_data.common_stock_dividend_paid }}
-                            </td>
-                            <td><input type="number" class="form-control pre-selected-growth-rate-input"
-                                    name="pre_selected_growth_rate" id="total-revenue-growth-rate"></td>
-                            <td class="period-plus-1-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-1-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-2-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-2-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-3-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-3-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-4-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-4-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-5-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-5-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-6-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-6-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-7-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-7-growth-rate-input period-growth-rate-input "></td>
-                        </tr>
-                        <tr>
-                            <td> End Cash Position </td>
-
-
-                            <td class="pre-selected-data">{{ pre_selected_cash_flow_data.end_cash_position }}</td>
-                            <td><input type="number" class="form-control pre-selected-growth-rate-input"
-                                    name="pre_selected_growth_rate" id="total-revenue-growth-rate"></td>
-                            <td class="period-plus-1-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-1-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-2-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-2-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-3-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-3-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-4-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-4-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-5-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-5-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-6-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-6-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-7-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-7-growth-rate-input period-growth-rate-input "></td>
-                        </tr>
-                        <tr>
-                            <td> Changes in Cash </td>
-
-
-                            <td class="pre-selected-data">{{ pre_selected_cash_flow_data.changes_in_cash }}</td>
-                            <td><input type="number" class="form-control pre-selected-growth-rate-input"
-                                    name="pre_selected_growth_rate" id="total-revenue-growth-rate"></td>
-                            <td class="period-plus-1-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-1-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-2-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-2-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-3-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-3-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-4-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-4-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-5-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-5-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-6-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-6-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-7-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-7-growth-rate-input period-growth-rate-input "></td>
-                        </tr>
-                        <tr>
-                            <td> Beginning Cash Position </td>
-
-
-                            <td class="pre-selected-data">{{ pre_selected_cash_flow_data.beginning_cash_position }}</td>
-                            <td><input type="number" class="form-control pre-selected-growth-rate-input"
-                                    name="pre_selected_growth_rate" id="total-revenue-growth-rate"></td>
-                            <td class="period-plus-1-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-1-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-2-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-2-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-3-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-3-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-4-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-4-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-5-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-5-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-6-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-6-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-7-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-7-growth-rate-input period-growth-rate-input "></td>
-                        </tr>
-                        <tr>
-                            <td> Capital Expenditure </td>
-
-
-                            <td class="pre-selected-data">{{ pre_selected_cash_flow_data.capital_expenditure }}</td>
-                            <td><input type="number" class="form-control pre-selected-growth-rate-input"
-                                    name="pre_selected_growth_rate" id="total-revenue-growth-rate"></td>
-                            <td class="period-plus-1-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-1-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-2-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-2-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-3-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-3-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-4-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-4-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-5-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-5-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-6-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-6-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-7-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-7-growth-rate-input period-growth-rate-input "></td>
-                        </tr>
-                        <tr>
-                            <td> Issuance/ (Repurchase) of Capital Stock </td>
-
-
-                            <td class="pre-selected-data">{{pre_selected_cash_flow_data.issuance_repurchase_of_capital_stock }}</td>
-                            <td><input type="number" class="form-control pre-selected-growth-rate-input"
-                                    name="pre_selected_growth_rate" id="total-revenue-growth-rate"></td>
-                            <td class="period-plus-1-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-1-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-2-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-2-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-3-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-3-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-4-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-4-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-5-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-5-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-6-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-6-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-7-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-7-growth-rate-input period-growth-rate-input "></td>
-                        </tr>
-                        <tr>
-                            <td> Repayment of Debt </td>
-
-                            <td class="pre-selected-data">{{ pre_selected_cash_flow_data.repayment_of_debt }}</td>
-                            <td><input type="number" class="form-control pre-selected-growth-rate-input"
-                                    name="pre_selected_growth_rate" id="total-revenue-growth-rate"></td>
-                            <td class="period-plus-1-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-1-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-2-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-2-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-3-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-3-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-4-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-4-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-5-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-5-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-6-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-6-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-7-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-7-growth-rate-input period-growth-rate-input "></td>
-                        </tr>
-                        <tr>
-                            <td> Free Cash Flow </td>
-
-
-                            <td class="pre-selected-data">{{ pre_selected_cash_flow_data.free_cash_flow }}</td>
-                            <td><input type="number" class="form-control pre-selected-growth-rate-input"
-                                    name="pre_selected_growth_rate" id="total-revenue-growth-rate"></td>
-                            <td class="period-plus-1-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-1-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-2-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-2-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-3-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-3-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-4-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-4-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-5-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-5-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-6-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-6-growth-rate-input period-growth-rate-input "></td>
-                            <td class="period-plus-7-value period-plus-value"></td>
-                            <td><input type="number"
-                                    class="form-control period-7-growth-rate-input period-growth-rate-input "></td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
+        <form method="post" id="cashFlowForm">
+                {% csrf_token %}
+
+
+                
+
+
+                <div class="table-container mt-1">
+                <div class="table-wrapper">
+                        <table class="cell">
+                        <thead>
+                                <!-- <tr>
+                                <th class="rowview">Breakdown</th>
+                                {% for cash_flow in cash_flows %}
+                                <th class="rowview1">{{cash_flow.date|date:'d-m-Y'}}
+                                ({{cash_flow.monthly_or_quarterly_or_yearly}})</th>
+                                {% endfor %}
+                                
+                        </tr> -->
+
+                                <tr>
+                                <th class="rowview">Breakdown</th>
+                                <th class="rowview">{{ headers.0 }}</th>
+                                <th class="rowview">{{ headers.0 }} Growth Rate (%)</th>
+                                {% for header in headers|slice:"1:" %}
+                                <th class="rowview">{{ header }}</th>
+                                <th class="rowview">{{ header }} Growth Rate (%)</th>
+                                {% endfor %}
+                                </tr>
+                        </thead>
+                        <tbody>
+                                <tr>
+                                <td>
+                                        <button type="button" id="btnMA" aria-expanded="false"
+                                        onclick="toggle(this.id,'#MS01ase,#MS01NIFCO');" aria-controls="MS01ase MS01NIFCO"
+                                        aria-label="Total Equity Gross Minority Interest" aria-labelledby="btnMA lblMSa">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" focusable="false">
+                                                <path d="M70.3 13.8L40 66.3 9.7 13.8z"></path>
+                                        </svg>
+                                        </button> Operating Cash Flow
+                                </td>
+
+                                <td class="pre-selected-data">{{ pre_selected_cash_flow_data.operating_cash_flow }}</td>
+                                <td><input type="number" class="form-control pre-selected-growth-rate-input"
+                                        name="pre_selected_growth_rate" id="total-revenue-growth-rate"></td>
+                                <td class="period-plus-1-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-1-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-2-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-2-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-3-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-3-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-4-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-4-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-5-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-5-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-6-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-6-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-7-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-7-growth-rate-input period-growth-rate-input "></td>
+
+                                </tr>
+                                <tr id="MS01NIFCO" class="hidden indent-level-1">
+                                <td> Net Income from Continuing Operations</td>
+
+
+                                <td class="pre-selected-data">{{ pre_selected_cash_flow_data.net_income_from_continuing_operations }}</td>
+                                <td><input type="number" class="form-control pre-selected-growth-rate-input"
+                                        name="pre_selected_growth_rate" id="total-revenue-growth-rate"></td>
+                                <td class="period-plus-1-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-1-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-2-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-2-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-3-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-3-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-4-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-4-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-5-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-5-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-6-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-6-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-7-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-7-growth-rate-input period-growth-rate-input "></td>
+                                </tr>
+                                <tr id="MS01NIFCO" class="hidden indent-level-1">
+                                <td> Depreciation & amortization </td>
+
+                                <td class="pre-selected-data">{{ pre_selected_cash_flow_data.depreciation_and_amortization }}</td>
+                                <td><input type="number" class="form-control pre-selected-growth-rate-input"
+                                        name="pre_selected_growth_rate" id="total-revenue-growth-rate"></td>
+                                <td class="period-plus-1-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-1-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-2-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-2-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-3-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-3-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-4-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-4-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-5-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-5-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-6-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-6-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-7-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-7-growth-rate-input period-growth-rate-input "></td>
+                                </tr>
+                                <tr id="MS01ase" class="hidden indent-level-1">
+                                <td>
+                                        <button type="button" id="btnMB" aria-expanded="false"
+                                        onclick="toggle(this.id,'#MS01acs,#MS01acss,#MS01are,#MS01aglnare,#MS01aoea');"
+                                        aria-controls="MS01acs MS01are MS01aglnare MS01aoea"
+                                        aria-label="Stockholders' Equity" aria-labelledby="btnMB lblMSb">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" focusable="false">
+                                                <path d="M70.3 13.8L40 66.3 9.7 13.8z"></path>
+                                        </svg>
+                                        </button> Change in working capital
+                                </td>
+
+
+
+                                <td class="pre-selected-data">{{ pre_selected_cash_flow_data.change_in_working_capital }}
+                                </td>
+                                <td><input type="number" class="form-control pre-selected-growth-rate-input"
+                                        name="pre_selected_growth_rate" id="total-revenue-growth-rate"></td>
+                                <td class="period-plus-1-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-1-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-2-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-2-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-3-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-3-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-4-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-4-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-5-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-5-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-6-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-6-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-7-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-7-growth-rate-input period-growth-rate-input "></td>
+                                </tr>
+                                <tr id="MS01acs" class="hidden indent-level-2">
+                                <td> Changes in Receivables </td>
+
+
+                                <td class="pre-selected-data">{{ pre_selected_cash_flow_data.changes_in_receivables }}</td>
+                                <td><input type="number" class="form-control pre-selected-growth-rate-input"
+                                        name="pre_selected_growth_rate" id="total-revenue-growth-rate"></td>
+                                <td class="period-plus-1-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-1-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-2-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-2-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-3-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-3-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-4-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-4-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-5-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-5-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-6-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-6-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-7-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-7-growth-rate-input period-growth-rate-input "></td>
+                                </tr>
+                                <tr id="MS01acss" class="hidden indent-level-2">
+                                <td> Change in Inventory </td>
+
+
+                                <td class="pre-selected-data">{{ pre_selected_cash_flow_data.change_in_inventory }}</td>
+                                <td><input type="number" class="form-control pre-selected-growth-rate-input"
+                                        name="pre_selected_growth_rate" id="total-revenue-growth-rate"></td>
+                                <td class="period-plus-1-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-1-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-2-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-2-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-3-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-3-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-4-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-4-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-5-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-5-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-6-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-6-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-7-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-7-growth-rate-input period-growth-rate-input "></td>
+                                </tr>
+                                <tr id="MS01are" class="hidden indent-level-2">
+                                <td> Change in Hedging Assets Current </td>
+
+
+                                <td class="pre-selected-data">{{ pre_selected_cash_flow_data.change_in_hedging_assets_current }}</td>
+                                <td><input type="number" class="form-control pre-selected-growth-rate-input"
+                                        name="pre_selected_growth_rate" id="total-revenue-growth-rate"></td>
+                                <td class="period-plus-1-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-1-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-2-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-2-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-3-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-3-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-4-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-4-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-5-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-5-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-6-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-6-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-7-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-7-growth-rate-input period-growth-rate-input "></td>
+                                </tr>
+                                <tr id="MS01aglnare" class="hidden indent-level-2">
+                                <td> Change in Other Current Assets </td>
+
+
+                                <td class="pre-selected-data">{{ pre_selected_cash_flow_data.change_in_other_current_assets }}</td>
+                                <td><input type="number" class="form-control pre-selected-growth-rate-input"
+                                        name="pre_selected_growth_rate" id="total-revenue-growth-rate"></td>
+                                <td class="period-plus-1-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-1-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-2-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-2-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-3-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-3-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-4-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-4-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-5-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-5-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-6-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-6-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-7-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-7-growth-rate-input period-growth-rate-input "></td>
+                                </tr>
+                                <tr id="MS01aoea" class="hidden indent-level-2">
+                                <td> Change in Payables And Accrued Expense </td>
+
+
+                                <td class="pre-selected-data">{{ pre_selected_cash_flow_data.change_in_payables_and_accrued_expense }}</td>
+                                <td><input type="number" class="form-control pre-selected-growth-rate-input"
+                                        name="pre_selected_growth_rate" id="total-revenue-growth-rate"></td>
+                                <td class="period-plus-1-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-1-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-2-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-2-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-3-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-3-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-4-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-4-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-5-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-5-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-6-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-6-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-7-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-7-growth-rate-input period-growth-rate-input "></td>
+                                </tr>
+                                <tr id="MS01aoea" class="hidden indent-level-2">
+                                <td> Change in Pension & Other Post Retirement Benefit Plans Current</td>
+
+
+                                <td class="pre-selected-data">{{ pre_selected_cash_flow_data.change_in_pension_and_other_post_retirement_benefit_plans_current }}</td>
+                                <td><input type="number" class="form-control pre-selected-growth-rate-input"
+                                        name="pre_selected_growth_rate" id="total-revenue-growth-rate"></td>
+                                <td class="period-plus-1-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-1-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-2-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-2-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-3-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-3-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-4-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-4-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-5-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-5-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-6-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-6-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-7-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-7-growth-rate-input period-growth-rate-input "></td>
+                                </tr>
+                                <tr id="MS01aoea" class="hidden indent-level-2">
+                                <td> Change in Current Debt And Capital Lease Obligation </td>
+
+
+                                <td class="pre-selected-data">{{ pre_selected_cash_flow_data.change_in_current_debt_and_capital_lease_obligation }}</td>
+                                <td><input type="number" class="form-control pre-selected-growth-rate-input"
+                                        name="pre_selected_growth_rate" id="total-revenue-growth-rate"></td>
+                                <td class="period-plus-1-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-1-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-2-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-2-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-3-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-3-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-4-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-4-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-5-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-5-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-6-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-6-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-7-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-7-growth-rate-input period-growth-rate-input "></td>
+                                </tr>
+                                <tr id="MS01aoea" class="hidden indent-level-2">
+                                <td> Change in Current Deferred Liabilities </td>
+
+
+                                <td class="pre-selected-data">{{ pre_selected_cash_flow_data.change_in_current_deferred_liabilities }}</td>
+                                <td><input type="number" class="form-control pre-selected-growth-rate-input"
+                                        name="pre_selected_growth_rate" id="total-revenue-growth-rate"></td>
+                                <td class="period-plus-1-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-1-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-2-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-2-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-3-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-3-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-4-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-4-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-5-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-5-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-6-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-6-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-7-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-7-growth-rate-input period-growth-rate-input "></td>
+                                </tr>
+                                <tr id="MS01aoea" class="hidden indent-level-2">
+                                <td> Change in Other Current Liabilities </td>
+
+
+                                <td class="pre-selected-data">{{ pre_selected_cash_flow_data.change_in_other_current_liabilities }}</td>
+                                <td><input type="number" class="form-control pre-selected-growth-rate-input"
+                                        name="pre_selected_growth_rate" id="total-revenue-growth-rate"></td>
+                                <td class="period-plus-1-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-1-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-2-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-2-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-3-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-3-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-4-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-4-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-5-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-5-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-6-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-6-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-7-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-7-growth-rate-input period-growth-rate-input "></td>
+                                </tr>
+                                <tr>
+                                <td>
+                                        <button type="button" id="btnMZ" aria-expanded="false"
+                                        onclick="toggle(this.id,'#MS01CFfcia');" aria-controls="MS01CFfcia"
+                                        aria-label="Investing Cash Flow" aria-labelledby="btnMZ lblMSa">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" focusable="false">
+                                                <path d="M70.3 13.8L40 66.3 9.7 13.8z"></path>
+                                        </svg>
+                                        </button> Investing Cash Flow
+                                </td>
+
+
+                                <td class="pre-selected-data">{{ pre_selected_cash_flow_data.investing_cash_flow }}</td>
+                                <td><input type="number" class="form-control pre-selected-growth-rate-input"
+                                        name="pre_selected_growth_rate" id="total-revenue-growth-rate"></td>
+                                <td class="period-plus-1-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-1-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-2-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-2-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-3-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-3-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-4-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-4-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-5-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-5-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-6-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-6-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-7-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-7-growth-rate-input period-growth-rate-input "></td>
+                                </tr>
+                                <tr id="MS01CFfcia" class="hidden indent-level-1">
+                                <td>
+                                        <button type="button" id="btnMY" aria-expanded="false"
+                                        onclick="toggle(this.id,'#MS01nppas,#MS01gaoia,#MS01iaad,#MS01oncas');"
+                                        aria-controls="MS01nppas MS01gaoia MS01iaad MS01oncas"
+                                        aria-label="Cash Flow from Continuing Investing Activities"
+                                        aria-labelledby="btnMY lblMSb">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" focusable="false">
+                                                <path d="M70.3 13.8L40 66.3 9.7 13.8z"></path>
+                                        </svg>
+                                        </button> Cash Flow from Continuing Investing Activities
+                                </td>
+
+
+                                <td class="pre-selected-data">{{ pre_selected_cash_flow_data.cash_flow_from_continuing_investing_activities }}</td>
+                                <td><input type="number" class="form-control pre-selected-growth-rate-input"
+                                        name="pre_selected_growth_rate" id="total-revenue-growth-rate"></td>
+                                <td class="period-plus-1-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-1-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-2-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-2-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-3-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-3-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-4-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-4-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-5-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-5-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-6-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-6-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-7-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-7-growth-rate-input period-growth-rate-input "></td>
+                                </tr>
+                                <tr id="MS01nppas" class="hidden indent-level-2">
+                                <td> Net PPE Purchase And Sale </td>
+
+
+                                <td class="pre-selected-data">{{ pre_selected_cash_flow_data.net_ppe_purchase_and_sale }}
+                                </td>
+                                <td><input type="number" class="form-control pre-selected-growth-rate-input"
+                                        name="pre_selected_growth_rate" id="total-revenue-growth-rate"></td>
+                                <td class="period-plus-1-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-1-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-2-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-2-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-3-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-3-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-4-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-4-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-5-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-5-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-6-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-6-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-7-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-7-growth-rate-input period-growth-rate-input "></td>
+                                </tr>
+                                <tr id="MS01gaoia" class="hidden indent-level-2">
+                                <td> Goodwill And Other Intangible Assets </td>
+
+
+                                <td class="pre-selected-data">{{ pre_selected_cash_flow_data.goodwill_and_other_intangible_assets }}</td>
+                                <td><input type="number" class="form-control pre-selected-growth-rate-input"
+                                        name="pre_selected_growth_rate" id="total-revenue-growth-rate"></td>
+                                <td class="period-plus-1-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-1-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-2-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-2-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-3-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-3-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-4-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-4-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-5-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-5-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-6-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-6-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-7-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-7-growth-rate-input period-growth-rate-input "></td>
+                                </tr>
+                                <tr id="MS01iaad" class="hidden indent-level-2">
+                                <td> Investments And Advances </td>
+
+
+                                <td class="pre-selected-data">{{ pre_selected_cash_flow_data.investments_and_advances }}
+                                </td>
+                                <td><input type="number" class="form-control pre-selected-growth-rate-input"
+                                        name="pre_selected_growth_rate" id="total-revenue-growth-rate"></td>
+                                <td class="period-plus-1-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-1-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-2-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-2-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-3-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-3-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-4-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-4-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-5-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-5-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-6-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-6-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-7-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-7-growth-rate-input period-growth-rate-input "></td>
+                                </tr>
+                                <tr id="MS01oncas" class="hidden indent-level-2">
+                                <td> Other Non Current Assets </td>
+
+
+                                <td class="pre-selected-data">{{ pre_selected_cash_flow_data.other_non_current_assets }}
+                                </td>
+                                <td><input type="number" class="form-control pre-selected-growth-rate-input"
+                                        name="pre_selected_growth_rate" id="total-revenue-growth-rate"></td>
+                                <td class="period-plus-1-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-1-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-2-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-2-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-3-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-3-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-4-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-4-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-5-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-5-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-6-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-6-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-7-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-7-growth-rate-input period-growth-rate-input "></td>
+                                </tr>
+                                <tr>
+                                <td>
+                                        <button type="button" id="btnMX" aria-expanded="false"
+                                        onclick="toggle(this.id,'#MS01CFfcias');" aria-controls="MS01CFfcia"
+                                        aria-label="Financing Cash Flow" aria-labelledby="btnMX lblMSa">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" focusable="false">
+                                                <path d="M70.3 13.8L40 66.3 9.7 13.8z"></path>
+                                        </svg>
+                                        </button> Financing Cash Flow
+                                </td>
+
+                                <td class="pre-selected-data">{{ pre_selected_cash_flow_data.financing_cash_flow }}</td>
+                                <td><input type="number" class="form-control pre-selected-growth-rate-input"
+                                        name="pre_selected_growth_rate" id="total-revenue-growth-rate"></td>
+                                <td class="period-plus-1-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-1-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-2-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-2-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-3-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-3-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-4-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-4-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-5-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-5-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-6-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-6-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-7-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-7-growth-rate-input period-growth-rate-input "></td>
+                                </tr>
+                                <tr id="MS01CFfcias" class="hidden indent-level-1">
+                                <td>
+                                        <button type="button" id="btnMW" aria-expanded="false"
+                                        onclick="toggle(this.id,'#MS01ltdaclo,#MS01ncdls,#MS01taopnc,#MS01oncls,#MS01csip,#MS01csdpd');"
+                                        aria-controls="MS01ltdaclo MS01ncdls MS01taopnc MS01oncls MS01csip MS01csdpd"
+                                        aria-label="Cash Flow from Continuing Financing Activities"
+                                        aria-labelledby="btnMW lblMSb">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" focusable="false">
+                                                <path d="M70.3 13.8L40 66.3 9.7 13.8z"></path>
+                                        </svg>
+                                        </button> Cash Flow from Continuing Financing Activities
+                                </td>
+
+
+                                <td class="pre-selected-data">{{ pre_selected_cash_flow_data.cash_flow_from_continuing_financing_activities }}</td>
+                                <td><input type="number" class="form-control pre-selected-growth-rate-input"
+                                        name="pre_selected_growth_rate" id="total-revenue-growth-rate"></td>
+                                <td class="period-plus-1-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-1-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-2-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-2-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-3-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-3-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-4-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-4-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-5-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-5-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-6-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-6-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-7-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-7-growth-rate-input period-growth-rate-input "></td>
+                                </tr>
+                                <tr id="MS01ltdaclo" class="hidden indent-level-2">
+                                <td> Long Term Debt And Capital Lease Obligation</td>
+
+
+                                <td class="pre-selected-data">{{ pre_selected_cash_flow_data.long_term_debt_and_capital_lease_obligation }}</td>
+                                <td><input type="number" class="form-control pre-selected-growth-rate-input"
+                                        name="pre_selected_growth_rate" id="total-revenue-growth-rate"></td>
+                                <td class="period-plus-1-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-1-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-2-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-2-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-3-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-3-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-4-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-4-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-5-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-5-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-6-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-6-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-7-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-7-growth-rate-input period-growth-rate-input "></td>
+                                </tr>
+                                <tr id="MS01ncdls" class="hidden indent-level-2">
+                                <td> Non Current Deferred Liabilities </td>
+
+                                <td class="pre-selected-data">{{ pre_selected_cash_flow_data.non_current_deferred_liabilities }}</td>
+                                <td><input type="number" class="form-control pre-selected-growth-rate-input"
+                                        name="pre_selected_growth_rate" id="total-revenue-growth-rate"></td>
+                                <td class="period-plus-1-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-1-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-2-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-2-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-3-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-3-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-4-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-4-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-5-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-5-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-6-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-6-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-7-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-7-growth-rate-input period-growth-rate-input "></td>
+                                </tr>
+                                <tr id="MS01taopnc" class="hidden indent-level-2">
+                                <td> Trade and Other Payables Non Current </td>
+
+
+                                <td class="pre-selected-data">{{ pre_selected_cash_flow_data.trade_and_other_payables_non_current }}</td>
+                                <td><input type="number" class="form-control pre-selected-growth-rate-input"
+                                        name="pre_selected_growth_rate" id="total-revenue-growth-rate"></td>
+                                <td class="period-plus-1-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-1-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-2-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-2-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-3-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-3-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-4-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-4-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-5-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-5-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-6-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-6-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-7-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-7-growth-rate-input period-growth-rate-input "></td>
+                                </tr>
+                                <tr id="MS01oncls" class="hidden indent-level-2">
+                                <td> Other Non Current Liabilities </td>
+
+
+                                <td class="pre-selected-data">{{ pre_selected_cash_flow_data.other_non_current_liabilities }}</td>
+                                <td><input type="number" class="form-control pre-selected-growth-rate-input"
+                                        name="pre_selected_growth_rate" id="total-revenue-growth-rate"></td>
+                                <td class="period-plus-1-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-1-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-2-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-2-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-3-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-3-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-4-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-4-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-5-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-5-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-6-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-6-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-7-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-7-growth-rate-input period-growth-rate-input "></td>
+                                </tr>
+                                <tr id="MS01csip" class="hidden indent-level-2">
+                                <td> Common Stock Issuance/ (Payments) </td>
+
+
+                                <td class="pre-selected-data">{{ pre_selected_cash_flow_data.common_stock_issuance_payments }}</td>
+                                <td><input type="number" class="form-control pre-selected-growth-rate-input"
+                                        name="pre_selected_growth_rate" id="total-revenue-growth-rate"></td>
+                                <td class="period-plus-1-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-1-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-2-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-2-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-3-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-3-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-4-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-4-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-5-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-5-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-6-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-6-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-7-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-7-growth-rate-input period-growth-rate-input "></td>
+                                </tr>
+                                <tr id="MS01csdpd" class="hidden indent-level-2">
+                                <td> Common Stock Dividend Paid </td>
+
+
+                                <td class="pre-selected-data">{{ pre_selected_cash_flow_data.common_stock_dividend_paid }}
+                                </td>
+                                <td><input type="number" class="form-control pre-selected-growth-rate-input"
+                                        name="pre_selected_growth_rate" id="total-revenue-growth-rate"></td>
+                                <td class="period-plus-1-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-1-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-2-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-2-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-3-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-3-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-4-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-4-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-5-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-5-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-6-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-6-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-7-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-7-growth-rate-input period-growth-rate-input "></td>
+                                </tr>
+                                <tr>
+                                <td> End Cash Position </td>
+
+
+                                <td class="pre-selected-data">{{ pre_selected_cash_flow_data.end_cash_position }}</td>
+                                <td><input type="number" class="form-control pre-selected-growth-rate-input"
+                                        name="pre_selected_growth_rate" id="total-revenue-growth-rate"></td>
+                                <td class="period-plus-1-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-1-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-2-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-2-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-3-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-3-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-4-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-4-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-5-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-5-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-6-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-6-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-7-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-7-growth-rate-input period-growth-rate-input "></td>
+                                </tr>
+                                <tr>
+                                <td> Changes in Cash </td>
+
+
+                                <td class="pre-selected-data">{{ pre_selected_cash_flow_data.changes_in_cash }}</td>
+                                <td><input type="number" class="form-control pre-selected-growth-rate-input"
+                                        name="pre_selected_growth_rate" id="total-revenue-growth-rate"></td>
+                                <td class="period-plus-1-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-1-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-2-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-2-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-3-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-3-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-4-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-4-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-5-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-5-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-6-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-6-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-7-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-7-growth-rate-input period-growth-rate-input "></td>
+                                </tr>
+                                <tr>
+                                <td> Beginning Cash Position </td>
+
+
+                                <td class="pre-selected-data">{{ pre_selected_cash_flow_data.beginning_cash_position }}</td>
+                                <td><input type="number" class="form-control pre-selected-growth-rate-input"
+                                        name="pre_selected_growth_rate" id="total-revenue-growth-rate"></td>
+                                <td class="period-plus-1-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-1-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-2-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-2-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-3-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-3-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-4-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-4-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-5-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-5-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-6-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-6-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-7-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-7-growth-rate-input period-growth-rate-input "></td>
+                                </tr>
+                                <tr>
+                                <td> Capital Expenditure </td>
+
+
+                                <td class="pre-selected-data">{{ pre_selected_cash_flow_data.capital_expenditure }}</td>
+                                <td><input type="number" class="form-control pre-selected-growth-rate-input"
+                                        name="pre_selected_growth_rate" id="total-revenue-growth-rate"></td>
+                                <td class="period-plus-1-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-1-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-2-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-2-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-3-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-3-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-4-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-4-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-5-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-5-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-6-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-6-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-7-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-7-growth-rate-input period-growth-rate-input "></td>
+                                </tr>
+                                <tr>
+                                <td> Issuance/ (Repurchase) of Capital Stock </td>
+
+
+                                <td class="pre-selected-data">{{pre_selected_cash_flow_data.issuance_repurchase_of_capital_stock }}</td>
+                                <td><input type="number" class="form-control pre-selected-growth-rate-input"
+                                        name="pre_selected_growth_rate" id="total-revenue-growth-rate"></td>
+                                <td class="period-plus-1-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-1-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-2-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-2-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-3-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-3-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-4-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-4-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-5-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-5-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-6-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-6-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-7-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-7-growth-rate-input period-growth-rate-input "></td>
+                                </tr>
+                                <tr>
+                                <td> Repayment of Debt </td>
+
+                                <td class="pre-selected-data">{{ pre_selected_cash_flow_data.repayment_of_debt }}</td>
+                                <td><input type="number" class="form-control pre-selected-growth-rate-input"
+                                        name="pre_selected_growth_rate" id="total-revenue-growth-rate"></td>
+                                <td class="period-plus-1-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-1-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-2-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-2-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-3-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-3-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-4-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-4-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-5-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-5-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-6-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-6-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-7-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-7-growth-rate-input period-growth-rate-input "></td>
+                                </tr>
+                                <tr>
+                                <td> Free Cash Flow </td>
+
+
+                                <td class="pre-selected-data">{{ pre_selected_cash_flow_data.free_cash_flow }}</td>
+                                <td><input type="number" class="form-control pre-selected-growth-rate-input"
+                                        name="pre_selected_growth_rate" id="total-revenue-growth-rate"></td>
+                                <td class="period-plus-1-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-1-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-2-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-2-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-3-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-3-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-4-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-4-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-5-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-5-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-6-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-6-growth-rate-input period-growth-rate-input "></td>
+                                <td class="period-plus-7-value period-plus-value"></td>
+                                <td><input type="number"
+                                        class="form-control period-7-growth-rate-input period-growth-rate-input "></td>
+                                </tr>
+                        </tbody>
+                        </table>
+                </div>
+                </div>
+
+                <div class="row">
+                        <div class="col-md-12 mt-3 text-center">
+                                <input type="hidden" name="cash_flow_data" id="cashFlowData">
+                                <button type="submit" class="btn btn-primary">Save</button>
+                        </div>
+                </div>
+
+        </form>
 
 
         {% endif %}
@@ -1612,24 +1582,33 @@
     });
 </script>
 
+
 <script>
-        document.querySelector('form').addEventListener('submit', function(event) {
-                // Find all period-plus-value cells
-                const periodValues = document.querySelectorAll('.period-plus-value');
-            
-                periodValues.forEach((cell, index) => {
-                    // Create a hidden input for each cell
-                    const input = document.createElement('input');
-                    input.type = 'hidden';
-                    input.name = `period_value_${index + 1}`; // Name the input appropriately
-                    input.value = cell.textContent.trim(); // Get the text content of the cell
-            
-                    // Append the hidden input to the form
-                    this.appendChild(input);
-                });
+        document.getElementById('cashFlowForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+    
+            const tableData = [];
+            const rows = document.querySelectorAll('tbody tr');
+            rows.forEach(row => {
+                const rowData = {
+                    breakdown: row.cells[0].innerText.trim(),
+                    data: []
+                };
+                for (let i = 1; i < row.cells.length; i++) {
+                    const cellValue = row.cells[i].querySelector('input') ? row.cells[i].querySelector('input').value : row.cells[i].innerText.trim();
+                    rowData.data.push(cellValue);
+                }
+                tableData.push(rowData);
             });
-            
-</script>
+    
+            document.getElementById('cashFlowData').value = JSON.stringify(tableData);
+            this.submit();
+        });
+    </script>
+
+
+
+
 
 
 {% endblock content %}
