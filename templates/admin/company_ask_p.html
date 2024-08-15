@@ -1,13 +1,18 @@
-{% include 'admin/company_profile.html' %}
+
 {% load static %}
 
-  
-
-
+{% block content %}
+{% include './company_profile.html' %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cap Table</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body {
             margin: 20px;
-            font-family: 'Agency FB';
         }
         .big-plus-button {
             font-size: 3rem;
@@ -15,7 +20,7 @@
             text-align: center;
             cursor: pointer;
             display: block;
-            margin: 50px auto; /* Adjusted margin for better centering */
+            margin: 100px auto;
         }
         .table-container {
             margin-top: 20px;
@@ -45,56 +50,55 @@
         }
         .form-control {
             border: none;
-            background-color: transparent !important;
+            background-color: transparent;
             text-align: center;
-            box-shadow: none !important;
+            box-shadow: none;
         }
         .form-control:focus {
-            background-color: transparent !important;
+            background-color: transparent;
             outline: none;
-            box-shadow: none !important;
+            box-shadow: none;
         }
         .add-row-button, .edit-button, .delete-button {
             cursor: pointer;
             font-size: 1.25rem;
         }
-        .actions {
-            text-align: center;
-        }
-        .container{
+        .container {
             margin: 190px;
             margin-top: 20px;
         }
     </style>
-
-
-{% block content %}
     
-<div class="container">
-    <div id="bigPlusButton" class="big-plus-button" onclick="showTable()">+ Add Table</div>
+</head>
+<body>
 
-    <div id="tableContainer" class="table-container">
-        <table id="capTable" class="table table-striped">
-            <thead>
-                <tr>
-                    <th>Shareholder</th>
-                    <th>Name</th>
-                    <th>Equity Share</th>
-                    <th>Invested Since</th>
-                    <th>Investment Amount</th>
-                    <th>Valuation</th>
-                    <th>Details</th>
-                    <th class="actions">Actions</th>
-                </tr>
-            </thead>
-            <tbody id="tableBody">
-                <!-- Rows will be added here dynamically -->
-            </tbody>
-        </table>
-        <div class="text-center mt-3">
-            <span class="add-row-button" onclick="showEntryRow()">+ Add Row</span>
+<div class="container">
+    <form id="capTableForm" method="post" action="">
+        {% csrf_token %}
+        <input type="hidden" name="company_id" value="{{ company_id }}">
+
+        <div id="bigPlusButton" class="big-plus-button" onclick="showTable()">+ Add Table</div>
+
+        <div id="tableContainer" class="table-container">
+            <table id="capTable" class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Ask</th>
+                        <th>Value</th>
+                        <th>Equity Share</th>
+                        <th>Details</th>
+                        <th class="actions">Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody">
+                    <!-- Rows will be added here dynamically -->
+                </tbody>
+            </table>
+            <div class="text-center mt-3">
+                <span class="add-row-button" onclick="showEntryRow()">+ Add Row</span>
+            </div>
         </div>
-    </div>
+    </form>
 </div>
 
 <script>
@@ -112,12 +116,9 @@
         const entryRow = document.createElement('tr');
 
         entryRow.innerHTML = `
-            <td><input type="text" class="form-control" id="shareholderInput"></td>
-            <td><input type="text" class="form-control" id="nameInput"></td>
+            <td><input type="text" class="form-control" id="askInput"></td>
+            <td><input type="text" class="form-control" id="valueInput"></td>
             <td><input type="text" class="form-control" id="equityShareInput"></td>
-            <td><input type="text" class="form-control" id="investedSinceInput"></td>
-            <td><input type="text" class="form-control" id="investmentAmountInput"></td>
-            <td><input type="text" class="form-control" id="valuationInput"></td>
             <td><input type="text" class="form-control" id="detailsInput"></td>
             <td><button class="btn btn-primary btn-sm" onclick="saveRow()">Add</button></td>
         `;
@@ -126,21 +127,15 @@
     }
 
     function saveRow() {
-        const shareholder = document.getElementById('shareholderInput').value;
-        const name = document.getElementById('nameInput').value;
+        const ask = document.getElementById('askInput').value;
+        const value = document.getElementById('valueInput').value;
         const equityShare = document.getElementById('equityShareInput').value;
-        const investedSince = document.getElementById('investedSinceInput').value;
-        const investmentAmount = document.getElementById('investmentAmountInput').value;
-        const valuation = document.getElementById('valuationInput').value;
         const details = document.getElementById('detailsInput').value;
 
         const row = {
-            shareholder,
-            name,
+            ask,
+            value,
             equityShare,
-            investedSince,
-            investmentAmount,
-            valuation,
             details
         };
 
@@ -152,6 +147,7 @@
         }
 
         renderRows();
+        submitForm(); // Call the function to submit the form data
     }
 
     function renderRows() {
@@ -162,12 +158,9 @@
             const newRow = document.createElement('tr');
             newRow.id = `row-${index}`; // Set a unique ID for each row
             newRow.innerHTML = `
-                <td>${row.shareholder}</td>
-                <td>${row.name}</td>
+                <td>${row.ask}</td>
+                <td>${row.value}</td>
                 <td>${row.equityShare}</td>
-                <td>${row.investedSince}</td>
-                <td>${row.investmentAmount}</td>
-                <td>${row.valuation}</td>
                 <td>${row.details}</td>
                 <td class="actions">
                     <span class="edit-button" onclick="editRow(${index})">&#9998;</span>
@@ -184,7 +177,7 @@
     }
 
     function editRow(index) {
-        editIndex = index; // Set the index of the product being edited
+        editIndex = index; // Set the index of the row being edited
         const row = rows[index];
         
         // Select the row to edit
@@ -192,12 +185,9 @@
         
         // Replace the row's content with input fields containing the current values
         tableRow.innerHTML = `
-            <td><input type="text" class="form-control" value="${row.shareholder}"></td>
-            <td><input type="text" class="form-control" value="${row.name}"></td>
+            <td><input type="text" class="form-control" value="${row.ask}"></td>
+            <td><input type="text" class="form-control" value="${row.value}"></td>
             <td><input type="text" class="form-control" value="${row.equityShare}"></td>
-            <td><input type="text" class="form-control" value="${row.investedSince}"></td>
-            <td><input type="text" class="form-control" value="${row.investmentAmount}"></td>
-            <td><input type="text" class="form-control" value="${row.valuation}"></td>
             <td><input type="text" class="form-control" value="${row.details}"></td>
             <td>
                 <button class="btn btn-primary btn-sm" onclick="saveEditedRow(${index})">Save Changes</button>
@@ -211,16 +201,13 @@
         
         // Retrieve the updated values from the input fields
         const updatedRow = {
-            shareholder: tableRow.cells[0].querySelector('input').value,
-            name: tableRow.cells[1].querySelector('input').value,
+            ask: tableRow.cells[0].querySelector('input').value,
+            value: tableRow.cells[1].querySelector('input').value,
             equityShare: tableRow.cells[2].querySelector('input').value,
-            investedSince: tableRow.cells[3].querySelector('input').value,
-            investmentAmount: tableRow.cells[4].querySelector('input').value,
-            valuation: tableRow.cells[5].querySelector('input').value,
-            details: tableRow.cells[6].querySelector('input').value
+            details: tableRow.cells[3].querySelector('input').value
         };
 
-        // Update the row in the rows array
+        // Update the row in the `rows` array
         rows[index] = updatedRow;
         
         // Re-render the table to reflect the changes
@@ -228,8 +215,32 @@
     }
 
     function cancelEdit(index) {
-        // Re-render the table without saving changes to revert to the original row
+        // Re-render the table without making changes
         renderRows();
     }
+
+    function submitForm() {
+        const form = document.getElementById('capTableForm');
+        const formData = new FormData(form);
+        formData.append('rows', JSON.stringify(rows)); // Append the rows data to the form data
+
+        fetch(form.action, {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert('Data saved successfully!');
+            } else {
+                alert('An error occurred.');
+            }
+        })
+        .catch(error => console.error('Error:', error));
+    }
 </script>
-{% endblock %}
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
+{% endblock content %}

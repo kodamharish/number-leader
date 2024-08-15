@@ -1,0 +1,390 @@
+{% include './company_profile.html' %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Products and Services</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            margin: 20px;
+            position: relative;
+        }
+        .plus-button {
+            font-size: 5rem;
+            color: black;
+            text-align: center;
+            cursor: pointer;
+            display: block;
+            margin: 100px auto;
+        }
+        .small-plus-button {
+            font-size: 2rem;
+            color: black;
+            text-align: center;
+            cursor: pointer;
+            display: none;
+            position: absolute;
+            top: 20px;
+            right: 20px;
+        }
+        .entry-form, .product-list {
+            display: none;
+            margin-top: 20px;
+        }
+        .product-card {
+            padding: 20px;
+            margin-bottom: 20px;
+            position: relative;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            background-color: #fff;
+        }
+        .product-header {
+            font-weight: bold;
+            font-size: 1.5rem;
+            margin-bottom: 5px;
+            color: grey;
+        }
+        .product-name {
+            font-weight: bold;
+            font-size: 1.25rem;
+            margin-bottom: 10px;
+            color: black;
+        }
+        .section-title {
+            color: grey;
+            font-weight: bold;
+            margin-top: 20px;
+            margin-bottom: 2px; /* Small gap between label and data */
+        }
+        .form-control {
+            border: none;
+            border-bottom: 1px solid grey;
+            border-radius: 0;
+            width: 100%;
+            padding-left: 0;
+            margin-bottom: 0.5rem;
+            background-color: white !important;
+            transition: background-color 0s;
+        }
+        .form-control:focus {
+            background-color: white !important;
+            box-shadow: none;
+            outline: none;
+        }
+        .card-buttons {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+        }
+        .delete-button, .edit-button {
+            margin-left: 10px;
+        }
+        .submit-button {
+            position: relative;
+            display: block;
+            margin-top: 20px;
+            margin-left: auto;
+        }
+        .divider {
+            border-top: 1px solid grey;
+            margin: 10px 0;
+        }
+        .inline-inputs {
+            display: flex;
+            align-items: center;
+        }
+        .inline-inputs label {
+            margin-right: 5px;
+        }
+        .inline-inputs input {
+            width: 150px;
+            margin-right: 5px;
+        }
+        .form-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: stretch;
+        }
+        .form-column {
+            flex: 1;
+            margin-right: 20px;
+            display: flex;
+            flex-direction: column;
+        }
+        .form-column:last-child {
+            margin-right: 0;
+        }
+        .form-column > .form-group {
+            flex: 1;
+        }
+        .product-card p {
+            margin-top: -5px; /* Small gap between label and data */
+            margin-bottom: 20px; /* Regular gap between different fields */
+            line-height: 2.2; /* Adjusts the line height for better readability */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div id="plusButton" class="plus-button" onclick="showForm()">+</div>
+        <div id="smallPlusButton" class="small-plus-button" onclick="showForm()">+</div>
+
+        <div id="entryForm" class="entry-form">
+            <div class="form-container">
+                <div class="form-column">
+                    <div class="form-group">
+                        <label for="productTitle" class="form-label section-title">Product Title</label>
+                        <input type="text" class="form-control" id="productTitle" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="description" class="form-label section-title">Description</label>
+                        <textarea class="form-control" id="description" rows="3" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="industry" class="form-label section-title">Industry / Sector</label>
+                        <input type="text" class="form-control" id="industry" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="businessType" class="form-label section-title">Type of Business</label>
+                        <input type="text" class="form-control" id="businessType" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="problemsSolved" class="form-label section-title">Problems Solved</label>
+                        <input type="text" class="form-control" id="problemsSolved" required>
+                    </div>
+                </div>
+                <div class="form-column">
+                    <div class="form-group">
+                        <label for="launchDate" class="form-label section-title">Launch Date</label>
+                        <input type="date" class="form-control" id="launchDate" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label section-title">Three Year Revenue & Profit</label>
+                        <div class="inline-inputs">
+                            <label>Current Year (YTD):</label>
+                        </div>
+                        <div class="inline-inputs">
+                            <label>Revenue = </label>
+                            <input type="text" class="form-control" id="revenueCurrentYear" required>
+                            <label>| P/L =</label>
+                            <input type="text" class="form-control" id="profitCurrentYear" required>
+                        </div>
+                        <div class="inline-inputs">
+                            <label>Previous Year:</label>
+                        </div>
+                        <div class="inline-inputs">
+                            <label>Revenue = </label>
+                            <input type="text" class="form-control" id="revenuePreviousYear" required>
+                            <label>| P/L =</label>
+                            <input type="text" class="form-control" id="profitPreviousYear" required>
+                        </div>
+                        <div class="inline-inputs">
+                            <label>A year before:</label>
+                        </div>
+                        <div class="inline-inputs">
+                            <label>Revenue = </label>
+                            <input type="text" class="form-control" id="revenueYearBefore" required>
+                            <label>| P/L =</label>
+                            <input type="text" class="form-control" id="profitYearBefore" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="customers" class="form-label section-title">Customers</label>
+                        <input type="text" class="form-control" id="customers" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="competitors" class="form-label section-title">Competitors</label>
+                        <input type="text" class="form-control" id="competitors" required>
+                    </div>
+                </div>
+            </div>
+            <button type="button" class="btn btn-primary submit-button" onclick="saveProduct()">Add Product</button>
+        </div>
+
+        <div id="productList" class="product-list"></div>
+    </div>
+
+    <script>
+        let products = [];
+        let editIndex = -1; // To keep track of the product being edited
+
+        function showForm() {
+            document.getElementById('plusButton').style.display = 'none';
+            document.getElementById('smallPlusButton').style.display = 'none';
+            document.getElementById('entryForm').style.display = 'block';
+            document.getElementById('productList').style.display = 'none';
+        }
+
+        function hideForm() {
+            document.getElementById('entryForm').style.display = 'none';
+            if (products.length > 0) {
+                document.getElementById('smallPlusButton').style.display = 'block';
+                document.getElementById('productList').style.display = 'block';
+            } else {
+                document.getElementById('plusButton').style.display = 'block';
+            }
+        }
+
+        function saveProduct() {
+            const productTitle = document.getElementById('productTitle').value;
+            const description = document.getElementById('description').value;
+            const industry = document.getElementById('industry').value;
+            const businessType = document.getElementById('businessType').value;
+            const problemsSolved = document.getElementById('problemsSolved').value;
+            const launchDate = document.getElementById('launchDate').value;
+            const revenueCurrentYear = document.getElementById('revenueCurrentYear').value;
+            const profitCurrentYear = document.getElementById('profitCurrentYear').value;
+            const revenuePreviousYear = document.getElementById('revenuePreviousYear').value;
+            const profitPreviousYear = document.getElementById('profitPreviousYear').value;
+            const revenueYearBefore = document.getElementById('revenueYearBefore').value;
+            const profitYearBefore = document.getElementById('profitYearBefore').value;
+            const customers = document.getElementById('customers').value;
+            const competitors = document.getElementById('competitors').value;
+
+            const product = {
+                productTitle,
+                description,
+                industry,
+                businessType,
+                problemsSolved,
+                launchDate,
+                revenueCurrentYear,
+                profitCurrentYear,
+                revenuePreviousYear,
+                profitPreviousYear,
+                revenueYearBefore,
+                profitYearBefore,
+                customers,
+                competitors
+            };
+
+            if (editIndex === -1) {
+                products.unshift(product); // Add new product to the beginning of the list
+            } else {
+                products[editIndex] = product; // Update the existing product
+                editIndex = -1; // Reset editIndex after editing
+                document.querySelector('.submit-button').textContent = "Add Product"; // Reset button text
+            }
+
+            renderProducts();
+            hideForm();
+            resetForm();
+        }
+
+        function renderProducts() {
+            const productList = document.getElementById('productList');
+            productList.innerHTML = ''; // Clear the list
+
+            products.forEach((product, index) => {
+                const productCard = document.createElement('div');
+                productCard.className = 'product-card';
+                productCard.innerHTML = `
+                    <div class="product-header">Product ${index + 1}</div>
+                    <div class="product-name">${product.productTitle}</div>
+                    <div class="divider"></div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p><span class="section-title">Description:</span></p>
+                            <p>${product.description}</p>
+                            <p><span class="section-title">Industry / Sector:</span></p>
+                            <p>${product.industry}</p>
+                            <p><span class="section-title">Type of Business:</span></p>
+                            <p>${product.businessType}</p>
+                            <p><span class="section-title">Problems Solved:</span></p>
+                            <p>${product.problemsSolved}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <p><span class="section-title">Launch Date:</span></p>
+                            <p>${new Date(product.launchDate).toLocaleDateString()}</p>
+                            <p><span class="section-title">Three Year Revenue & Profit:</span></p>
+                            <p>Current Year (YTD):</p>
+                            <p>Revenue = ${product.revenueCurrentYear} | P/L = ${product.profitCurrentYear}</p>
+                            <p>Previous Year:</p>
+                            <p>Revenue = ${product.revenuePreviousYear} | P/L = ${product.profitPreviousYear}</p>
+                            <p>A year before:</p>
+                            <p>Revenue = ${product.revenueYearBefore} | P/L = ${product.profitYearBefore}</p>
+                            <p><span class="section-title">Customers:</span></p>
+                            <p>${product.customers}</p>
+                            <p><span class="section-title">Competitors:</span></p>
+                            <p>${product.competitors}</p>
+                        </div>
+                    </div>
+                    <div class="card-buttons">
+                        <button class="btn btn-warning edit-button" onclick="editProduct(${index})">Edit</button>
+                        <button class="btn btn-danger delete-button" onclick="deleteProduct(${index})">Delete</button>
+                    </div>
+                `;
+                productList.prepend(productCard);  // Using prepend to show the latest product at the top
+            });
+
+            if (products.length > 0) {
+                document.getElementById('smallPlusButton').style.display = 'block';
+                document.getElementById('plusButton').style.display = 'none';
+                document.getElementById('productList').style.display = 'block';
+            }
+        }
+
+        function deleteProduct(index) {
+            products.splice(index, 1); // Remove the product from the array
+            renderProducts();
+
+            if (products.length === 0) {
+                document.getElementById('productList').style.display = 'none';
+                document.getElementById('smallPlusButton').style.display = 'none';
+                document.getElementById('plusButton').style.display = 'block';
+            }
+        }
+
+        function editProduct(index) {
+            editIndex = index; // Set the index of the product being edited
+            const product = products[index];
+
+            // Populate the form with existing product data
+            document.getElementById('productTitle').value = product.productTitle;
+            document.getElementById('description').value = product.description;
+            document.getElementById('industry').value = product.industry;
+            document.getElementById('businessType').value = product.businessType;
+            document.getElementById('problemsSolved').value = product.problemsSolved;
+            document.getElementById('launchDate').value = product.launchDate;
+            document.getElementById('revenueCurrentYear').value = product.revenueCurrentYear;
+            document.getElementById('profitCurrentYear').value = product.profitCurrentYear;
+            document.getElementById('revenuePreviousYear').value = product.revenuePreviousYear;
+            document.getElementById('profitPreviousYear').value = product.profitPreviousYear;
+            document.getElementById('revenueYearBefore').value = product.revenueYearBefore;
+            document.getElementById('profitYearBefore').value = product.profitYearBefore;
+            document.getElementById('customers').value = product.customers;
+            document.getElementById('competitors').value = product.competitors;
+
+            document.querySelector('.submit-button').textContent = "Save Changes"; // Change button text to "Save Changes"
+            showForm(); // Show the form with populated data
+        }
+
+        function resetForm() {
+            document.getElementById('productTitle').value = '';
+            document.getElementById('description').value = '';
+            document.getElementById('industry').value = '';
+            document.getElementById('businessType').value = '';
+            document.getElementById('problemsSolved').value = '';
+            document.getElementById('launchDate').value = '';
+            document.getElementById('revenueCurrentYear').value = '';
+            document.getElementById('profitCurrentYear').value = '';
+            document.getElementById('revenuePreviousYear').value = '';
+            document.getElementById('profitPreviousYear').value = '';
+            document.getElementById('revenueYearBefore').value = '';
+            document.getElementById('profitYearBefore').value = '';
+            document.getElementById('customers').value = '';
+            document.getElementById('competitors').value = '';
+
+            editIndex = -1; // Reset the edit index after form reset
+            document.querySelector('.submit-button').textContent = "Add Product"; // Reset button text
+        }
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -48,6 +48,8 @@ urlpatterns = [
     path('business_plan/<str:id>/',businessPlan,name='business_plan'),
     path('pitch_and_product/<str:id>/',pitchAndProduct,name='pitch_and_product'),
     path('founders/<str:id>/',founders,name='founders'),
+    path('delete_founders/<str:id>/',deleteFounders,name='delete_founders'),
+
     
     path('basic_info/<str:id>/',basicInfo,name='basic_info'),
     path('product_and_services/<str:id>/',productsAndServices,name='product_and_services'),

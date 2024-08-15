@@ -1,0 +1,201 @@
+{% include './company_profile.html' %}
+{% load static %}
+{% block content %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile Page</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+        .main-content {
+            flex: 1;
+            overflow-y: auto;
+        }
+        .profile-card {
+            text-align: center;
+            padding: 20px;
+            width: 100%;
+            max-width: 550px;
+            border: none;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            background-color: #fff;
+            box-shadow: none;
+            position: relative;
+            top: -50px; 
+            margin-left: -260px;
+        }
+        .profile-img {
+            width: 100px;
+            height: 100px;
+            background-color: #6c757d;
+            border-radius: 50%;
+            margin: 0 auto 15px auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+        .profile-img img {
+            border-radius: 50%;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .profile-img .edit-icon {
+            position: absolute;
+            bottom: 5px;
+            right: 5px;
+            background-color: white;
+            border-radius: 50%;
+            padding: 5px;
+            cursor: pointer;
+            width: 24px;
+            height: 24px;
+        }
+        .add-button {
+            position: absolute;
+            top: -10px;
+            right: 20px;
+            background-color: #007bff;
+            color: white;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            cursor: pointer;
+            z-index: 1000;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 20px;
+        }
+        .scrollable-container {
+            max-height: 80vh;
+            overflow-y: auto;
+            overflow-x: hidden;
+            padding-right: 20px; /* Adjust padding to account for scrollbar width */
+        }
+        .container::-webkit-scrollbar {
+            display: none;
+        }
+        .form-control {
+            border-top: none;
+            border-left: none;
+            border-right: none;
+            border-bottom: 1px solid black !important;
+            align-items: center;
+        }
+        .placeholder {
+            text-align: center !important;
+        }
+        .heading{
+            font-size: 1rem;
+            margin-left: -10px; 
+        }
+    </style>
+</head>
+<body>
+    <div class="main-content">
+        <div class="container position-relative mt-4">
+            <h3 class="heading">My Companies -> {{ company.name }} -> Profile</h3>
+            <div class="add-button" id="addButton">+</div>
+
+            <div id="profile-cards-container" class="row row-cols-1 row-cols-md-2 row-cols-lg-3 justify-content-center mt-5">
+                <!-- Existing profile cards -->
+                <div class="col d-flex justify-content-center mb-3">
+                    <div class="profile-card">
+                        <div class="profile-img">
+                            <img src="https://via.placeholder.com/100" alt="Nitish Kashyap">
+                        </div>
+                        <p><strong>Name:</strong> Nitish Kashyap</p>
+                        <p><strong>Title:</strong> Founder & CEO</p>
+                        <p><strong>Date Joined:</strong> 1<sup>st</sup> August, 2020</p>
+                        <p><strong>LinkedIn:</strong> <a href="https://www.linkedin.com/nitish">www.linkedin.com/nitish</a></p>
+                        <p><strong>Profile:</strong> Nitish is the founder of Manartha Solutions and has a passion for virtualizing CFO functions and services to make things easier for startups and investors.</p>
+                    </div>
+                </div>
+                <div class="col d-flex justify-content-center mb-3">
+                    <div class="profile-card">
+                        <div class="profile-img">
+                            <img src="https://via.placeholder.com/100" alt="Naren Narayana">
+                        </div>
+                        <p><strong>Name:</strong> Naren Narayana</p>
+                        <p><strong>Title:</strong> Co-Founder & CTO</p>
+                        <p><strong>Date Joined:</strong> 1<sup>st</sup> August, 2023</p>
+                        <p><strong>LinkedIn:</strong> <a href="https://www.linkedin.com/naren">www.linkedin.com/naren</a></p>
+                        <p><strong>Profile:</strong> Naren is the founder of Manartha Solutions and has a passion for virtualizing CFO functions and services to make things easier for startups and investors.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const addButton = document.getElementById('addButton');
+            const profileCardsContainer = document.getElementById('profile-cards-container');
+
+            addButton.addEventListener('click', function() {
+                // Create a new card element
+                const newCard = document.createElement('div');
+                newCard.classList.add('col', 'd-flex', 'justify-content-center', 'mb-3');
+                newCard.innerHTML = `
+                    <div class="profile-card">
+                        <div class="profile-img">
+                            <img src="https://via.placeholder.com/100" alt="Profile Picture" class="profile-img-placeholder">
+                            <input type="file" class="profile-img-upload" style="display: none;">
+                            <div class="edit-icon">
+                                <img src="https://img.icons8.com/material-outlined/24/000000/pencil--v1.png" alt="Edit">
+                            </div>
+                        </div>
+                        <p><input type="text" class="form-control" placeholder="Enter Name"></p>
+                        <p><input type="text" class="form-control" placeholder="Enter Title"></p>
+                        <p><input type="date" class="form-control" placeholder="Date joined"></p>
+                        <p><input type="url" class="form-control" placeholder="Enter LinkedIn URL"></p>
+                        <p><textarea class="form-control" placeholder="Enter Profile"></textarea></p>
+                    </div>
+                `;
+
+                // Append the new card at the end of the container
+                profileCardsContainer.appendChild(newCard);
+
+                // Add event listener for image upload on new card
+                const newCardImage = newCard.querySelector('.profile-img');
+                const newCardInput = newCard.querySelector('.profile-img-upload');
+                const newCardEditIcon = newCard.querySelector('.edit-icon');
+
+                newCardEditIcon.addEventListener('click', function() {
+                    newCardInput.click();
+                });
+
+                newCardInput.addEventListener('change', function(event) {
+                    const file = event.target.files[0];
+                    if (file) {
+                        const reader = new FileReader();
+                        reader.onload = function(e) {
+                            newCardImage.querySelector('img').src = e.target.result;
+                        };
+                        reader.readAsDataURL(file);
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
+{% endblock content %}

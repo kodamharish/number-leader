@@ -1305,11 +1305,52 @@ def basicInfo(request, id):
         return render(request, 'admin/basic_info.html', context)
     
 
-def productsAndServices(request, id):
+def productsAndServices2(request, id):
     company = Company.objects.get(company_id = id)
     company_profile = CompanyProfile.objects.get(company_id = id)
+    print('a')
+
     if request.method == 'POST':
-        pass
+        print('b')
+        productTitle = request.POST.get('productTitle')
+        description = request.POST.get('description')
+        industry = request.POST.get('industry')
+        businessType = request.POST.get('businessType')
+        problemsSolved = request.POST.get('problemsSolved')
+        launchDate = request.POST.get('launchDate')
+        revenueCurrentYear = request.POST.get('revenueCurrentYear')
+        profitCurrentYear = request.POST.get('profitCurrentYear')
+        revenuePreviousYear = request.POST.get('revenuePreviousYear')
+        profitPreviousYear = request.POST.get('profitPreviousYear')
+        revenueYearBefore = request.POST.get('revenueYearBefore')
+        profitYearBefore = request.POST.get('profitYearBefore')
+        customers = request.POST.get('customers')
+        competitors = request.POST.get('competitors')
+
+        product_and_service = ProductAndServie(
+            company_id = company,
+            product_title = productTitle,
+            launch_date = launchDate,
+            description = description,
+            industry_or_sector = industry,
+            business_type = businessType,
+            problems_solved = problemsSolved,
+            revenue_current_year = revenueCurrentYear,
+            revenue_previous_year = revenuePreviousYear,
+            revenue_year_before = revenueYearBefore,
+            profit_current_year = profitCurrentYear,
+            profit_previous_year = profitPreviousYear,
+            profit_year_before = profitYearBefore,
+            customers = customers,
+            competitors = competitors
+        )
+        product_and_service.save()
+        print('c')
+        print('d')
+         
+
+        return redirect('product_and_services',id)
+
 
     else:
         
@@ -1319,6 +1360,76 @@ def productsAndServices(request, id):
         }
 
         return render(request, 'admin/products.html', context)
+    
+
+
+
+
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+import json
+
+@csrf_exempt
+def productsAndServices(request, id):
+    company = Company.objects.get(company_id=id)
+    company_profile = CompanyProfile.objects.get(company_id=id)
+
+    if request.method == 'POST':
+        # Parse the JSON data from the request body
+        try:
+            data = json.loads(request.body)
+            
+            # Extract fields from the parsed JSON
+            productTitle = data.get('productTitle')
+            description = data.get('description')
+            industry = data.get('industry')
+            businessType = data.get('businessType')
+            problemsSolved = data.get('problemsSolved')
+            launchDate = data.get('launchDate')
+            revenueCurrentYear = data.get('revenueCurrentYear')
+            profitCurrentYear = data.get('profitCurrentYear')
+            revenuePreviousYear = data.get('revenuePreviousYear')
+            profitPreviousYear = data.get('profitPreviousYear')
+            revenueYearBefore = data.get('revenueYearBefore')
+            profitYearBefore = data.get('profitYearBefore')
+            customers = data.get('customers')
+            competitors = data.get('competitors')
+
+            # Create and save the new ProductAndService object
+            product_and_service = ProductAndServie(
+                company_id=company,
+                product_title=productTitle,
+                description=description,
+                industry_or_sector=industry,
+                business_type=businessType,
+                problems_solved=problemsSolved,
+                launch_date=launchDate,
+                revenue_current_year=revenueCurrentYear,
+                profit_current_year=profitCurrentYear,
+                revenue_previous_year=revenuePreviousYear,
+                profit_previous_year=profitPreviousYear,
+                revenue_year_before=revenueYearBefore,
+                profit_year_before=profitYearBefore,
+                customers=customers,
+                competitors=competitors
+            )
+            product_and_service.save()
+
+            # Return success response
+            return JsonResponse({'status': 'success', 'message': 'Product and Service added successfully!'})
+        
+        except json.JSONDecodeError as e:
+            # Handle JSON parsing error
+            return JsonResponse({'status': 'error', 'message': 'Invalid JSON format'}, status=400)
+
+    else:
+        # For GET requests, render the HTML page with the context
+        context = {
+            'company': company,
+            'company_profile': company_profile,
+        }
+        return render(request, 'admin/products.html', context)
+
     
 
 def pitchPresentationAndVideo(request, id):
@@ -1405,7 +1516,7 @@ def pitchAndProduct(request, id):
 
         return render(request, 'admin/pitch_and_product.html', context)
     
-def founders(request, id):
+def founders1(request, id):
     company = Company.objects.get(company_id = id)
     company_profile = CompanyProfile.objects.get(company_id = id)
     if request.method == 'POST':
@@ -1420,8 +1531,75 @@ def founders(request, id):
 
         return render(request, 'admin/founders.html', context)
     
+from django.http import JsonResponse
+
+def founders(request, id):
+    if request.method == 'POST':
+        name = request.POST.get('name')
+        phone_number = request.POST.get('phone_number')
+        email = request.POST.get('email')
+        linkedin_url = request.POST.get('linkedin_url')
+        short_profile = request.POST.get('short_profile')
+        photo = request.FILES.get('photo')
+        founder_id=request.POST.get('id')
+        print(id)
+
+        company = get_object_or_404(Company, company_id=id)
+
+        try:
+            if founder_id:
+                founder = Founder.objects.get(id=founder_id)
+                founder.name = name
+                founder.phone_number = phone_number
+                founder.email = email
+                founder.linkedin_url = linkedin_url
+                founder.short_profile = short_profile
+                if photo:
+                    founder.photo = photo
+                founder.save()
+                return JsonResponse({'success': True})
+            else:
+                Founder.objects.create(
+                    name=name,
+                    phone_number=phone_number,
+                    email=email,
+                    linkedin_url=linkedin_url,
+                    short_profile=short_profile,
+                    photo=photo,
+                    company_id=company
+                )
+                return JsonResponse({'success': True})
+        except Founder.DoesNotExist:
+            return JsonResponse({'success': False, 'error': 'Founder not found'})
+
+    else:
+        founders = Founder.objects.filter(company_id=id)
+        company = Company.objects.get(company_id=id)
+        
+        context = {
+            'founder': founders,
+            'company': company
+        }
+        return render(request, 'admin/founders.html', context)
 
 
+def deleteFounders(request,id):
+     
+    founder_id=request.GET.get('id')
+    founder = Founder.objects.get(id=id)
+    print(founder,'founderfounderfounder')
+    founder.delete()
+    founders = Founder.objects.filter(company_id=id)
+    company = Company.objects.get(company_id=id)
+        
+    context = {
+            'founder': founders,
+            'company': company
+        }
+    return redirect('founders',id,context)
+
+
+    
 
 
 def capTable(request, id):
@@ -2508,7 +2686,7 @@ def forecastedBalanceSheetTable(request, id):
 
 
 
-def forecastedCashFlowTable(request, id):
+def forecastedCashFlowTable1(request, id):
     company = Company.objects.get(company_id=id)
     months, quarters, years = get_months_quarters_years()
     cash_flows = CashFlow.objects.filter(company_id=id)
@@ -2639,7 +2817,159 @@ def forecastedCashFlowTable(request, id):
         }
 
         return render(request, 'admin/forecasted_cash_flow.html', context)
+
+
+
+def forecastedCashFlowTable(request, id):
+    company = Company.objects.get(company_id=id)
+    months, quarters, years = get_months_quarters_years()
+    cash_flows = CashFlow.objects.filter(company_id=id)
+    forecasted_cash_flows = ForecastingCashFlow.objects.filter(company_id=id)
     
+
+
+    
+    if request.method == 'POST':
+        # Retrieve the data from POST request
+        cash_flow_data = json.loads(request.POST.get('cash_flow_data', ''))
+        selected_header = request.POST.get('selected_header', '')
+         # Print or use the selected header as needed
+        print(f"Selected Header: {selected_header}")
+
+        # Find or create the CashFlowData object for the specific company
+        #company_id = request.POST.get('company_id')  # Ensure company_id is sent in the POST request
+        #cash_flow_instance, created = CashFlowData.objects.get_or_create(company_id=company_id)
+        cash_flow_instance = ForecastingCashFlow(company_id=company,monthly_or_quarterly_or_yearly=selected_header)
+
+        # Map the breakdowns to the corresponding model fields
+        field_mapping = {
+            'Operating Cash Flow': 'operating_cash_flow',
+            'Net Income from Continuing Operations': 'net_income_from_continuing_operations',
+            'Depreciation & amortization': 'depreciation_and_amortization',
+            'Change in working capital': 'change_in_working_capital',
+            'Changes in Receivables': 'changes_in_receivables',
+            'Change in Inventory': 'change_in_inventory',
+            'Change in Hedging Assets Current': 'change_in_hedging_assets_current',
+            'Change in Other Current Assets': 'change_in_other_current_assets',
+            'Change in Payables And Accrued Expense': 'change_in_payables_and_accrued_expense',
+            'Change in Pension & Other Post Retirement Benefit Plans Current': 'change_in_pension_and_other_post_retirement_benefit_plans_current',
+            'Change in Current Debt And Capital Lease Obligation': 'change_in_current_debt_and_capital_lease_obligation',
+            'Change in Current Deferred Liabilities': 'change_in_current_deferred_liabilities',
+            'Change in Other Current Liabilities': 'change_in_other_current_liabilities',
+            'Investing Cash Flow': 'investing_cash_flow',
+            'Cash Flow from Continuing Investing Activities': 'cash_flow_from_continuing_investing_activities',
+            'Net PPE Purchase And Sale': 'net_ppe_purchase_and_sale',
+            'Goodwill And Other Intangible Assets': 'goodwill_and_other_intangible_assets',
+            'Investments And Advances': 'investments_and_advances',
+            'Other Non Current Assets': 'other_non_current_assets',
+            'Financing Cash Flow': 'financing_cash_flow',
+            'Cash Flow from Continuing Financing Activities': 'cash_flow_from_continuing_financing_activities',
+            'Long Term Debt And Capital Lease Obligation': 'long_term_debt_and_capital_lease_obligation',
+            'Non Current Deferred Liabilities': 'non_current_deferred_liabilities',
+            'Trade and Other Payables Non Current': 'trade_and_other_payables_non_current',
+            'Other Non Current Liabilities': 'other_non_current_liabilities',
+            'Common Stock Issuance/ (Payments)': 'common_stock_issuance_payments',
+            'Common Stock Dividend Paid': 'common_stock_dividend_paid',
+            'End Cash Position': 'end_cash_position',
+            'Changes in Cash': 'changes_in_cash',
+            'Beginning Cash Position': 'beginning_cash_position',
+            'Capital Expenditure': 'capital_expenditure',
+            'Issuance/ (Repurchase) of Capital Stock': 'issuance_repurchase_of_capital_stock',
+            'Repayment of Debt': 'repayment_of_debt',
+            'Free Cash Flow': 'free_cash_flow',
+        }
+
+        # Save each breakdown and its corresponding data to the appropriate field
+        for item in cash_flow_data:
+            breakdown = item['breakdown'].strip()
+            values_data = {}
+            growth_rates_data = {}
+
+            # Assuming the periods are fixed and known
+            periods = ['preselected', 'period1', 'period2', 'period3', 'period4', 'period5', 'period6', 'period7']
+
+            # Assign values and growth rates to respective periods
+            for i, period in enumerate(periods):
+                values_data[period] = item['data'][i*2]  # Get value for the period
+                growth_rates_data[period] = item['data'][i*2 + 1]  # Get growth rate for the period
+
+            # Prepare the final structure
+            data = {
+                'periods': values_data,
+                'growth_rates': growth_rates_data
+            }
+
+            # Set the data to the corresponding field
+            field_name = field_mapping.get(breakdown)
+            if field_name:
+                setattr(cash_flow_instance, field_name, data)
+
+        # Save the instance
+        cash_flow_instance.save()
+        
+
+        return redirect('forecasting_cash_flow_table',id)
+        pass
+
+    else:
+        pre_selected_cash_flow = request.GET.get('pre_selected_cash_flow')
+        forecasted_cash_flow = request.GET.get('forecasted_cash_flow')
+
+        period_type = 'monthly'  # Default to monthly
+        headers = []
+
+        if pre_selected_cash_flow:
+            if any(pre_selected_cash_flow.startswith(month) for month in months):
+                period_type = 'monthly'
+                headers = get_next_period_headers(pre_selected_cash_flow, period_type)
+            elif pre_selected_cash_flow.startswith('Q'):
+                period_type = 'quarterly'
+                headers = get_next_period_headers(pre_selected_cash_flow, period_type)
+            elif pre_selected_cash_flow.isdigit():
+                period_type = 'yearly'
+                headers = get_next_period_headers(pre_selected_cash_flow, period_type)
+        if forecasted_cash_flow:
+            #print(forecasted_cash_flow[0:8],forecasted_cash_flow,type(forecasted_cash_flow))
+
+            if any(forecasted_cash_flow[0:8].startswith(month) for month in months):
+                period_type = 'monthly'
+                headers = get_next_period_headers(forecasted_cash_flow[0:8], period_type)
+            elif forecasted_cash_flow.startswith('Q'):
+                period_type = 'quarterly'
+                headers = get_next_period_headers(forecasted_cash_flow, period_type)
+            elif forecasted_cash_flow.isdigit():
+                period_type = 'yearly'
+                headers = get_next_period_headers(forecasted_cash_flow, period_type)
+
+        pre_selected_cash_flow_data = CashFlow.objects.filter(
+            company_id=id,
+            monthly_or_quarterly_or_yearly=pre_selected_cash_flow
+        ).first()
+
+        forecasted_cash_flow_data = ForecastingCashFlow.objects.filter(
+            company_id=id,
+            monthly_or_quarterly_or_yearly = forecasted_cash_flow
+        ).first()
+
+        
+           
+            
+
+
+        context = {
+            'company': company,
+            'months': months,
+            'quarters': quarters,
+            'years': years,
+            'cash_flows': cash_flows,
+            'forecasted_cash_flows':forecasted_cash_flows,
+            'pre_selected_cash_flow_data': pre_selected_cash_flow_data,
+            'forecasted_cash_flow_data':forecasted_cash_flow_data,
+            'headers': headers,
+            'period_type': period_type,
+        }
+
+        return render(request, 'admin/forecasted_cash_flow.html', context)   
 # # # Assuming you have an instance of CashFlowData
 # cash_flow_data_instance = ForecastingCashFlow.objects.get(company_id='C001')  # replace `1` with the actual ID or filter criteria
 
@@ -2656,6 +2986,120 @@ def forecastedCashFlowTable(request, id):
 # else:
 #     print("No growth rates found for Operating Cash Flow.")
 
+
+
+def forecastedCashFlowTable2(request, id):
+    company = Company.objects.get(company_id=id)
+    months, quarters, years = get_months_quarters_years()
+    cash_flows = CashFlow.objects.filter(company_id=id)
+    forecasted_cash_flows = ForecastingCashFlow.objects.filter(company_id=id)
+
+    if request.method == 'POST':
+        # Retrieve the data from POST request
+        cash_flow_data = json.loads(request.POST.get('cash_flow_data', ''))
+        headers = json.loads(request.POST.get('headers', ''))
+
+        # Create a new instance for the specific company
+        cash_flow_instance = ForecastingCashFlow(company_id=company)
+
+        # Map the breakdowns to the corresponding model fields
+        field_mapping = {
+            'Operating Cash Flow': 'operating_cash_flow',
+            'Net Income from Continuing Operations': 'net_income',
+            'Depreciation & amortization': 'depreciation_amortization',
+            'Change in working capital': 'change_in_working_capital',
+            'Changes in Receivables': 'changes_in_receivables',
+            'Change in Inventory': 'change_in_inventory',
+            'Change in Hedging Assets Current': 'change_in_hedging_assets_current',
+            'Change in Other Current Assets': 'change_in_other_current_assets',
+            'Change in Payables And Accrued Expense': 'change_in_payables_and_accrued_expense',
+            'Change in Pension & Other Post Retirement Benefit Plans Current': 'change_in_pension_and_other_post_retirement_benefit_plans_current',
+            'Change in Current Debt And Capital Lease Obligation': 'change_in_current_debt_and_capital_lease_obligation',
+            'Change in Current Deferred Liabilities': 'change_in_current_deferred_liabilities',
+            'Change in Other Current Liabilities': 'change_in_other_current_liabilities',
+            'Investing Cash Flow': 'investing_cash_flow',
+            'Cash Flow from Continuing Investing Activities': 'cash_flow_from_continuing_investing_activities',
+            'Net PPE Purchase And Sale': 'net_ppe_purchase_and_sale',
+            'Goodwill And Other Intangible Assets': 'goodwill_and_other_intangible_assets',
+            'Investments And Advances': 'investments_and_advances',
+            'Other Non Current Assets': 'other_non_current_assets',
+            'Financing Cash Flow': 'financing_cash_flow',
+            'Cash Flow from Continuing Financing Activities': 'cash_flow_from_continuing_financing_activities',
+            'Long Term Debt And Capital Lease Obligation': 'long_term_debt_and_capital_lease_obligation',
+            'Non Current Deferred Liabilities': 'non_current_deferred_liabilities',
+            'Trade and Other Payables Non Current': 'trade_and_other_payables_non_current',
+            'Other Non Current Liabilities': 'other_non_current_liabilities',
+            'Common Stock Issuance/ (Payments)': 'common_stock_issuance_payments',
+            'Common Stock Dividend Paid': 'common_stock_dividend_paid',
+            'End Cash Position': 'end_cash_position',
+            'Changes in Cash': 'changes_in_cash',
+            'Beginning Cash Position': 'beginning_cash_position',
+            'Capital Expenditure': 'capital_expenditure',
+            'Issuance/ (Repurchase) of Capital Stock': 'issuance_repurchase_of_capital_stock',
+            'Repayment of Debt': 'repayment_of_debt',
+            'Free Cash Flow': 'free_cash_flow',
+        }
+
+        # Save each breakdown and its corresponding data to the appropriate field
+        for item in cash_flow_data:
+            breakdown = item['breakdown'].strip()
+            values_data = {}
+            growth_rates_data = {}
+
+            # Dynamically process each header
+            for i, header in enumerate(headers):
+                values_data[header] = item['data'][i*2]  # Value for the period
+                growth_rates_data[header] = item['data'][i*2 + 1]  # Growth rate for the period
+
+            # Prepare the final structure
+            data = {
+                'values': values_data,
+                'growth_rates': growth_rates_data
+            }
+
+            # Set the data to the corresponding field
+            field_name = field_mapping.get(breakdown)
+            if field_name:
+                setattr(cash_flow_instance, field_name, data)
+
+        # Save the instance
+        cash_flow_instance.save()
+        return redirect('forecasting_cash_flow_table', id)
+
+    else:
+        pre_selected_cash_flow = request.GET.get('pre_selected_cash_flow')
+        period_type = 'monthly'  # Default to monthly
+        headers = []
+
+        if pre_selected_cash_flow:
+            if any(pre_selected_cash_flow.startswith(month) for month in months):
+                period_type = 'monthly'
+                headers = get_next_period_headers(pre_selected_cash_flow, period_type)
+            elif pre_selected_cash_flow.startswith('Q'):
+                period_type = 'quarterly'
+                headers = get_next_period_headers(pre_selected_cash_flow, period_type)
+            elif pre_selected_cash_flow.isdigit():
+                period_type = 'yearly'
+                headers = get_next_period_headers(pre_selected_cash_flow, period_type)
+
+        pre_selected_cash_flow_data = CashFlow.objects.filter(
+            company_id=id,
+            monthly_or_quarterly_or_yearly=pre_selected_cash_flow
+        ).first()
+
+        context = {
+            'company': company,
+            'months': months,
+            'quarters': quarters,
+            'years': years,
+            'cash_flows': cash_flows,
+            'forecasted_cash_flows': forecasted_cash_flows,
+            'pre_selected_cash_flow_data': pre_selected_cash_flow_data,
+            'headers': headers,
+            'period_type': period_type,
+        }
+
+        return render(request, 'admin/forecasted_cash_flow.html', context)
 
 #Investor
 

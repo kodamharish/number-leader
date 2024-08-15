@@ -208,6 +208,28 @@ class Team(models.Model):
         return self.subuser_id
 
 
+class ProductAndServie(models.Model):
+    company_id=models.ForeignKey(Company, on_delete=models.CASCADE,related_name='product_and_services')
+
+    product_title = models.CharField(max_length=100)
+    launch_date = models.DateField()
+    description = models.TextField()
+    revenue_current_year = models.DecimalField(max_digits=10, decimal_places=2,null=True)
+    revenue_previous_year = models.DecimalField(max_digits=10, decimal_places=2,null=True)
+    revenue_year_before = models.DecimalField(max_digits=10, decimal_places=2,null=True)
+    profit_current_year = models.DecimalField(max_digits=10, decimal_places=2,null=True)
+    profit_previous_year = models.DecimalField(max_digits=10, decimal_places=2,null=True)
+    profit_year_before = models.DecimalField(max_digits=10, decimal_places=2,null=True)
+    industry_or_sector = models.CharField(max_length=100)
+    business_type = models.CharField(max_length=100)
+    customers = models.CharField(max_length=100)
+    problems_solved = models.TextField()
+    competitors = models.CharField(max_length=100)
+
+    
+
+
+
 
 
 class IncomeStatement(models.Model):
@@ -385,8 +407,8 @@ from django.db import models
 class ForecastingCashFlow(models.Model):
     company_id = models.ForeignKey(Company,on_delete=models.CASCADE)
     operating_cash_flow = models.JSONField(default=dict)
-    net_income = models.JSONField(default=dict)
-    depreciation_amortization = models.JSONField(default=dict)
+    net_income_from_continuing_operations = models.JSONField(default=dict)
+    depreciation_and_amortization = models.JSONField(default=dict)
     change_in_working_capital = models.JSONField(default=dict)
     changes_in_receivables = models.JSONField(default=dict)
     change_in_inventory = models.JSONField(default=dict)
@@ -418,6 +440,8 @@ class ForecastingCashFlow(models.Model):
     issuance_repurchase_of_capital_stock = models.JSONField(default=dict)
     repayment_of_debt = models.JSONField(default=dict)
     free_cash_flow = models.JSONField(default=dict)
+    monthly_or_quarterly_or_yearly = models.CharField(max_length=15,null=True)
+
 
     
 
